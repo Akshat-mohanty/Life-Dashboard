@@ -1,0 +1,597 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Life Dashboard - Production-Ready Serverless Backend
+  Includes API Gateway, Cognito Auth, DynamoDB, S3, EventBridge, Bedrock, SNS, SES, and Lambdas.
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues: [dev, staging, prod]
+    Description: Deployment environment stage.
+  BedrockModelId:
+    Type: String
+    Default: anthropic.claude-3-5-sonnet-20241022-v2:0
+    Description: Bedrock Claude model ID for briefing generation.
+
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Timeout: 30
+    MemorySize: 512
+    Tracing: Active
+    Environment:
+      Variables:
+        TABLE_NAME: !Ref LifeDashboardTable
+        BUCKET_NAME: !Ref LifeDashboardBucket
+        BEDROCK_MODEL_ID: !Ref BedrockModelId
+        USER_POOL_ID: !Ref LifeDashboardUserPool
+        SNS_TOPIC_ARN: !Ref HealthRemindersTopic
+        ENVIRONMENT: !Ref Environment
+        NODE_OPTIONS: "--enable-source-maps"
+
+Resources:
+  ##############################################################################
+  # COGNITO USER POOL & CLIENT
+  ##############################################################################
+  LifeDashboardUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Sub life-dashboard-users-${Environment}
+      UsernameAttributes:
+        - email
+      AutoVerifiedAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: false
+          RequireUppercase: true
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Mutable: true
+          Required: true
+        - Name: name
+          AttributeDataType: String
+          Mutable: true
+          Required: false
+
+  LifeDashboardUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: !Sub life-dashboard-web-client-${Environment}
+      UserPoolId: !Ref LifeDashboardUserPool
+      GenerateSecret: false
+      ExplicitAuthFlows:
+        - ALLOW_USER_PASSWORD_AUTH
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      PreventUserExistenceErrors: ENABLED
+
+  ##############################################################################
+  # DYNAMODB TABLE (Single-Table Design)
+  ##############################################################################
+  LifeDashboardTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: LifeDashboard
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      SSESpecification:
+        SSEEnabled: true
+
+  ##############################################################################
+  # S3 STORAGE (Documents & Receipts)
+  ##############################################################################
+  LifeDashboardBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub life-dashboard-storage-${AWS::AccountId}-${Environment}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: ['*']
+            AllowedMethods: [GET, PUT, POST, DELETE, HEAD]
+            AllowedOrigins: ['*']
+            MaxAge: 3000
+
+  LifeDashboardBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref LifeDashboardBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: EnforceSecureTransport
+            Effect: Deny
+            Principal: '*'
+            Action: 's3:*'
+            Resource:
+              - !Sub arn:aws:s3:::${LifeDashboardBucket}
+              - !Sub arn:aws:s3:::${LifeDashboardBucket}/*
+            Condition:
+              Bool:
+                'aws:SecureTransport': 'false'
+
+  ##############################################################################
+  # SNS TOPIC (Health Reminder SMS / Push)
+  ##############################################################################
+  HealthRemindersTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub life-dashboard-health-alerts-${Environment}
+      DisplayName: LifeDashboardHealth
+
+  ##############################################################################
+  # API GATEWAY (REST API with Cognito Authorizer)
+  ##############################################################################
+  LifeDashboardApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Name: !Sub life-dashboard-api-${Environment}
+      TracingEnabled: true
+      Cors:
+        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
+        AllowHeaders: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
+      Auth:
+        DefaultAuthorizer: CognitoAuthorizer
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn: !GetAtt LifeDashboardUserPool.Arn
+            Identity:
+              Header: Authorization
+
+  ##############################################################################
+  # MODULE 1: BILLS LAMBDA FUNCTIONS
+  ##############################################################################
+  BillsCreateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: bills/create.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        CreateBill:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /bills
+            Method: post
+
+  BillsListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: bills/list.handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        ListBills:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /bills
+            Method: get
+
+  BillsUpdateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: bills/update.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        UpdateBill:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /bills/{id}
+            Method: put
+
+  BillsDeleteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: bills/delete.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        DeleteBill:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /bills/{id}
+            Method: delete
+
+  ##############################################################################
+  # MODULE 2: TASKS LAMBDA FUNCTIONS
+  ##############################################################################
+  TasksCreateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: tasks/create.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        CreateTask:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /tasks
+            Method: post
+
+  TasksListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: tasks/list.handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        ListTasks:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /tasks
+            Method: get
+
+  TasksUpdateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: tasks/update.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        UpdateTask:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /tasks/{id}
+            Method: put
+
+  TasksDeleteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: tasks/delete.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        DeleteTask:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /tasks/{id}
+            Method: delete
+
+  ##############################################################################
+  # MODULE 3: CALENDAR LAMBDA FUNCTIONS
+  ##############################################################################
+  CalendarCreateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: calendar/create.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        CreateCalendar:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /calendar
+            Method: post
+
+  CalendarListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: calendar/list.handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        ListCalendar:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /calendar
+            Method: get
+
+  CalendarDeleteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: calendar/delete.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        DeleteCalendar:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /calendar/{id}
+            Method: delete
+
+  ##############################################################################
+  # MODULE 4: HEALTH REMINDERS LAMBDA FUNCTIONS
+  ##############################################################################
+  HealthCreateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: health/create.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LifeDashboardTable
+        - SNSPublishMessagePolicy:
+            TopicName: !GetAtt HealthRemindersTopic.TopicName
+      Events:
+        CreateHealth:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /health
+            Method: post
+
+  HealthListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: health/list.handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        ListHealth:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /health
+            Method: get
+
+  HealthDeleteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: health/delete.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        DeleteHealth:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /health/{id}
+            Method: delete
+
+  ##############################################################################
+  # MODULE 5: DOCUMENTS LAMBDA FUNCTIONS (S3 Integration)
+  ##############################################################################
+  DocumentsUploadFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: documents/upload.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LifeDashboardTable
+        - S3CrudPolicy:
+            BucketName: !Sub life-dashboard-storage-${AWS::AccountId}-${Environment}
+      Events:
+        UploadDoc:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /documents/upload
+            Method: post
+
+  DocumentsListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: documents/list.handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref LifeDashboardTable
+        - S3ReadPolicy:
+            BucketName: !Sub life-dashboard-storage-${AWS::AccountId}-${Environment}
+      Events:
+        ListDocs:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /documents
+            Method: get
+
+  DocumentsDeleteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: documents/delete.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LifeDashboardTable
+        - S3CrudPolicy:
+            BucketName: !Sub life-dashboard-storage-${AWS::AccountId}-${Environment}
+      Events:
+        DeleteDoc:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /documents/{id}
+            Method: delete
+
+  ##############################################################################
+  # MODULE 6: SPENDING LAMBDA FUNCTIONS
+  ##############################################################################
+  SpendingCreateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: spending/create.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        CreateSpending:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /spending
+            Method: post
+
+  SpendingListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: spending/list.handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        ListSpending:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /spending
+            Method: get
+
+  SpendingSummaryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: spending/summary.handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        SummarySpending:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /spending/summary
+            Method: get
+
+  ##############################################################################
+  # AI LAYER: BEDROCK MORNING BRIEFING & EVENTBRIDGE TRIGGER
+  ##############################################################################
+  BriefingGenerateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: briefing/generate.handler
+      Timeout: 120
+      MemorySize: 1024
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LifeDashboardTable
+        - Statement:
+            - Sid: BedrockInvokeAccess
+              Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+                - bedrock:InvokeModelWithResponseStream
+              Resource: '*'
+            - Sid: SESSendEmailAccess
+              Effect: Allow
+              Action:
+                - ses:SendEmail
+                - ses:SendRawEmail
+              Resource: '*'
+      Events:
+        DailyCronTrigger:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 1 * * ? *)
+            Name: LifeDashboardDailyBriefingTrigger
+            Description: Fires 7am IST daily to generate AI briefing
+            Enabled: true
+        ManualTrigger:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /briefing/generate
+            Method: post
+        GetTodayBriefing:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /briefing/today
+            Method: get
+
+Outputs:
+  ApiEndpoint:
+    Description: Base URL for API Gateway REST endpoints
+    Value: !Sub "https://${LifeDashboardApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+    Export:
+      Name: !Sub ${AWS::StackName}-ApiEndpoint
+
+  UserPoolId:
+    Description: Cognito User Pool ID
+    Value: !Ref LifeDashboardUserPool
+    Export:
+      Name: !Sub ${AWS::StackName}-UserPoolId
+
+  UserPoolClientId:
+    Description: Cognito User Pool App Client ID
+    Value: !Ref LifeDashboardUserPoolClient
+    Export:
+      Name: !Sub ${AWS::StackName}-UserPoolClientId
+
+  DynamoDBTableName:
+    Description: LifeDashboard DynamoDB Single-Table
+    Value: !Ref LifeDashboardTable
+    Export:
+      Name: !Sub ${AWS::StackName}-TableName
+
+  S3BucketName:
+    Description: Storage bucket for user documents and receipts
+    Value: !Ref LifeDashboardBucket
+    Export:
+      Name: !Sub ${AWS::StackName}-BucketName
+
+  SNSTopicArn:
+    Description: Health alert SNS Topic ARN
+    Value: !Ref HealthRemindersTopic
+    Export:
+      Name: !Sub ${AWS::StackName}-SnsTopicArn
