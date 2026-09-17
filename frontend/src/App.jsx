@@ -242,7 +242,7 @@ export default function App() {
 
         <div className="mt-8 text-center text-xs text-slate-500 flex items-center gap-2">
           <ShieldCheck className="w-4 h-4 text-emerald-400" />
-          <span>Secured with AWS Cognito & AWS Cedar Policy Authorization</span>
+          <span>Secure login</span>
         </div>
       </div>
     );
