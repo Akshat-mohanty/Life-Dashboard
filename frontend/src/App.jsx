@@ -229,7 +229,6 @@ export default function App() {
 
           {/* Quick Demo Access */}
           <div className="mt-6 pt-5 border-t border-slate-200 text-center">
-            <p className="text-[11px] text-slate-500 mb-3">Testing locally or in hackathon demo?</p>
             <button
               type="button"
               onClick={loginAsDemo}
