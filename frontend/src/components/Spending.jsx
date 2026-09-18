@@ -6,6 +6,7 @@
 
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   PieChart as PieChartIcon,
   Plus,
@@ -146,7 +147,7 @@ export default function Spending() {
     }));
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
+    <div className="bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center justify-between pb-4 border-b border-zinc-100">
         <div className="flex items-center gap-3">
@@ -179,7 +180,7 @@ export default function Spending() {
           {!isAdding && (
             <button
               onClick={() => setIsAdding(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-accent-600 hover:bg-accent-700 shadow-sm transition-all hover:scale-105"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-accent-600 hover:bg-accent-700 shadow-sm transition-all hover:scale-105 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Log</span>
@@ -293,112 +294,122 @@ export default function Spending() {
       )}
 
       {/* Log Expense Modal Popup */}
-      {isAdding && (
-        <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-in fade-in duration-150"
-          onClick={resetForm}
-        >
-          <div
-            className="bg-white rounded-3xl border border-zinc-200 shadow-2xl p-6 max-w-md w-full relative animate-in zoom-in-95 duration-150"
-            onClick={(e) => e.stopPropagation()}
+      <AnimatePresence>
+        {isAdding && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4"
+            onClick={resetForm}
           >
-            <div className="flex items-center justify-between pb-4 border-b border-zinc-100 mb-4">
-              <div>
-                <h3 className="text-base font-bold text-black tracking-tight">Log Expense</h3>
-                <p className="text-xs text-zinc-500">Track your daily purchases and financial outlays</p>
-              </div>
-              <button
-                type="button"
-                onClick={resetForm}
-                className="p-1.5 text-zinc-400 hover:text-black hover:bg-zinc-100 rounded-xl transition cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-3">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.93, y: 14 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.93, y: 14 }}
+              transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+              className="bg-white rounded-3xl border border-zinc-200 shadow-2xl p-6 max-w-md w-full relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between pb-4 border-b border-zinc-100 mb-4">
                 <div>
-                  <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
-                    Amount (₹)
-                  </label>
-                  <input
-                    type="number"
-                    placeholder="450"
-                    value={formData.amount}
-                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                    required
-                    min="1"
-                    step="any"
-                    className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition"
-                  />
+                  <h3 className="text-base font-bold text-black tracking-tight">Log Expense</h3>
+                  <p className="text-xs text-zinc-500">Track your daily purchases and financial outlays</p>
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
-                    Category
-                  </label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition cursor-pointer"
-                  >
-                    <option value="food">Food & Dining</option>
-                    <option value="transport">Transport / Cab</option>
-                    <option value="bills">Bills & Utilities</option>
-                    <option value="health">Health & Medical</option>
-                    <option value="entertainment">Entertainment</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
-                  Description
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Weekly Groceries, Uber to Office, Movie Tickets"
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  required
-                  className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
-                  Date
-                </label>
-                <input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                  required
-                  className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition cursor-pointer"
-                />
-              </div>
-
-              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-zinc-100">
                 <button
                   type="button"
                   onClick={resetForm}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-600 hover:text-black hover:bg-zinc-100 transition cursor-pointer"
+                  className="p-1.5 text-zinc-400 hover:text-black hover:bg-zinc-100 rounded-xl transition cursor-pointer"
                 >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={createMutation.isPending}
-                  className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-accent-600 hover:bg-accent-700 shadow-sm transition active:scale-95 disabled:opacity-50 cursor-pointer"
-                >
-                  {createMutation.isPending ? 'Logging...' : 'Log Expense'}
+                  <X className="w-4 h-4" />
                 </button>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
+
+              <form onSubmit={handleCreateSubmit} className="space-y-4">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                      Amount (₹)
+                    </label>
+                    <input
+                      type="number"
+                      placeholder="450"
+                      value={formData.amount}
+                      onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                      required
+                      min="1"
+                      step="any"
+                      className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                      Category
+                    </label>
+                    <select
+                      value={formData.category}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                      className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition cursor-pointer"
+                    >
+                      <option value="food">Food & Dining</option>
+                      <option value="transport">Transport / Cab</option>
+                      <option value="bills">Bills & Utilities</option>
+                      <option value="health">Health & Medical</option>
+                      <option value="entertainment">Entertainment</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                    Description
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Weekly Groceries, Uber to Office, Movie Tickets"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    required
+                    className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    required
+                    className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition cursor-pointer"
+                  />
+                </div>
+
+                <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-zinc-100">
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-600 hover:text-black hover:bg-zinc-100 transition cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={createMutation.isPending}
+                    className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-accent-600 hover:bg-accent-700 shadow-sm transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                  >
+                    {createMutation.isPending ? 'Logging...' : 'Log Expense'}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Expense Item List */}
       <div className="mt-4 flex-1 overflow-y-auto space-y-2.5 max-h-[300px] pr-0.5">
@@ -414,30 +425,37 @@ export default function Spending() {
             <p className="text-xs font-medium text-zinc-600">No expenses logged for {selectedMonth}.</p>
           </div>
         ) : (
-          items.map((item) => (
-            <div
-              key={item.id}
-              className="p-3 rounded-xl border border-zinc-200 bg-white hover:border-zinc-300 hover:bg-zinc-50/50 transition-all flex items-center justify-between gap-3"
-            >
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-7 h-7 rounded-lg bg-zinc-50 border border-zinc-200 flex items-center justify-center flex-shrink-0">
-                  {getCategoryIcon(item.category)}
-                </div>
-                <div className="min-w-0">
-                  <h4 className="text-xs font-bold text-black truncate">{item.description}</h4>
-                  <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 mt-0.5">
-                    <span className="capitalize">{item.category}</span>
-                    <span>•</span>
-                    <span>{item.date}</span>
+          <AnimatePresence initial={false}>
+            {items.map((item) => (
+              <motion.div
+                key={item.id}
+                layout
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.2 }}
+                className="p-3 rounded-xl border border-zinc-200 bg-white hover:border-zinc-300 hover:bg-zinc-50/50 transition-all flex items-center justify-between gap-3"
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className="w-7 h-7 rounded-lg bg-zinc-50 border border-zinc-200 flex items-center justify-center flex-shrink-0">
+                    {getCategoryIcon(item.category)}
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="text-xs font-bold text-black truncate">{item.description}</h4>
+                    <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 mt-0.5">
+                      <span className="capitalize">{item.category}</span>
+                      <span>•</span>
+                      <span>{item.date}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="text-right flex-shrink-0">
-                <span className="text-xs font-bold text-black">₹{item.amount?.toLocaleString('en-IN')}</span>
-              </div>
-            </div>
-          ))
+                <div className="text-right flex-shrink-0">
+                  <span className="text-xs font-bold text-black">₹{item.amount?.toLocaleString('en-IN')}</span>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         )}
       </div>
     </div>

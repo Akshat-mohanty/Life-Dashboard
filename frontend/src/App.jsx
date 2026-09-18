@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   LogOut,
   User,
@@ -100,19 +101,29 @@ export default function App() {
         <div className="absolute inset-0 bg-white/30 backdrop-blur-[1px] pointer-events-none z-0" />
 
         {/* Minimal top branding */}
-        <header className="relative z-10 max-w-7xl mx-auto w-full px-6 py-8 flex items-center justify-between">
+        <motion.header
+          initial={{ opacity: 0, y: -15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="relative z-10 max-w-7xl mx-auto w-full px-6 py-8 flex items-center justify-between"
+        >
           <div className="flex items-center gap-3">
             <MeridianLogo className="w-10 h-10" />
             <div>
               <span className="text-2xl font-bold tracking-tight text-black block font-serif">Meridian</span>
             </div>
           </div>
-        </header>
+        </motion.header>
 
         {/* Center Canvas */}
         <main className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 py-8 lg:py-12 flex-1 flex flex-col items-center justify-center">
           <div className="w-full max-w-md mx-auto">
-            <div className="bg-white/95 backdrop-blur-xl rounded-3xl border border-white/80 p-7 sm:p-9 shadow-2xl">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-white/95 backdrop-blur-xl rounded-3xl border border-white/80 p-7 sm:p-9 shadow-2xl"
+            >
               {/* Modern Pill Switcher */}
               <div className="flex bg-zinc-100 p-1 rounded-xl border border-zinc-200/60 mb-6">
                 <button
@@ -300,7 +311,7 @@ export default function App() {
                   <span>Continue as Demo User (Instant)</span>
                 </button>
               </div>
-            </div>
+            </motion.div>
 
             {/* Security badge footer */}
             <div className="mt-6 text-center text-xs text-zinc-500 flex items-center justify-center gap-1.5">
@@ -310,9 +321,14 @@ export default function App() {
           </div>
         </main>
 
-        <footer className="relative z-10 max-w-7xl mx-auto w-full px-6 py-6 text-center text-xs text-zinc-500 font-medium">
+        <motion.footer
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="relative z-10 max-w-7xl mx-auto w-full px-6 py-6 text-center text-xs text-zinc-500 font-medium"
+        >
           made by Akshat Mohanty
-        </footer>
+        </motion.footer>
       </div>
     );
   }
@@ -339,7 +355,12 @@ export default function App() {
       {/* ====================================================================
        * FULL-WIDTH TOP BAR
        * ==================================================================== */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-zinc-200/80 shadow-xs">
+      <motion.header
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-zinc-200/80 shadow-xs"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Brand Left */}
           <div className="flex items-center gap-3">
@@ -354,43 +375,69 @@ export default function App() {
             <UserProfileMenu />
           </div>
         </div>
-      </header>
+      </motion.header>
 
       {/* ====================================================================
        * MAIN CONTENT CANVAS
        * ==================================================================== */}
       <main className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1">
         {/* 1. Full-Width AI Morning Briefing (Loads First) */}
-        <Briefing />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Briefing />
+        </motion.div>
 
         {/* 2. Three-Column Desktop Grid (1-Column on Mobile) */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           {/* Left Column: Bills + Spending */}
-          <div className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-6"
+          >
             <Bills />
             <Spending />
-          </div>
+          </motion.div>
 
           {/* Center Column: Tasks + Calendar */}
-          <div className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-6"
+          >
             <Tasks />
             <CalendarView />
-          </div>
+          </motion.div>
 
           {/* Right Column: Health + Documents */}
-          <div className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="space-y-6"
+          >
             <Health />
             <Documents />
-          </div>
+          </motion.div>
         </div>
       </main>
 
       {/* ====================================================================
        * ARCHITECTURAL FOOTER
        * ==================================================================== */}
-      <footer className="relative z-10 py-6 mt-12 text-center text-xs text-zinc-500 font-medium">
+      <motion.footer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.5 }}
+        className="relative z-10 py-6 mt-12 text-center text-xs text-zinc-500 font-medium"
+      >
         made by Akshat Mohanty
-      </footer>
+      </motion.footer>
     </div>
   );
 }

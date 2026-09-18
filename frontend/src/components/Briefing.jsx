@@ -6,6 +6,7 @@
 
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, RefreshCw, AlertCircle, Clock, CheckCircle2, ChevronRight } from 'lucide-react';
 import { briefingApi } from '../api/client';
 
@@ -92,7 +93,7 @@ export default function Briefing() {
   const displayContent = isStreaming ? streamedContent : briefing?.content || '';
 
   return (
-    <div className="w-full bg-white border border-zinc-200 rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md relative overflow-hidden mb-8 transition-all">
+    <div className="w-full bg-white border border-zinc-200 rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 relative overflow-hidden mb-8">
       {/* Header */}
       <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-zinc-100">
         <div className="flex items-center gap-3">
@@ -112,7 +113,7 @@ export default function Briefing() {
             <button
               onClick={handleGenerate}
               disabled={generateMutation.isPending || isStreaming}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-zinc-700 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 shadow-xs transition active:scale-95 disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-zinc-700 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 shadow-xs transition active:scale-95 disabled:opacity-50 cursor-pointer"
               title="Regenerate briefing"
             >
               <RefreshCw className={`w-3.5 h-3.5 text-accent-600 ${generateMutation.isPending || isStreaming ? 'animate-spin' : ''}`} />
@@ -141,7 +142,7 @@ export default function Briefing() {
             </div>
             <button
               onClick={() => refetch()}
-              className="px-3 py-1 bg-white border border-rose-300 rounded-lg text-xs font-semibold hover:bg-rose-100 text-rose-800"
+              className="px-3 py-1 bg-white border border-rose-300 rounded-lg text-xs font-semibold hover:bg-rose-100 text-rose-800 cursor-pointer"
             >
               Retry
             </button>
@@ -159,7 +160,7 @@ export default function Briefing() {
             <button
               onClick={handleGenerate}
               disabled={generateMutation.isPending}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-accent-600 hover:bg-accent-700 shadow-sm hover:shadow transition active:scale-95 disabled:opacity-60"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-accent-600 hover:bg-accent-700 shadow-sm hover:shadow transition active:scale-95 disabled:opacity-60 cursor-pointer"
             >
               {generateMutation.isPending ? (
                 <>
@@ -177,7 +178,11 @@ export default function Briefing() {
           </div>
         ) : (
           // Formatted Briefing Text Display
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
             <div className="bg-zinc-50/70 border border-zinc-200/80 rounded-xl p-5 sm:p-6 leading-relaxed text-zinc-800 text-sm sm:text-base font-normal whitespace-pre-line">
               {displayContent}
               {isStreaming && (
@@ -190,7 +195,7 @@ export default function Briefing() {
                 <span>Generated at {new Date(briefing.generatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
               </div>
             )}
-          </div>
+          </motion.div>
         )}
       </div>
     </div>
