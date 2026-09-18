@@ -144,9 +144,9 @@ export default function Documents() {
         {!isAdding && (
           <button
             onClick={() => setIsAdding(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-accent-600 hover:bg-accent-700 shadow-sm transition-all hover:scale-105 cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-black bg-white hover:bg-zinc-50 border border-zinc-300 hover:border-zinc-400 shadow-xs transition-all hover:scale-105 cursor-pointer"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-3.5 h-3.5 text-zinc-700" />
             <span>Upload</span>
           </button>
         )}
@@ -281,7 +281,7 @@ export default function Documents() {
                   <button
                     type="submit"
                     disabled={uploadMutation.isPending || !selectedFile}
-                    className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-accent-600 hover:bg-accent-700 shadow-sm transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                    className="px-5 py-2 rounded-xl text-xs font-bold text-black bg-white hover:bg-zinc-50 border border-zinc-300 hover:border-zinc-400 shadow-xs transition active:scale-95 disabled:opacity-50 cursor-pointer"
                   >
                     {uploadProgress ? 'Uploading to S3...' : 'Upload File'}
                   </button>

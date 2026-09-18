@@ -160,18 +160,18 @@ export default function Briefing() {
             <button
               onClick={handleGenerate}
               disabled={generateMutation.isPending}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-accent-600 hover:bg-accent-700 shadow-sm hover:shadow transition active:scale-95 disabled:opacity-60 cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-black bg-white hover:bg-zinc-50 border border-zinc-300 hover:border-zinc-400 shadow-xs hover:shadow transition active:scale-95 disabled:opacity-60 cursor-pointer"
             >
               {generateMutation.isPending ? (
                 <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <RefreshCw className="w-4 h-4 animate-spin text-zinc-700" />
                   <span>Synthesizing your life data...</span>
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4" />
+                  <Sparkles className="w-4 h-4 text-zinc-700" />
                   <span>Generate Today's Briefing</span>
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-4 h-4 text-zinc-400" />
                 </>
               )}
             </button>
