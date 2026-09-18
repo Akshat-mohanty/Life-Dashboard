@@ -7,7 +7,6 @@ import {
   Trash2,
   Check,
   X,
-  ShieldCheck,
   Upload,
   Link as LinkIcon,
   Loader2,
@@ -268,10 +267,6 @@ export default function UserProfileMenu() {
                 {user?.name || 'User'}
               </p>
               <p className="text-[10px] text-zinc-500 truncate">{user?.email}</p>
-              <span className="inline-flex items-center gap-1 mt-1 text-[9px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded-full border border-emerald-200">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                Active Session
-              </span>
             </div>
           </div>
 
@@ -286,7 +281,7 @@ export default function UserProfileMenu() {
               {isProcessingFile ? (
                 <Loader2 className="w-4 h-4 text-accent-600 animate-spin" />
               ) : quickUploadSuccess ? (
-                <Check className="w-4 h-4 text-emerald-600" />
+                <Check className="w-4 h-4 text-accent-600" />
               ) : (
                 <Upload className="w-4 h-4 text-zinc-400 group-hover:text-black" />
               )}
@@ -482,12 +477,8 @@ export default function UserProfileMenu() {
                 <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
                   Email Address
                 </label>
-                <div className="flex items-center justify-between px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs font-medium text-zinc-500">
-                  <span className="truncate">{user?.email}</span>
-                  <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 flex-shrink-0">
-                    <ShieldCheck className="w-3 h-3 text-emerald-600" />
-                    Cognito Verified
-                  </span>
+                <div className="px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-xs font-medium text-zinc-500 truncate">
+                  {user?.email}
                 </div>
               </div>
 
