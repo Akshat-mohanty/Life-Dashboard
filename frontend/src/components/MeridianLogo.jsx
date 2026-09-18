@@ -12,57 +12,48 @@ export default function MeridianLogo({ className = "w-9 h-9" }) {
       xmlns="http://www.w3.org/2000/svg"
       className={`${className} flex-shrink-0 transition-transform duration-300 hover:scale-105`}
     >
-      {/* 1. Top Face (Pure White Highlight) */}
+      {/* 1. Top Face (Reference #F5F7F8 with soft clean perimeter) */}
       <polygon
         points="50,15 82,33.5 50,52 18,33.5"
-        fill="#FFFFFF"
-        stroke="#18181B"
-        strokeWidth="1.2"
+        fill="#F5F7F8"
+        stroke="#E2E8F0"
+        strokeWidth="0.8"
         strokeLinejoin="round"
       />
 
-      {/* 2. Left Face (Clean Neutral Gray) */}
+      {/* 2. Left Face (Reference Steel Slate #B1C1CB) */}
       <polygon
         points="18,33.5 50,52 50,87 18,68.5"
-        fill="#D4D4D8"
-        stroke="#18181B"
-        strokeWidth="1.2"
+        fill="#B1C1CB"
+        stroke="#B1C1CB"
+        strokeWidth="0.8"
         strokeLinejoin="round"
       />
 
-      {/* 3. Upper Right Facet (Mid-tone Shadow Gray) */}
+      {/* 3. Upper Right Facet (Reference Mid Slate #879EAF) */}
       <polygon
-        points="50,52 82,33.5 82,49 64,59.4"
-        fill="#71717A"
-        stroke="#18181B"
-        strokeWidth="1.2"
+        points="50,52 82,33.5 82,51 66,60"
+        fill="#879EAF"
+        stroke="#879EAF"
+        strokeWidth="0.8"
         strokeLinejoin="round"
       />
 
-      {/* 4. Inner Notch Recessed Wall (Deep Shadow Charcoal) */}
+      {/* 4. Inner Notch Recessed Wall (Reference Shadow Slate #66859A) */}
       <polygon
-        points="50,52 64,59.4 64,71 50,63.6"
-        fill="#18181B"
-        stroke="#18181B"
-        strokeWidth="1.2"
+        points="50,52 66,60 66,63 50,71"
+        fill="#66859A"
+        stroke="#66859A"
+        strokeWidth="0.8"
         strokeLinejoin="round"
       />
 
-      {/* 5. Inner Horizontal Shelf (Reflective Shelf Step) */}
+      {/* 5. Lower Right Block (Reference Light Slate Block #DCE2E8) */}
       <polygon
-        points="50,63.6 64,71 72,66.4 58,59"
-        fill="#D4D4D8"
-        stroke="#18181B"
-        strokeWidth="1.2"
-        strokeLinejoin="round"
-      />
-
-      {/* 6. Lower Right Block Front & Side (Light Gray Facet) */}
-      <polygon
-        points="64,59.4 82,49 82,66.5 50,87 50,63.6 64,71"
-        fill="#E4E4E7"
-        stroke="#18181B"
-        strokeWidth="1.2"
+        points="66,60 82,51 82,68.5 50,87 50,71"
+        fill="#DCE2E8"
+        stroke="#DCE2E8"
+        strokeWidth="0.8"
         strokeLinejoin="round"
       />
     </svg>
