@@ -292,83 +292,112 @@ export default function Spending() {
         </div>
       )}
 
-      {/* Inline Add Expense Form */}
+      {/* Log Expense Modal Popup */}
       {isAdding && (
-        <form onSubmit={handleCreateSubmit} className="mt-4 p-4 bg-zinc-50 rounded-xl border border-zinc-200 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-black">Log New Expense</span>
-            <button type="button" onClick={resetForm} className="text-zinc-400 hover:text-black transition">
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <input
-                type="number"
-                placeholder="Amount (₹)"
-                value={formData.amount}
-                onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                required
-                min="1"
-                step="any"
-                className="w-full text-xs px-3 py-2 bg-white border border-zinc-300 text-black placeholder-zinc-400 rounded-lg focus:outline-none focus:border-accent-600 focus:ring-1 focus:ring-accent-600 transition"
-              />
-            </div>
-            <div>
-              <select
-                value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                className="w-full text-xs px-3 py-2 bg-white border border-zinc-300 text-black rounded-lg focus:outline-none focus:border-accent-600 focus:ring-1 focus:ring-accent-600"
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-in fade-in duration-150"
+          onClick={resetForm}
+        >
+          <div
+            className="bg-white rounded-3xl border border-zinc-200 shadow-2xl p-6 max-w-md w-full relative animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-4 border-b border-zinc-100 mb-4">
+              <div>
+                <h3 className="text-base font-bold text-black tracking-tight">Log Expense</h3>
+                <p className="text-xs text-zinc-500">Track your daily purchases and financial outlays</p>
+              </div>
+              <button
+                type="button"
+                onClick={resetForm}
+                className="p-1.5 text-zinc-400 hover:text-black hover:bg-zinc-100 rounded-xl transition cursor-pointer"
               >
-                <option value="food">Food & Dining</option>
-                <option value="transport">Transport / Cab</option>
-                <option value="bills">Bills & Utilities</option>
-                <option value="health">Health & Medical</option>
-                <option value="entertainment">Entertainment</option>
-                <option value="other">Other</option>
-              </select>
+                <X className="w-4 h-4" />
+              </button>
             </div>
-          </div>
 
-          <div>
-            <input
-              type="text"
-              placeholder="Description (e.g. Weekly Organic Produce)"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              required
-              className="w-full text-xs px-3 py-2 bg-white border border-zinc-300 text-black placeholder-zinc-400 rounded-lg focus:outline-none focus:border-accent-600 focus:ring-1 focus:ring-accent-600 transition"
-            />
-          </div>
+            <form onSubmit={handleCreateSubmit} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                    Amount (₹)
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="450"
+                    value={formData.amount}
+                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                    required
+                    min="1"
+                    step="any"
+                    className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                    Category
+                  </label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition cursor-pointer"
+                  >
+                    <option value="food">Food & Dining</option>
+                    <option value="transport">Transport / Cab</option>
+                    <option value="bills">Bills & Utilities</option>
+                    <option value="health">Health & Medical</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
 
-          <div>
-            <input
-              type="date"
-              value={formData.date}
-              onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-              required
-              className="w-full text-xs px-3 py-2 bg-white border border-zinc-300 text-black rounded-lg focus:outline-none focus:border-accent-600 focus:ring-1 focus:ring-accent-600"
-            />
-          </div>
+              <div>
+                <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                  Description
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Weekly Groceries, Uber to Office, Movie Tickets"
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  required
+                  className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition"
+                />
+              </div>
 
-          <div className="flex justify-end gap-2 pt-1">
-            <button
-              type="button"
-              onClick={resetForm}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 hover:text-black hover:bg-zinc-200 transition"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={createMutation.isPending}
-              className="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-accent-600 hover:bg-accent-700 shadow-sm transition"
-            >
-              {createMutation.isPending ? 'Logging...' : 'Log Expense'}
-            </button>
+              <div>
+                <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                  Date
+                </label>
+                <input
+                  type="date"
+                  value={formData.date}
+                  onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                  required
+                  className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition cursor-pointer"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-zinc-100">
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-600 hover:text-black hover:bg-zinc-100 transition cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={createMutation.isPending}
+                  className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-accent-600 hover:bg-accent-700 shadow-sm transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                >
+                  {createMutation.isPending ? 'Logging...' : 'Log Expense'}
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
+        </div>
       )}
 
       {/* Expense Item List */}

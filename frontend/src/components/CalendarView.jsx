@@ -138,79 +138,116 @@ export default function CalendarView() {
         </div>
       </div>
 
-      {/* Inline Add Form */}
+      {/* Add Calendar Event Modal Popup */}
       {isAdding && (
-        <form onSubmit={handleCreateSubmit} className="mt-4 p-4 bg-zinc-50 rounded-xl border border-zinc-200 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-black">Add Calendar Event</span>
-            <button type="button" onClick={resetForm} className="text-zinc-400 hover:text-black transition">
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Event Title (e.g. Team Standup)"
-              value={formData.title}
-              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              required
-              className="w-full text-xs px-3 py-2 bg-white border border-zinc-300 text-black placeholder-zinc-400 rounded-lg focus:outline-none focus:border-accent-600 focus:ring-1 focus:ring-accent-600 transition"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <input
-                type="date"
-                value={formData.date}
-                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                required
-                className="w-full text-xs px-3 py-2 bg-white border border-zinc-300 text-black rounded-lg focus:outline-none focus:border-accent-600 focus:ring-1 focus:ring-accent-600"
-              />
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-in fade-in duration-150"
+          onClick={resetForm}
+        >
+          <div
+            className="bg-white rounded-3xl border border-zinc-200 shadow-2xl p-6 max-w-md w-full relative animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-4 border-b border-zinc-100 mb-4">
+              <div>
+                <h3 className="text-base font-bold text-black tracking-tight">Add Calendar Event</h3>
+                <p className="text-xs text-zinc-500">Schedule meetings, deadlines, or appointments</p>
+              </div>
+              <button
+                type="button"
+                onClick={resetForm}
+                className="p-1.5 text-zinc-400 hover:text-black hover:bg-zinc-100 rounded-xl transition cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
-            <div>
-              <input
-                type="time"
-                value={formData.time}
-                onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                className="w-full text-xs px-3 py-2 bg-white border border-zinc-300 text-black rounded-lg focus:outline-none focus:border-accent-600 focus:ring-1 focus:ring-accent-600"
-              />
-            </div>
+
+            <form onSubmit={handleCreateSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                  Event Title
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Team Standup, Doctor Appointment, Project Review"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  required
+                  className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    required
+                    className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition cursor-pointer"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                    Time (Optional)
+                  </label>
+                  <input
+                    type="time"
+                    value={formData.time}
+                    onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                    className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition cursor-pointer"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                  Location / Link
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Zoom, Google Meet, City Clinic"
+                  value={formData.location}
+                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                  className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                  Notes or Agenda (Optional)
+                </label>
+                <textarea
+                  placeholder="Additional event details..."
+                  rows={2}
+                  value={formData.notes}
+                  onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                  className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition resize-none"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-zinc-100">
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-600 hover:text-black hover:bg-zinc-100 transition cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={createMutation.isPending}
+                  className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-accent-600 hover:bg-accent-700 shadow-sm transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                >
+                  {createMutation.isPending ? 'Saving...' : 'Save Event'}
+                </button>
+              </div>
+            </form>
           </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Location or link (e.g. Zoom / Clinic)"
-              value={formData.location}
-              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-              className="w-full text-xs px-3 py-2 bg-white border border-zinc-300 text-black placeholder-zinc-400 rounded-lg focus:outline-none focus:border-accent-600 focus:ring-1 focus:ring-accent-600 transition"
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Notes or agenda (optional)"
-              value={formData.notes}
-              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              className="w-full text-xs px-3 py-2 bg-white border border-zinc-300 text-black placeholder-zinc-400 rounded-lg focus:outline-none focus:border-accent-600 focus:ring-1 focus:ring-accent-600 transition"
-            />
-          </div>
-          <div className="flex justify-end gap-2 pt-1">
-            <button
-              type="button"
-              onClick={resetForm}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 hover:text-black hover:bg-zinc-200 transition"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={createMutation.isPending}
-              className="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-accent-600 hover:bg-accent-700 shadow-sm transition"
-            >
-              {createMutation.isPending ? 'Saving...' : 'Save Event'}
-            </button>
-          </div>
-        </form>
+        </div>
       )}
 
       {/* Event List */}

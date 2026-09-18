@@ -216,87 +216,117 @@ export default function Bills() {
         )}
       </div>
 
-      {/* Inline Add Form */}
+      {/* Add Bill Modal Popup */}
       {isAdding && (
-        <form onSubmit={handleCreateSubmit} className="mt-4 p-4 bg-zinc-50 rounded-xl border border-zinc-200 space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-black">Add New Bill</span>
-            <button type="button" onClick={resetForm} className="text-zinc-400 hover:text-black">
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Bill Name (e.g. WiFi Broadband)"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              required
-              className="w-full text-xs px-3 py-2 bg-white border border-zinc-300 rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:border-accent-600 focus:ring-1 focus:ring-accent-600"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <input
-                type="number"
-                placeholder="Amount (₹)"
-                value={formData.amount}
-                onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                required
-                min="1"
-                step="any"
-                className="w-full text-xs px-3 py-2 bg-white border border-zinc-300 rounded-lg text-black placeholder-zinc-400 focus:outline-none focus:border-accent-600 focus:ring-1 focus:ring-accent-600"
-              />
-            </div>
-            <div>
-              <input
-                type="date"
-                value={formData.dueDate}
-                onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                required
-                className="w-full text-xs px-3 py-2 bg-white border border-zinc-300 rounded-lg text-black focus:outline-none focus:border-accent-600 focus:ring-1 focus:ring-accent-600"
-              />
-            </div>
-          </div>
-          <div className="flex items-center justify-between pt-1">
-            <label className="flex items-center gap-1.5 text-xs text-zinc-700 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={formData.isRecurring}
-                onChange={(e) => setFormData({ ...formData, isRecurring: e.target.checked })}
-                className="rounded border-zinc-300 text-accent-600 focus:ring-accent-500"
-              />
-              <span>Recurring</span>
-            </label>
-            {formData.isRecurring && (
-              <select
-                value={formData.frequency}
-                onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
-                className="text-xs px-2.5 py-1 bg-white border border-zinc-300 text-black rounded-lg focus:outline-none focus:border-accent-600"
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-in fade-in duration-150"
+          onClick={resetForm}
+        >
+          <div
+            className="bg-white rounded-3xl border border-zinc-200 shadow-2xl p-6 max-w-md w-full relative animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-4 border-b border-zinc-100 mb-4">
+              <div>
+                <h3 className="text-base font-bold text-black tracking-tight">Add New Bill</h3>
+                <p className="text-xs text-zinc-500">Record a recurring or one-time payment</p>
+              </div>
+              <button
+                type="button"
+                onClick={resetForm}
+                className="p-1.5 text-zinc-400 hover:text-black hover:bg-zinc-100 rounded-xl transition cursor-pointer"
               >
-                <option value="monthly">Monthly</option>
-                <option value="weekly">Weekly</option>
-                <option value="yearly">Yearly</option>
-              </select>
-            )}
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                  Bill Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. WiFi Broadband, Electric Bill, Rent"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                  className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                    Amount (₹)
+                  </label>
+                  <input
+                    type="number"
+                    placeholder="1500"
+                    value={formData.amount}
+                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                    required
+                    min="1"
+                    step="any"
+                    className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
+                    Due Date
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.dueDate}
+                    onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
+                    required
+                    className="w-full text-xs px-3.5 py-2.5 bg-zinc-50 border border-zinc-200 rounded-xl text-black focus:outline-none focus:bg-white focus:border-accent-400 focus:ring-2 focus:ring-accent-100 transition"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between p-3 bg-zinc-50 border border-zinc-200 rounded-xl">
+                <label className="flex items-center gap-2 text-xs font-medium text-zinc-700 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.isRecurring}
+                    onChange={(e) => setFormData({ ...formData, isRecurring: e.target.checked })}
+                    className="rounded border-zinc-300 text-accent-600 focus:ring-accent-500 w-4 h-4"
+                  />
+                  <span>Recurring Obligation</span>
+                </label>
+                {formData.isRecurring && (
+                  <select
+                    value={formData.frequency}
+                    onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
+                    className="text-xs px-3 py-1.5 bg-white border border-zinc-200 text-black font-semibold rounded-lg focus:outline-none focus:border-accent-400"
+                  >
+                    <option value="monthly">Monthly</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="yearly">Yearly</option>
+                  </select>
+                )}
+              </div>
+
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-zinc-100">
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-zinc-600 hover:text-black hover:bg-zinc-100 transition cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={createMutation.isPending}
+                  className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-accent-600 hover:bg-accent-700 shadow-sm transition active:scale-95 disabled:opacity-50 cursor-pointer"
+                >
+                  {createMutation.isPending ? 'Saving...' : 'Save Bill'}
+                </button>
+              </div>
+            </form>
           </div>
-          <div className="flex justify-end gap-2 pt-2">
-            <button
-              type="button"
-              onClick={resetForm}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 hover:text-black"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={createMutation.isPending}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-accent-600 hover:bg-accent-700 transition active:scale-95 shadow-sm"
-            >
-              {createMutation.isPending ? 'Saving...' : 'Save Bill'}
-            </button>
-          </div>
-        </form>
+        </div>
       )}
 
       {/* Bill List */}
