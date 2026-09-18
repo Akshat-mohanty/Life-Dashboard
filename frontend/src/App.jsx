@@ -9,14 +9,10 @@ import {
   LogOut,
   User,
   ShieldCheck,
-  Sparkles,
   Lock,
   Mail,
   ArrowRight,
   Zap,
-  CheckCircle2,
-  Clock,
-  Layers,
 } from 'lucide-react';
 import { useAuth } from './hooks/useAuth';
 import Briefing from './components/Briefing';
@@ -109,49 +105,9 @@ export default function App() {
         </header>
 
         {/* Center Canvas */}
-        <main className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 py-8 lg:py-12 flex-1 flex items-center justify-center">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center w-full max-w-5xl">
-            {/* Left Hero Section (Desktop) */}
-            <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-500/10 border border-accent-500/20 text-accent-300 text-xs font-semibold shadow-glow-sm">
-                <Sparkles className="w-3.5 h-3.5 text-accent-400" />
-                <span>Replaces 10 fragmented apps with 1 page</span>
-              </div>
-
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-[1.15]">
-                Start every morning with{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-400 via-indigo-300 to-white">
-                  total clarity.
-                </span>
-              </h2>
-
-              <p className="text-slate-400 text-sm sm:text-base leading-relaxed max-w-lg mx-auto lg:mx-0">
-                Every morning at 7:00 AM, Claude 3.5 Sonnet analyzes your bills, urgency-ranked tasks, 7-day calendar, health reminders, documents, and monthly spending to deliver a plain-English briefing.
-              </p>
-
-              {/* Feature Highlights Grid */}
-              <div className="pt-2 grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-lg mx-auto lg:mx-0">
-                <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06] backdrop-blur-md text-left">
-                  <Clock className="w-4 h-4 text-accent-400 mb-2" />
-                  <div className="text-xs font-bold text-white">7 AM Daily AI</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">Automated EventBridge trigger</div>
-                </div>
-                <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06] backdrop-blur-md text-left">
-                  <Layers className="w-4 h-4 text-accent-400 mb-2" />
-                  <div className="text-xs font-bold text-white">Single-Table</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">DynamoDB high efficiency</div>
-                </div>
-                <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.06] backdrop-blur-md text-left">
-                  <CheckCircle2 className="w-4 h-4 text-accent-400 mb-2" />
-                  <div className="text-xs font-bold text-white">Cedar Secured</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">Strict per-user data isolation</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Form Card */}
-            <div className="lg:col-span-6 w-full max-w-md mx-auto">
-              <div className="bg-[#11131a]/85 backdrop-blur-2xl rounded-3xl border border-white/10 p-7 sm:p-9 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_1px_1px_rgba(255,255,255,0.08)]">
+        <main className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 py-8 lg:py-12 flex-1 flex flex-col items-center justify-center">
+          <div className="w-full max-w-md mx-auto">
+            <div className="bg-[#11131a]/85 backdrop-blur-2xl rounded-3xl border border-white/10 p-7 sm:p-9 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_1px_1px_rgba(255,255,255,0.08)]">
                 {/* Modern Pill Switcher */}
                 <div className="flex bg-white/[0.04] p-1 rounded-xl border border-white/5 mb-6">
                   <button
@@ -304,7 +260,6 @@ export default function App() {
                 <span>Secure login</span>
               </div>
             </div>
-          </div>
         </main>
 
         <footer className="relative z-10 max-w-7xl mx-auto w-full px-6 py-6 text-center text-xs text-slate-500 border-t border-white/[0.04]">
