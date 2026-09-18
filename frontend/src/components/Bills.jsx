@@ -1,6 +1,6 @@
 /**
  * Bills & Payments Component
- * Displays unpaid total, color-coded due dates, inline add/edit, and one-click mark-as-paid.
+ * Redesigned in Obsidian Black, Pure White & Electric Indigo
  */
 
 import React, { useState } from 'react';
@@ -138,33 +138,33 @@ export default function Bills() {
     });
   };
 
-  // Color-coded badge helper
+  // Color-coded badge helper for dark mode
   const getStatusBadge = (status) => {
     switch (status) {
       case 'overdue':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-rose-100 text-rose-700 border border-rose-200">
-            <AlertTriangle className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-300 border border-rose-500/30">
+            <AlertTriangle className="w-3 h-3 text-rose-400" />
             Overdue
           </span>
         );
       case 'due_soon':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-200">
-            <Clock className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">
+            <Clock className="w-3 h-3 text-amber-400" />
             Due Soon
           </span>
         );
       case 'paid':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
-            <CheckCircle className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+            <CheckCircle className="w-3 h-3 text-emerald-400" />
             Paid
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/[0.05] text-slate-400 border border-white/10">
             Upcoming
           </span>
         );
@@ -172,23 +172,23 @@ export default function Bills() {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col h-full">
+    <div className="bg-[#0E1017]/90 backdrop-blur-xl rounded-2xl border border-white/10 p-6 shadow-xl flex flex-col h-full transition-all">
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center">
             <CreditCard className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="font-bold text-slate-900 text-base">Bills & Payments</h3>
-            <p className="text-xs text-slate-500">Track due dates & expenses</p>
+            <h3 className="font-bold text-white text-base">Bills & Payments</h3>
+            <p className="text-xs text-slate-400">Track due dates & expenses</p>
           </div>
         </div>
 
         {!isAdding && !editingId && (
           <button
             onClick={() => setIsAdding(true)}
-            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition"
+            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-accent-300 bg-accent-500/10 hover:bg-accent-500/20 border border-accent-500/20 transition active:scale-95"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add</span>
@@ -197,19 +197,19 @@ export default function Bills() {
       </div>
 
       {/* Unpaid Tally Metric Bar */}
-      <div className="mt-4 p-3 bg-slate-50 rounded-xl flex items-center justify-between">
+      <div className="mt-4 p-3.5 bg-white/[0.03] border border-white/[0.06] rounded-xl flex items-center justify-between">
         <div>
-          <span className="text-xs font-medium text-slate-500 uppercase tracking-wider block">Total Unpaid</span>
-          <span className="text-xl font-extrabold text-slate-900">
+          <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider block">Total Unpaid</span>
+          <span className="text-xl font-extrabold text-white tracking-tight">
             ₹{summary.totalUnpaidAmount.toLocaleString('en-IN')}
           </span>
         </div>
         {summary.overdueCount > 0 && (
           <div className="text-right">
-            <span className="text-xs font-medium text-rose-600 block flex items-center gap-1 justify-end">
-              <AlertTriangle className="w-3 h-3" /> {summary.overdueCount} Overdue
+            <span className="text-xs font-medium text-rose-400 block flex items-center gap-1 justify-end">
+              <AlertTriangle className="w-3 h-3 text-rose-400" /> {summary.overdueCount} Overdue
             </span>
-            <span className="text-xs text-rose-700 font-semibold">
+            <span className="text-xs text-rose-300 font-bold">
               ₹{summary.totalOverdueAmount.toLocaleString('en-IN')}
             </span>
           </div>
@@ -218,10 +218,10 @@ export default function Bills() {
 
       {/* Inline Add Form */}
       {isAdding && (
-        <form onSubmit={handleCreateSubmit} className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+        <form onSubmit={handleCreateSubmit} className="mt-4 p-4 bg-white/[0.03] rounded-xl border border-white/10 space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-700">Add New Bill</span>
-            <button type="button" onClick={resetForm} className="text-slate-400 hover:text-slate-600">
+            <span className="text-xs font-bold text-white">Add New Bill</span>
+            <button type="button" onClick={resetForm} className="text-slate-400 hover:text-white">
               <X className="w-4 h-4" />
             </button>
           </div>
@@ -232,7 +232,7 @@ export default function Bills() {
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               required
-              className="w-full text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-full text-xs px-3 py-2 bg-white/[0.04] border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-accent-400 focus:ring-1 focus:ring-accent-400"
             />
           </div>
           <div className="grid grid-cols-2 gap-2">
@@ -245,7 +245,7 @@ export default function Bills() {
                 required
                 min="1"
                 step="any"
-                className="w-full text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full text-xs px-3 py-2 bg-white/[0.04] border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-accent-400 focus:ring-1 focus:ring-accent-400"
               />
             </div>
             <div>
@@ -254,17 +254,17 @@ export default function Bills() {
                 value={formData.dueDate}
                 onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
                 required
-                className="w-full text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="w-full text-xs px-3 py-2 bg-white/[0.04] border border-white/10 rounded-lg text-white focus:outline-none focus:border-accent-400 focus:ring-1 focus:ring-accent-400"
               />
             </div>
           </div>
           <div className="flex items-center justify-between pt-1">
-            <label className="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
+            <label className="flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.isRecurring}
                 onChange={(e) => setFormData({ ...formData, isRecurring: e.target.checked })}
-                className="rounded text-emerald-600 focus:ring-emerald-500"
+                className="rounded bg-white/10 border-white/20 text-accent-500 focus:ring-accent-500"
               />
               <span>Recurring</span>
             </label>
@@ -272,11 +272,11 @@ export default function Bills() {
               <select
                 value={formData.frequency}
                 onChange={(e) => setFormData({ ...formData, frequency: e.target.value })}
-                className="text-xs px-2 py-1 bg-white border border-slate-300 rounded-lg"
+                className="text-xs px-2.5 py-1 bg-white/[0.06] border border-white/10 text-white rounded-lg focus:outline-none"
               >
-                <option value="monthly">Monthly</option>
-                <option value="weekly">Weekly</option>
-                <option value="yearly">Yearly</option>
+                <option value="monthly" className="bg-[#0e1017]">Monthly</option>
+                <option value="weekly" className="bg-[#0e1017]">Weekly</option>
+                <option value="yearly" className="bg-[#0e1017]">Yearly</option>
               </select>
             )}
           </div>
@@ -284,14 +284,14 @@ export default function Bills() {
             <button
               type="button"
               onClick={resetForm}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-200"
+              className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={createMutation.isPending}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition"
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-accent-600 hover:bg-accent-500 transition active:scale-95"
             >
               {createMutation.isPending ? 'Saving...' : 'Save Bill'}
             </button>
@@ -304,16 +304,16 @@ export default function Bills() {
         {isLoading ? (
           <div className="space-y-2.5 animate-pulse">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-16 bg-slate-100 rounded-xl" />
+              <div key={i} className="h-16 bg-white/[0.04] rounded-xl" />
             ))}
           </div>
         ) : isError ? (
-          <p className="text-xs text-rose-600 p-2">Error loading bills: {error.message}</p>
+          <p className="text-xs text-rose-400 p-2">Error loading bills: {error.message}</p>
         ) : bills.length === 0 ? (
-          <div className="text-center py-8 text-slate-400">
-            <CreditCard className="w-8 h-8 mx-auto mb-2 opacity-40" />
-            <p className="text-xs font-medium">No bills added yet.</p>
-            <p className="text-[11px] text-slate-400 mt-0.5">Add subscriptions, utilities, and rent.</p>
+          <div className="text-center py-8 text-slate-500">
+            <CreditCard className="w-8 h-8 mx-auto mb-2 opacity-30" />
+            <p className="text-xs font-medium text-slate-400">No bills added yet.</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">Add subscriptions, utilities, and rent.</p>
           </div>
         ) : (
           bills.map((bill) => (
@@ -321,12 +321,12 @@ export default function Bills() {
               key={bill.id}
               className={`p-3.5 rounded-xl border transition-all ${
                 bill.status === 'overdue'
-                  ? 'bg-rose-50/40 border-rose-200'
+                  ? 'bg-rose-500/[0.06] border-rose-500/30'
                   : bill.status === 'due_soon'
-                  ? 'bg-amber-50/40 border-amber-200'
+                  ? 'bg-amber-500/[0.06] border-amber-500/30'
                   : bill.isPaid
-                  ? 'bg-slate-50/60 border-slate-200/80 opacity-75'
-                  : 'bg-white border-slate-200 hover:border-slate-300'
+                  ? 'bg-white/[0.01] border-white/[0.04] opacity-55'
+                  : 'bg-white/[0.03] border-white/[0.07] hover:border-white/15'
               }`}
             >
               {editingId === bill.id ? (
@@ -336,7 +336,7 @@ export default function Bills() {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
-                    className="w-full text-xs px-2 py-1 bg-white border border-slate-300 rounded"
+                    className="w-full text-xs px-2 py-1 bg-white/[0.06] border border-white/10 rounded text-white"
                   />
                   <div className="grid grid-cols-2 gap-2">
                     <input
@@ -344,28 +344,28 @@ export default function Bills() {
                       value={formData.amount}
                       onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                       required
-                      className="w-full text-xs px-2 py-1 bg-white border border-slate-300 rounded"
+                      className="w-full text-xs px-2 py-1 bg-white/[0.06] border border-white/10 rounded text-white"
                     />
                     <input
                       type="date"
                       value={formData.dueDate}
                       onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
                       required
-                      className="w-full text-xs px-2 py-1 bg-white border border-slate-300 rounded"
+                      className="w-full text-xs px-2 py-1 bg-white/[0.06] border border-white/10 rounded text-white"
                     />
                   </div>
                   <div className="flex justify-end gap-1 pt-1">
                     <button
                       type="button"
                       onClick={() => setEditingId(null)}
-                      className="px-2 py-1 text-xs text-slate-500"
+                      className="px-2 py-1 text-xs text-slate-400"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={updateMutation.isPending}
-                      className="px-2.5 py-1 text-xs font-semibold bg-emerald-600 text-white rounded"
+                      className="px-2.5 py-1 text-xs font-semibold bg-accent-600 text-white rounded"
                     >
                       Save
                     </button>
@@ -375,7 +375,7 @@ export default function Bills() {
                 <div className="flex items-center justify-between gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className={`text-sm font-bold truncate ${bill.isPaid ? 'line-through text-slate-500' : 'text-slate-900'}`}>
+                      <h4 className={`text-sm font-bold truncate ${bill.isPaid ? 'line-through text-slate-500' : 'text-white'}`}>
                         {bill.name}
                       </h4>
                       {bill.isRecurring && (
@@ -385,11 +385,11 @@ export default function Bills() {
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 mt-1 text-xs text-slate-500">
-                      <span className="font-extrabold text-slate-800">₹{bill.amount?.toLocaleString('en-IN')}</span>
+                    <div className="flex items-center gap-2 mt-1 text-xs text-slate-400">
+                      <span className="font-extrabold text-white">₹{bill.amount?.toLocaleString('en-IN')}</span>
                       <span>•</span>
                       <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
+                        <Calendar className="w-3 h-3 text-slate-500" />
                         {bill.dueDate}
                       </span>
                       <span>•</span>
@@ -397,27 +397,27 @@ export default function Bills() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1 flex-shrink-0">
+                  <div className="flex items-center gap-1.5 flex-shrink-0">
                     <button
                       onClick={() => togglePaid(bill)}
                       className={`px-2.5 py-1 rounded-lg text-xs font-semibold transition ${
                         bill.isPaid
-                          ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                          : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'
+                          ? 'bg-white/[0.04] text-slate-400 hover:text-white'
+                          : 'bg-accent-500/15 text-accent-300 hover:bg-accent-500/25 border border-accent-500/30 shadow-glow-sm'
                       }`}
                     >
                       {bill.isPaid ? 'Unmark' : 'Mark Paid'}
                     </button>
                     <button
                       onClick={() => startEdit(bill)}
-                      className="p-1 text-slate-400 hover:text-slate-600 rounded transition"
+                      className="p-1 text-slate-400 hover:text-white rounded transition"
                       title="Edit"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => deleteMutation.mutate(bill.id)}
-                      className="p-1 text-slate-400 hover:text-rose-600 rounded transition"
+                      className="p-1 text-slate-400 hover:text-rose-400 rounded transition"
                       title="Delete"
                     >
                       <Trash2 className="w-3.5 h-3.5" />

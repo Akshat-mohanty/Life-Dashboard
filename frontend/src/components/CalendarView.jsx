@@ -102,23 +102,26 @@ export default function CalendarView() {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col h-full">
+    <div className="bg-[#0E1017]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl flex flex-col h-full relative overflow-hidden group/card hover:border-white/15 transition-all">
+      {/* Subtle top glow */}
+      <div className="absolute top-0 right-1/4 w-40 h-20 bg-accent-500/10 blur-3xl pointer-events-none" />
+
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+      <div className="flex items-center justify-between pb-4 border-b border-white/[0.08] relative z-10">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-accent-500/10 border border-accent-500/20 text-accent-400 flex items-center justify-center shadow-glow-sm">
             <CalendarIcon className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="font-bold text-slate-900 text-base">Calendar</h3>
-            <p className="text-xs text-slate-500">Today & next 7 days</p>
+            <h3 className="font-bold text-white text-base tracking-tight">Calendar</h3>
+            <p className="text-xs text-slate-400">Today & next 7 days</p>
           </div>
         </div>
 
         {!isAdding && (
           <button
             onClick={() => setIsAdding(true)}
-            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 transition"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-accent-600 hover:bg-accent-500 shadow-glow-sm border border-accent-400/30 transition-all hover:scale-105"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Add</span>
@@ -127,23 +130,23 @@ export default function CalendarView() {
       </div>
 
       {/* Summary Chips */}
-      <div className="mt-4 p-3 bg-slate-50 rounded-xl flex items-center justify-between">
+      <div className="mt-4 p-3.5 bg-white/[0.03] border border-white/[0.06] rounded-xl flex items-center justify-between relative z-10">
         <div>
-          <span className="text-xs font-medium text-slate-500 uppercase tracking-wider block">Today's Schedule</span>
-          <span className="text-xl font-extrabold text-slate-900">{summary.todayCount} Events</span>
+          <span className="text-xs font-medium text-slate-400 uppercase tracking-wider block">Today's Schedule</span>
+          <span className="text-2xl font-extrabold text-white tracking-tight">{summary.todayCount} Events</span>
         </div>
         <div className="text-right">
-          <span className="text-xs font-medium text-indigo-600 block">Next 7 Days</span>
-          <span className="text-xs font-bold text-slate-700">{summary.next7DaysCount} Total</span>
+          <span className="text-xs font-medium text-accent-400 block">Next 7 Days</span>
+          <span className="text-xs font-bold text-slate-300">{summary.next7DaysCount} Total</span>
         </div>
       </div>
 
       {/* Inline Add Form */}
       {isAdding && (
-        <form onSubmit={handleCreateSubmit} className="mt-4 p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+        <form onSubmit={handleCreateSubmit} className="mt-4 p-4 bg-white/[0.03] rounded-xl border border-white/10 space-y-3 relative z-10">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-700">Add Calendar Event</span>
-            <button type="button" onClick={resetForm} className="text-slate-400 hover:text-slate-600">
+            <span className="text-xs font-bold text-white">Add Calendar Event</span>
+            <button type="button" onClick={resetForm} className="text-slate-400 hover:text-white transition">
               <X className="w-4 h-4" />
             </button>
           </div>
@@ -154,7 +157,7 @@ export default function CalendarView() {
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               required
-              className="w-full text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full text-xs px-3 py-2 bg-white/[0.04] border border-white/10 text-white placeholder-slate-500 rounded-lg focus:outline-none focus:border-accent-400 focus:ring-1 focus:ring-accent-400 transition"
             />
           </div>
           <div className="grid grid-cols-2 gap-2">
@@ -164,7 +167,7 @@ export default function CalendarView() {
                 value={formData.date}
                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                 required
-                className="w-full text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full text-xs px-3 py-2 bg-white/[0.04] border border-white/10 text-white rounded-lg focus:outline-none focus:border-accent-400 focus:ring-1 focus:ring-accent-400"
               />
             </div>
             <div>
@@ -172,7 +175,7 @@ export default function CalendarView() {
                 type="time"
                 value={formData.time}
                 onChange={(e) => setFormData({ ...formData, time: e.target.value })}
-                className="w-full text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full text-xs px-3 py-2 bg-white/[0.04] border border-white/10 text-white rounded-lg focus:outline-none focus:border-accent-400 focus:ring-1 focus:ring-accent-400"
               />
             </div>
           </div>
@@ -182,7 +185,7 @@ export default function CalendarView() {
               placeholder="Location or link (e.g. Zoom / Clinic)"
               value={formData.location}
               onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-              className="w-full text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full text-xs px-3 py-2 bg-white/[0.04] border border-white/10 text-white placeholder-slate-500 rounded-lg focus:outline-none focus:border-accent-400 focus:ring-1 focus:ring-accent-400 transition"
             />
           </div>
           <div>
@@ -191,21 +194,21 @@ export default function CalendarView() {
               placeholder="Notes or agenda (optional)"
               value={formData.notes}
               onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-              className="w-full text-xs px-3 py-2 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full text-xs px-3 py-2 bg-white/[0.04] border border-white/10 text-white placeholder-slate-500 rounded-lg focus:outline-none focus:border-accent-400 focus:ring-1 focus:ring-accent-400 transition"
             />
           </div>
           <div className="flex justify-end gap-2 pt-1">
             <button
               type="button"
               onClick={resetForm}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-200"
+              className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-white/[0.06] transition"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={createMutation.isPending}
-              className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition"
+              className="px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-accent-600 hover:bg-accent-500 shadow-glow-sm transition"
             >
               {createMutation.isPending ? 'Saving...' : 'Save Event'}
             </button>
@@ -214,20 +217,20 @@ export default function CalendarView() {
       )}
 
       {/* Event List */}
-      <div className="mt-4 flex-1 overflow-y-auto space-y-2.5 max-h-[420px] pr-0.5">
+      <div className="mt-4 flex-1 overflow-y-auto space-y-2.5 max-h-[420px] pr-0.5 relative z-10">
         {isLoading ? (
           <div className="space-y-2.5 animate-pulse">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-16 bg-slate-100 rounded-xl" />
+              <div key={i} className="h-16 bg-white/[0.03] border border-white/[0.06] rounded-xl" />
             ))}
           </div>
         ) : isError ? (
-          <p className="text-xs text-rose-600 p-2">Error loading calendar: {error.message}</p>
+          <p className="text-xs text-rose-400 p-2">Error loading calendar: {error.message}</p>
         ) : events.length === 0 ? (
-          <div className="text-center py-8 text-slate-400">
-            <CalendarCheck className="w-8 h-8 mx-auto mb-2 opacity-40" />
-            <p className="text-xs font-medium">No events for the next 7 days.</p>
-            <p className="text-[11px] text-slate-400 mt-0.5">Add meetings, doctors, or reminders.</p>
+          <div className="text-center py-8 text-slate-500">
+            <CalendarCheck className="w-8 h-8 mx-auto mb-2 opacity-30 text-slate-400" />
+            <p className="text-xs font-medium text-slate-300">No events for the next 7 days.</p>
+            <p className="text-[11px] text-slate-500 mt-0.5">Add meetings, doctors, or reminders.</p>
           </div>
         ) : (
           events.map((event) => {
@@ -237,8 +240,8 @@ export default function CalendarView() {
                 key={event.id}
                 className={`p-3.5 rounded-xl border transition-all ${
                   isToday
-                    ? 'bg-indigo-50/40 border-indigo-200 shadow-xs'
-                    : 'bg-white border-slate-200 hover:border-slate-300'
+                    ? 'bg-accent-500/[0.08] border-accent-500/30 shadow-glow-sm'
+                    : 'bg-white/[0.03] border-white/[0.08] hover:border-white/15 hover:bg-white/[0.05]'
                 }`}
               >
                 <div className="flex items-start justify-between gap-3">
@@ -247,29 +250,29 @@ export default function CalendarView() {
                       <span
                         className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                           isToday
-                            ? 'bg-indigo-600 text-white'
-                            : 'bg-slate-100 text-slate-600'
+                            ? 'bg-accent-600 text-white shadow-glow-sm'
+                            : 'bg-white/[0.06] text-slate-300 border border-white/10'
                         }`}
                       >
                         {getDayLabel(event.date)}
                       </span>
                       {event.time && (
-                        <span className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                          <Clock className="w-3 h-3 text-slate-400" />
+                        <span className="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                          <Clock className="w-3 h-3 text-slate-500" />
                           {event.time}
                         </span>
                       )}
                     </div>
-                    <h4 className="text-xs font-bold text-slate-900 mt-1 truncate">{event.title}</h4>
+                    <h4 className="text-xs font-bold text-white mt-1.5 truncate">{event.title}</h4>
                     {event.location && (
-                      <p className="text-[11px] text-slate-500 mt-0.5 flex items-center gap-1 truncate">
-                        <MapPin className="w-3 h-3 text-slate-400 flex-shrink-0" />
+                      <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1.5 truncate">
+                        <MapPin className="w-3 h-3 text-slate-500 flex-shrink-0" />
                         {event.location}
                       </p>
                     )}
                     {event.notes && (
-                      <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 line-clamp-1">
-                        <FileText className="w-3 h-3 flex-shrink-0" />
+                      <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1.5 line-clamp-1">
+                        <FileText className="w-3 h-3 text-slate-500 flex-shrink-0" />
                         {event.notes}
                       </p>
                     )}
@@ -277,7 +280,7 @@ export default function CalendarView() {
 
                   <button
                     onClick={() => deleteMutation.mutate(event.id)}
-                    className="p-1 text-slate-300 hover:text-rose-600 rounded transition flex-shrink-0"
+                    className="p-1 text-slate-500 hover:text-rose-400 rounded transition flex-shrink-0"
                     title="Delete Event"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
