@@ -1,0 +1,11 @@
+{
+  "name": "life-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "backend": "node backend/scripts/local-dev-server.js",
+    "backend:local": "npm --prefix backend run local-server",
+    "frontend": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build"
+  }
+}
