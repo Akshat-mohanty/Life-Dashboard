@@ -114,7 +114,7 @@ export default function Documents() {
   const getCategoryBadge = (category) => {
     const styleMap = {
       ID: 'bg-accent-50 text-accent-800 border-accent-200',
-      insurance: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+      insurance: 'bg-accent-50 text-accent-800 border-accent-200',
       certificate: 'bg-amber-50 text-amber-800 border-amber-200',
       medical: 'bg-rose-50 text-rose-800 border-rose-200',
       other: 'bg-zinc-100 text-zinc-700 border-zinc-200',

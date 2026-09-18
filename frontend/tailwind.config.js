@@ -8,21 +8,21 @@ export default {
     extend: {
       colors: {
         accent: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          200: '#a7f3d0',
-          300: '#6ee7b7',
-          400: '#34d399',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
+          50: '#f0fbfd',
+          100: '#dcf4f8',
+          200: '#bcecf4',
+          300: '#9bdee8', // Exact base user color
+          400: '#68c5d4',
+          500: '#3faab9',
+          600: '#237d8d',
+          700: '#1b6370',
+          800: '#154f59',
+          900: '#0f3840',
         },
       },
       boxShadow: {
-        'glow-sm': '0 2px 10px -2px rgba(5, 150, 105, 0.25)',
-        'glow-md': '0 4px 20px -2px rgba(5, 150, 105, 0.3)',
+        'glow-sm': '0 2px 10px -2px rgba(35, 125, 141, 0.25)',
+        'glow-md': '0 4px 20px -2px rgba(35, 125, 141, 0.3)',
         'card-clean': '0 2px 12px -2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.06)',
       },
     },

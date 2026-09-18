@@ -25,9 +25,9 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { spendingApi } from '../api/client';
 
 const CATEGORY_COLORS = {
-  food: '#059669', // emerald-600
-  transport: '#0d9488', // teal-600
-  bills: '#10b981', // emerald-500
+  food: '#237d8d', // accent-600
+  transport: '#3faab9', // accent-500
+  bills: '#9bdee8', // base accent-300
   health: '#e11d48', // rose-600
   entertainment: '#7c3aed', // purple-600
   other: '#d97706', // amber-600

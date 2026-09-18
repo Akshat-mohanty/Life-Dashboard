@@ -94,9 +94,9 @@ export default function Health() {
       return <Droplets className="w-4 h-4 text-sky-500" />;
     }
     if (lower.includes('vitamin') || lower.includes('pill') || lower.includes('med') || lower.includes('tablet')) {
-      return <Pill className="w-4 h-4 text-emerald-500" />;
+      return <Pill className="w-4 h-4 text-accent-600" />;
     }
-    return <Activity className="w-4 h-4 text-teal-500" />;
+    return <Activity className="w-4 h-4 text-accent-700" />;
   };
 
   return (

@@ -78,7 +78,7 @@ export default function App() {
   // =========================================================================
   // UNAUTHENTICATED: CINEMATIC AESTHETIC SPLIT AUTH SCREEN
   // =========================================================================
-  // UNAUTHENTICATED: CLEAN MINIMALIST WHITE & EMERALD AUTH SCREEN
+  // UNAUTHENTICATED: CLEAN MINIMALIST WHITE & #9BDEE8 ACCENT AUTH SCREEN
   // =========================================================================
   if (!isAuthenticated && !authLoading) {
     return (
