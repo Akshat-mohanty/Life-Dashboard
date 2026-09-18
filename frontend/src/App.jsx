@@ -123,8 +123,8 @@ export default function App() {
                   }}
                   className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
                     authMode === 'login'
-                      ? 'bg-accent-600 text-white shadow-sm'
-                      : 'text-zinc-600 hover:text-black font-semibold'
+                      ? 'bg-white text-black shadow-xs'
+                      : 'text-zinc-500 hover:text-black font-semibold'
                   }`}
                 >
                   Sign In
@@ -137,8 +137,8 @@ export default function App() {
                   }}
                   className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
                     authMode === 'signup' || authMode === 'confirm'
-                      ? 'bg-accent-600 text-white shadow-sm'
-                      : 'text-zinc-600 hover:text-black font-semibold'
+                      ? 'bg-white text-black shadow-xs'
+                      : 'text-zinc-500 hover:text-black font-semibold'
                   }`}
                 >
                   Create Account
@@ -153,7 +153,7 @@ export default function App() {
                     setLocalError('');
                     loginWithGoogle();
                   }}
-                  className="w-full py-2.5 px-4 bg-white hover:bg-zinc-50 text-zinc-800 text-xs font-bold rounded-xl border border-zinc-200 shadow-xs hover:border-zinc-300 transition-all flex items-center justify-center gap-2.5 active:scale-[0.99] cursor-pointer"
+                  className="w-full py-2.5 px-4 bg-white hover:bg-zinc-50 text-zinc-800 text-xs font-bold rounded-xl border border-zinc-300 shadow-xs hover:border-zinc-400 transition-all flex items-center justify-center gap-2.5 active:scale-[0.99] cursor-pointer"
                 >
                   <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24">
                     <path
@@ -196,7 +196,7 @@ export default function App() {
               )}
 
               {infoMessage && (
-                <div className="p-3.5 mb-5 rounded-xl bg-accent-50 border border-accent-200 text-accent-800 text-xs font-medium">
+                <div className="p-3.5 mb-5 rounded-xl bg-zinc-100 border border-zinc-200 text-zinc-800 text-xs font-medium">
                   {infoMessage}
                 </div>
               )}
@@ -213,7 +213,7 @@ export default function App() {
                         placeholder="Akshat Mohanty"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full text-xs px-3 py-2.5 pl-9 bg-white border border-zinc-300 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:border-accent-600 focus:ring-2 focus:ring-accent-600/15 transition"
+                        className="w-full text-xs px-3 py-2.5 pl-9 bg-white border border-zinc-300 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/5 transition"
                       />
                       <User className="w-4 h-4 text-zinc-400 absolute left-3 top-2.5" />
                     </div>
@@ -231,7 +231,7 @@ export default function App() {
                           placeholder="akshat@example.com"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          className="w-full text-xs px-3 py-2.5 pl-9 bg-white border border-zinc-300 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:border-accent-600 focus:ring-2 focus:ring-accent-600/15 transition"
+                          className="w-full text-xs px-3 py-2.5 pl-9 bg-white border border-zinc-300 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/5 transition"
                         />
                         <Mail className="w-4 h-4 text-zinc-400 absolute left-3 top-2.5" />
                       </div>
@@ -246,7 +246,7 @@ export default function App() {
                           placeholder="••••••••"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="w-full text-xs px-3 py-2.5 pl-9 bg-white border border-zinc-300 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:border-accent-600 focus:ring-2 focus:ring-accent-600/15 transition"
+                          className="w-full text-xs px-3 py-2.5 pl-9 bg-white border border-zinc-300 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/5 transition"
                         />
                         <Lock className="w-4 h-4 text-zinc-400 absolute left-3 top-2.5" />
                       </div>
@@ -261,7 +261,7 @@ export default function App() {
                       placeholder="6-digit code"
                       value={confirmCode}
                       onChange={(e) => setConfirmCode(e.target.value)}
-                      className="w-full text-xs px-3 py-3 bg-white border border-zinc-300 rounded-xl text-black focus:outline-none focus:border-accent-600 focus:ring-2 focus:ring-accent-600/15 text-center tracking-widest text-lg font-mono font-bold"
+                      className="w-full text-xs px-3 py-3 bg-white border border-zinc-300 rounded-xl text-black focus:outline-none focus:border-black focus:ring-2 focus:ring-black/5 text-center tracking-widest text-lg font-mono font-bold"
                     />
                     <span className="text-[11px] text-zinc-500 mt-1.5 block">Enter the 6-digit code sent to your email.</span>
                   </div>
@@ -270,7 +270,7 @@ export default function App() {
                 <button
                   type="submit"
                   disabled={actionLoading}
-                  className="w-full py-3 px-4 bg-accent-600 hover:bg-accent-700 text-white text-xs font-bold rounded-xl shadow-sm hover:shadow transition-all active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+                  className="w-full py-3 px-4 bg-white hover:bg-zinc-50 text-black border border-zinc-300 hover:border-zinc-400 text-xs font-bold rounded-xl shadow-xs hover:shadow-sm transition-all active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 mt-2 cursor-pointer"
                 >
                   {actionLoading ? (
                     'Processing...'
@@ -294,9 +294,9 @@ export default function App() {
                 <button
                   type="button"
                   onClick={loginAsDemo}
-                  className="w-full py-2.5 px-4 bg-zinc-50 hover:bg-zinc-100 text-zinc-800 text-xs font-bold rounded-xl border border-zinc-200 transition flex items-center justify-center gap-2"
+                  className="w-full py-2.5 px-4 bg-zinc-50 hover:bg-zinc-100 text-zinc-800 text-xs font-bold rounded-xl border border-zinc-200 transition flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <Zap className="w-4 h-4 text-accent-600" />
+                  <Zap className="w-4 h-4 text-zinc-700" />
                   <span>Continue as Demo User (Instant)</span>
                 </button>
               </div>
