@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LogOut,
   User,
-  ShieldCheck,
   Lock,
   Mail,
   ArrowRight,
@@ -298,12 +297,6 @@ export default function App() {
                 </button>
               </div>
             </motion.div>
-
-            {/* Security badge footer */}
-            <div className="mt-6 text-center text-xs text-zinc-500 flex items-center justify-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-zinc-400" />
-              <span>Secure login</span>
-            </div>
           </div>
         </main>
 
