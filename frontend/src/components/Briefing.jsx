@@ -102,9 +102,6 @@ export default function Briefing() {
           <div>
             <div className="flex items-center gap-2.5">
               <h2 className="text-lg font-bold text-black tracking-tight">AI Morning Briefing</h2>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-accent-50 text-accent-800 border border-accent-200">
-                Claude 3.5 Sonnet
-              </span>
             </div>
             <p className="text-xs sm:text-sm text-zinc-500 font-medium mt-0.5">{todayFormatted}</p>
           </div>
