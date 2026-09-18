@@ -274,14 +274,28 @@ export default function App() {
   }
 
   // =========================================================================
-  // AUTHENTICATED: HOME DASHBOARD (CLEAN MINIMALIST WHITE)
+  // AUTHENTICATED: HOME DASHBOARD (WITH CLOUD ANIMATED 2 BACKGROUND)
   // =========================================================================
   return (
-    <div className="min-h-screen bg-white text-black flex flex-col relative overflow-x-hidden selection:bg-accent-100 selection:text-accent-900">
+    <div className="min-h-screen text-black flex flex-col relative overflow-x-hidden selection:bg-accent-100 selection:text-accent-900">
+      {/* Background Animated Video for Home Page */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="fixed inset-0 w-full h-full object-cover pointer-events-none z-0"
+      >
+        <source src="/cloud-animated2.mp4" type="video/mp4" />
+      </video>
+
+      {/* Atmospheric overlay to ensure crisp contrast and readability */}
+      <div className="fixed inset-0 bg-white/40 pointer-events-none z-0" />
+
       {/* ====================================================================
        * FULL-WIDTH TOP BAR
        * ==================================================================== */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-zinc-200 shadow-xs">
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-zinc-200/80 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Brand Left */}
           <div className="flex items-center gap-3">
