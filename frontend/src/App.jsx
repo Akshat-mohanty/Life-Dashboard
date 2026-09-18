@@ -258,7 +258,7 @@ export default function App() {
         </main>
 
         <footer className="relative z-10 max-w-7xl mx-auto w-full px-6 py-6 text-center text-xs text-slate-500 border-t border-white/[0.04]">
-          Built with AWS Serverless • Amazon Bedrock Claude 3.5 Sonnet • AWS Cedar Authorization
+          made by Akshat Mohanty
         </footer>
       </div>
     );
