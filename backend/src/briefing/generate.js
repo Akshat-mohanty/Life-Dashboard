@@ -382,7 +382,7 @@ async function generateAndSaveBriefingForUser(userId, userEmail = null, userName
             ToAddresses: [userEmail],
           },
           Message: {
-            Subject: { Data: `Your Life Dashboard Daily Briefing — ${todayStr}` },
+            Subject: { Data: `Your Meridian Daily Briefing — ${todayStr}` },
             Body: {
               Text: { Data: briefingContent },
             },

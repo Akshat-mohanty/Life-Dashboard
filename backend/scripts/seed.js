@@ -1,5 +1,5 @@
 /**
- * Life Dashboard - DynamoDB Seed Script
+ * Meridian - DynamoDB Seed Script
  * Seeds comprehensive mock data for local testing and initial environment setup.
  */
 

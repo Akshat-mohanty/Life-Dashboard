@@ -2,7 +2,7 @@
 set -e
 
 echo "========================================================"
-echo " Life Dashboard — AWS Amplify Hosting Deployment"
+echo " Meridian — AWS Amplify Hosting Deployment"
 echo "========================================================"
 
 APP_NAME="life-dashboard"

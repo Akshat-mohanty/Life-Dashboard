@@ -1,7 +1,7 @@
 {
   "name": "life-dashboard-backend",
   "version": "1.0.0",
-  "description": "Life Dashboard Serverless Backend Functions and Seed Scripts",
+  "description": "Meridian Serverless Backend Functions and Seed Scripts",
   "type": "module",
   "scripts": {
     "seed": "node scripts/seed.js",

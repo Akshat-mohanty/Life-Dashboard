@@ -1,5 +1,5 @@
 // =============================================================================
-// AWS Cedar Authorization Policies — Life Dashboard
+// AWS Cedar Authorization Policies — Meridian
 // Enforces tenant isolation, S3 object boundaries, and service role permissions
 // =============================================================================
 

@@ -1,4 +1,4 @@
-# Life Dashboard
+# Meridian
 
 > **A personal life management dashboard that replaces 10 different apps with one intelligent page.**  
 > Every morning, an AI reads all the user's data and delivers a prioritized, plain-English briefing: what needs attention today, what can wait, and what they might be forgetting.

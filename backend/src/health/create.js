@@ -91,7 +91,7 @@ export const handler = async (event) => {
     // Optional SNS confirmation alert if phone number is configured
     if (newReminder.phoneNumber) {
       try {
-        const smsMessage = `[Life Dashboard] Health reminder created: "${newReminder.name}" at ${newReminder.time} (${newReminder.frequency}).`;
+        const smsMessage = `[Meridian] Health reminder created: "${newReminder.name}" at ${newReminder.time} (${newReminder.frequency}).`;
         await snsClient.send(
           new PublishCommand({
             PhoneNumber: newReminder.phoneNumber,
@@ -109,7 +109,7 @@ export const handler = async (event) => {
         await snsClient.send(
           new PublishCommand({
             TopicArn: SNS_TOPIC_ARN,
-            Subject: 'Life Dashboard Health Reminder Registered',
+            Subject: 'Meridian Health Reminder Registered',
             Message: JSON.stringify({
               userId,
               reminderId: id,

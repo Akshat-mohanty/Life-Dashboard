@@ -1,5 +1,5 @@
 /**
- * Life Dashboard — Local Lambda Simulation Server
+ * Meridian — Local Lambda Simulation Server
  * Runs a standalone HTTP API Gateway simulator on port 3001
  * Dispatches to Lambda handlers, with graceful in-memory fallback when offline.
  */
@@ -396,5 +396,5 @@ Stay focused and take things one step at a time!`;
 });
 
 server.listen(PORT, () => {
-  console.log(`🚀 Life Dashboard Local API Gateway running on port ${PORT}`);
+  console.log(`🚀 Meridian Local API Gateway running on port ${PORT}`);
 });

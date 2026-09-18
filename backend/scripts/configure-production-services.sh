@@ -2,7 +2,7 @@
 set -e
 
 echo "========================================================"
-echo " Life Dashboard — Production Services Configuration"
+echo " Meridian — Production Services Configuration"
 echo " (EventBridge 7 AM IST Cron, Amazon SNS, Amazon SES)"
 echo "========================================================"
 

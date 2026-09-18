@@ -1,4 +1,4 @@
-# DynamoDB Single-Table Design — Life Dashboard
+# DynamoDB Single-Table Design — Meridian
 
 **Table Name**: `LifeDashboard`  
 **Billing Mode**: `PAY_PER_REQUEST` (On-Demand)  
@@ -9,7 +9,7 @@
 
 ## 1. Design Overview
 
-Life Dashboard follows an optimized **Single-Table Design** pattern. All user domains (Bills, Tasks, Calendar Events, Health Reminders, Documents, Spending Records, and Morning AI Briefings) are co-located in the `LifeDashboard` table.
+Meridian follows an optimized **Single-Table Design** pattern. All user domains (Bills, Tasks, Calendar Events, Health Reminders, Documents, Spending Records, and Morning AI Briefings) are co-located in the `LifeDashboard` table.
 
 ### Core Principles
 1. **Strict Multi-Tenant Isolation**: The Partition Key (`PK`) is always prefixed with `USER#{userId}`, ensuring users can never query or mutate another user's records.

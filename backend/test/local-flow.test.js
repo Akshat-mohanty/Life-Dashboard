@@ -1,5 +1,5 @@
 /**
- * Life Dashboard — Comprehensive Integration & Lambda Flow Test Suite
+ * Meridian — Comprehensive Integration & Lambda Flow Test Suite
  * Tests all 18 Lambda functions against simulated API Gateway events.
  */
 

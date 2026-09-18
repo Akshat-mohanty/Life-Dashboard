@@ -7,7 +7,7 @@ TABLE_NAME ?= LifeDashboard
 BUCKET_NAME ?= life-dashboard-storage-local
 
 help:
-	@echo "Life Dashboard Developer Commands:"
+	@echo "Meridian Developer Commands:"
 	@echo "  make setup         - Install backend and frontend dependencies"
 	@echo "  make local-up      - Start LocalStack container (DynamoDB, S3, SNS, SES, etc.)"
 	@echo "  make local-down    - Stop LocalStack container"

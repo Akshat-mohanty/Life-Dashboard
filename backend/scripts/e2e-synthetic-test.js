@@ -1,5 +1,5 @@
 /**
- * Life Dashboard — End-to-End Synthetic User Lifecycle Test
+ * Meridian — End-to-End Synthetic User Lifecycle Test
  * Validates the entire user flow across all 7 modules against live API Gateway or local test server.
  */
 
@@ -12,7 +12,7 @@ const TEST_USER_ID = process.env.TEST_USER_ID || `e2e-user-${Date.now()}`;
 const TEST_TOKEN = process.env.AUTH_TOKEN || `mock-token-${TEST_USER_ID}`;
 
 console.log('========================================================');
-console.log(' Life Dashboard — End-to-End Synthetic Test Runner');
+console.log(' Meridian — End-to-End Synthetic Test Runner');
 console.log(` Target Endpoint: ${BASE_URL}`);
 console.log(` Test User ID:    ${TEST_USER_ID}`);
 console.log('========================================================\n');

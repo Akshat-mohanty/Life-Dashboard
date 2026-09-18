@@ -2,7 +2,7 @@
 set -e
 
 echo "========================================================"
-echo " Life Dashboard — AWS SAM Production Deployment"
+echo " Meridian — AWS SAM Production Deployment"
 echo "========================================================"
 
 # 1. Check for SAM CLI
