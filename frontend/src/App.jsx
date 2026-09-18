@@ -273,14 +273,28 @@ export default function App() {
   }
 
   // =========================================================================
-  // AUTHENTICATED: CLEAN MINIMALIST WHITE & BLACK WITH EMERALD ACCENT
+  // AUTHENTICATED: HOME DASHBOARD WITH ANIMATED CLOUD BACKGROUND
   // =========================================================================
   return (
-    <div className="min-h-screen bg-white text-black flex flex-col relative selection:bg-accent-100 selection:text-accent-900">
+    <div className="min-h-screen text-black flex flex-col relative overflow-x-hidden selection:bg-accent-100 selection:text-accent-900">
+      {/* Background Animated Video */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="fixed inset-0 w-full h-full object-cover pointer-events-none z-0"
+      >
+        <source src="/cloud-animated2.mp4" type="video/mp4" />
+      </video>
+
+      {/* Soft atmospheric overlay for readability & contrast */}
+      <div className="fixed inset-0 bg-white/45 backdrop-blur-[1px] pointer-events-none z-0" />
+
       {/* ====================================================================
        * FULL-WIDTH TOP BAR
        * ==================================================================== */}
-      <header className="sticky top-0 z-40 bg-white border-b border-zinc-200 shadow-xs">
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-zinc-200/80 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Brand Left */}
           <div className="flex items-center gap-3">
@@ -316,7 +330,7 @@ export default function App() {
       {/* ====================================================================
        * MAIN CONTENT CANVAS
        * ==================================================================== */}
-      <main className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1">
+      <main className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1">
         {/* 1. Full-Width AI Morning Briefing (Loads First) */}
         <Briefing />
 
@@ -345,7 +359,7 @@ export default function App() {
       {/* ====================================================================
        * ARCHITECTURAL FOOTER
        * ==================================================================== */}
-      <footer className="border-t border-zinc-200 bg-white py-6 mt-12 text-center text-xs text-zinc-400">
+      <footer className="relative z-10 border-t border-zinc-200/80 bg-white/90 backdrop-blur-md py-6 mt-12 text-center text-xs text-zinc-500 font-medium">
         made by Akshat Mohanty
       </footer>
     </div>
