@@ -78,23 +78,20 @@ export default function App() {
   // =========================================================================
   // UNAUTHENTICATED: CINEMATIC AESTHETIC SPLIT AUTH SCREEN
   // =========================================================================
+  // UNAUTHENTICATED: CLEAN MINIMALIST WHITE & EMERALD AUTH SCREEN
+  // =========================================================================
   if (!isAuthenticated && !authLoading) {
     return (
-      <div className="min-h-screen bg-[#090A0F] text-white flex flex-col justify-between relative overflow-hidden selection:bg-accent-500/30 selection:text-white">
-        {/* Ambient background mesh glows */}
-        <div className="absolute -top-40 left-1/4 w-96 h-96 bg-accent-600/15 rounded-full blur-[128px] pointer-events-none" />
-        <div className="absolute -bottom-40 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-[128px] pointer-events-none" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-7xl h-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.06),transparent_70%)] pointer-events-none" />
-
+      <div className="min-h-screen bg-white text-black flex flex-col justify-between relative selection:bg-accent-100 selection:text-accent-900">
         {/* Minimal top branding */}
         <header className="relative z-10 max-w-7xl mx-auto w-full px-6 py-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-accent-600 to-indigo-500 flex items-center justify-center text-white shadow-glow-sm">
+            <div className="w-10 h-10 rounded-2xl bg-accent-600 flex items-center justify-center text-white shadow-sm">
               <Compass className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-lg font-extrabold tracking-tight text-white block">Meridian</span>
-              <span className="text-[11px] text-slate-400 font-medium -mt-1 block">Intelligent Daily OS</span>
+              <span className="text-lg font-extrabold tracking-tight text-black block">Meridian</span>
+              <span className="text-[11px] text-zinc-500 font-medium -mt-1 block">Intelligent Daily OS</span>
             </div>
           </div>
         </header>
@@ -102,162 +99,162 @@ export default function App() {
         {/* Center Canvas */}
         <main className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 py-8 lg:py-12 flex-1 flex flex-col items-center justify-center">
           <div className="w-full max-w-md mx-auto">
-            <div className="bg-[#11131a]/85 backdrop-blur-2xl rounded-3xl border border-white/10 p-7 sm:p-9 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9),0_0_1px_1px_rgba(255,255,255,0.08)]">
-                {/* Modern Pill Switcher */}
-                <div className="flex bg-white/[0.04] p-1 rounded-xl border border-white/5 mb-6">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAuthMode('login');
-                      setLocalError('');
-                    }}
-                    className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
-                      authMode === 'login'
-                        ? 'bg-accent-600 text-white shadow-glow-sm'
-                        : 'text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    Sign In
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setAuthMode('signup');
-                      setLocalError('');
-                    }}
-                    className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
-                      authMode === 'signup' || authMode === 'confirm'
-                        ? 'bg-accent-600 text-white shadow-glow-sm'
-                        : 'text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    Create Account
-                  </button>
+            <div className="bg-white rounded-3xl border border-zinc-200 p-7 sm:p-9 shadow-sm">
+              {/* Modern Pill Switcher */}
+              <div className="flex bg-zinc-100 p-1 rounded-xl border border-zinc-200/60 mb-6">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthMode('login');
+                    setLocalError('');
+                  }}
+                  className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                    authMode === 'login'
+                      ? 'bg-accent-600 text-white shadow-sm'
+                      : 'text-zinc-600 hover:text-black font-semibold'
+                  }`}
+                >
+                  Sign In
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthMode('signup');
+                    setLocalError('');
+                  }}
+                  className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${
+                    authMode === 'signup' || authMode === 'confirm'
+                      ? 'bg-accent-600 text-white shadow-sm'
+                      : 'text-zinc-600 hover:text-black font-semibold'
+                  }`}
+                >
+                  Create Account
+                </button>
+              </div>
+
+              {/* Alerts */}
+              {(localError || authError) && (
+                <div className="p-3.5 mb-5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
+                  {localError || authError}
                 </div>
+              )}
 
-                {/* Alerts */}
-                {(localError || authError) && (
-                  <div className="p-3.5 mb-5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs font-medium">
-                    {localError || authError}
-                  </div>
-                )}
+              {infoMessage && (
+                <div className="p-3.5 mb-5 rounded-xl bg-accent-50 border border-accent-200 text-accent-800 text-xs font-medium">
+                  {infoMessage}
+                </div>
+              )}
 
-                {infoMessage && (
-                  <div className="p-3.5 mb-5 rounded-xl bg-accent-500/10 border border-accent-500/20 text-accent-300 text-xs font-medium">
-                    {infoMessage}
-                  </div>
-                )}
-
-                {/* Auth Form */}
-                <form onSubmit={handleAuthSubmit} className="space-y-4">
-                  {authMode === 'signup' && (
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">Your Full Name</label>
-                      <div className="relative">
-                        <input
-                          type="text"
-                          required
-                          placeholder="Akshat Mohanty"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          className="w-full text-xs px-3 py-2.5 pl-9 bg-white/[0.04] border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-accent-400 focus:ring-2 focus:ring-accent-500/20 transition"
-                        />
-                        <User className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                      </div>
-                    </div>
-                  )}
-
-                  {authMode !== 'confirm' ? (
-                    <>
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-300 mb-1.5">Email Address</label>
-                        <div className="relative">
-                          <input
-                            type="email"
-                            required
-                            placeholder="akshat@example.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full text-xs px-3 py-2.5 pl-9 bg-white/[0.04] border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-accent-400 focus:ring-2 focus:ring-accent-500/20 transition"
-                          />
-                          <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-300 mb-1.5">Password</label>
-                        <div className="relative">
-                          <input
-                            type="password"
-                            required
-                            placeholder="••••••••"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full text-xs px-3 py-2.5 pl-9 bg-white/[0.04] border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-accent-400 focus:ring-2 focus:ring-accent-500/20 transition"
-                          />
-                          <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1.5">Confirmation Code</label>
+              {/* Auth Form */}
+              <form onSubmit={handleAuthSubmit} className="space-y-4">
+                {authMode === 'signup' && (
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-700 mb-1.5">Your Full Name</label>
+                    <div className="relative">
                       <input
                         type="text"
                         required
-                        placeholder="6-digit code"
-                        value={confirmCode}
-                        onChange={(e) => setConfirmCode(e.target.value)}
-                        className="w-full text-xs px-3 py-3 bg-white/[0.04] border border-white/10 rounded-xl text-white focus:outline-none focus:border-accent-400 focus:ring-2 focus:ring-accent-500/20 text-center tracking-widest text-lg font-mono font-bold"
+                        placeholder="Akshat Mohanty"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full text-xs px-3 py-2.5 pl-9 bg-white border border-zinc-300 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:border-accent-600 focus:ring-2 focus:ring-accent-600/15 transition"
                       />
-                      <span className="text-[11px] text-slate-400 mt-1.5 block">Enter the 6-digit code sent to your email.</span>
+                      <User className="w-4 h-4 text-zinc-400 absolute left-3 top-2.5" />
                     </div>
+                  </div>
+                )}
+
+                {authMode !== 'confirm' ? (
+                  <>
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1.5">Email Address</label>
+                      <div className="relative">
+                        <input
+                          type="email"
+                          required
+                          placeholder="akshat@example.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="w-full text-xs px-3 py-2.5 pl-9 bg-white border border-zinc-300 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:border-accent-600 focus:ring-2 focus:ring-accent-600/15 transition"
+                        />
+                        <Mail className="w-4 h-4 text-zinc-400 absolute left-3 top-2.5" />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-700 mb-1.5">Password</label>
+                      <div className="relative">
+                        <input
+                          type="password"
+                          required
+                          placeholder="••••••••"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="w-full text-xs px-3 py-2.5 pl-9 bg-white border border-zinc-300 rounded-xl text-black placeholder-zinc-400 focus:outline-none focus:border-accent-600 focus:ring-2 focus:ring-accent-600/15 transition"
+                        />
+                        <Lock className="w-4 h-4 text-zinc-400 absolute left-3 top-2.5" />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div>
+                    <label className="block text-xs font-semibold text-zinc-700 mb-1.5">Confirmation Code</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="6-digit code"
+                      value={confirmCode}
+                      onChange={(e) => setConfirmCode(e.target.value)}
+                      className="w-full text-xs px-3 py-3 bg-white border border-zinc-300 rounded-xl text-black focus:outline-none focus:border-accent-600 focus:ring-2 focus:ring-accent-600/15 text-center tracking-widest text-lg font-mono font-bold"
+                    />
+                    <span className="text-[11px] text-zinc-500 mt-1.5 block">Enter the 6-digit code sent to your email.</span>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={actionLoading}
+                  className="w-full py-3 px-4 bg-accent-600 hover:bg-accent-700 text-white text-xs font-bold rounded-xl shadow-sm hover:shadow transition-all active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+                >
+                  {actionLoading ? (
+                    'Processing...'
+                  ) : (
+                    <>
+                      <span>
+                        {authMode === 'login'
+                          ? 'Sign In to Dashboard'
+                          : authMode === 'signup'
+                          ? 'Create Free Account'
+                          : 'Verify & Continue'}
+                      </span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
                   )}
+                </button>
+              </form>
 
-                  <button
-                    type="submit"
-                    disabled={actionLoading}
-                    className="w-full py-3 px-4 bg-gradient-to-r from-accent-600 to-indigo-600 hover:from-accent-500 hover:to-indigo-500 text-white text-xs font-bold rounded-xl shadow-glow-sm hover:shadow-glow-md transition-all active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
-                  >
-                    {actionLoading ? (
-                      'Processing...'
-                    ) : (
-                      <>
-                        <span>
-                          {authMode === 'login'
-                            ? 'Sign In to Dashboard'
-                            : authMode === 'signup'
-                            ? 'Create Free Account'
-                            : 'Verify & Continue'}
-                        </span>
-                        <ArrowRight className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
-                </form>
-
-                {/* Instant Demo Access Button */}
-                <div className="mt-6 pt-5 border-t border-white/[0.08] text-center">
-                  <button
-                    type="button"
-                    onClick={loginAsDemo}
-                    className="w-full py-2.5 px-4 bg-white/[0.04] hover:bg-white/[0.08] text-white text-xs font-bold rounded-xl border border-white/10 hover:border-white/20 transition flex items-center justify-center gap-2"
-                  >
-                    <Zap className="w-4 h-4 text-amber-400" />
-                    <span>Continue as Demo User (Instant)</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Security badge footer */}
-              <div className="mt-6 text-center text-xs text-slate-500 flex items-center justify-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
-                <span>Secure login</span>
+              {/* Instant Demo Access Button */}
+              <div className="mt-6 pt-5 border-t border-zinc-100 text-center">
+                <button
+                  type="button"
+                  onClick={loginAsDemo}
+                  className="w-full py-2.5 px-4 bg-zinc-50 hover:bg-zinc-100 text-zinc-800 text-xs font-bold rounded-xl border border-zinc-200 transition flex items-center justify-center gap-2"
+                >
+                  <Zap className="w-4 h-4 text-accent-600" />
+                  <span>Continue as Demo User (Instant)</span>
+                </button>
               </div>
             </div>
+
+            {/* Security badge footer */}
+            <div className="mt-6 text-center text-xs text-zinc-500 flex items-center justify-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-zinc-400" />
+              <span>Secure login</span>
+            </div>
+          </div>
         </main>
 
-        <footer className="relative z-10 max-w-7xl mx-auto w-full px-6 py-6 text-center text-xs text-slate-500 border-t border-white/[0.04]">
+        <footer className="relative z-10 max-w-7xl mx-auto w-full px-6 py-6 text-center text-xs text-zinc-400 border-t border-zinc-100">
           made by Akshat Mohanty
         </footer>
       </div>
@@ -265,51 +262,47 @@ export default function App() {
   }
 
   // =========================================================================
-  // AUTHENTICATED: AESTHETIC OBSIDIAN + ELECTRIC INDIGO DASHBOARD SHELL
+  // AUTHENTICATED: CLEAN MINIMALIST WHITE & BLACK WITH EMERALD ACCENT
   // =========================================================================
   return (
-    <div className="min-h-screen bg-[#090A0F] text-slate-100 flex flex-col relative selection:bg-accent-500/30 selection:text-white">
-      {/* Subtle ambient lighting backdrop */}
-      <div className="fixed top-0 left-1/3 w-[600px] h-[350px] bg-accent-600/10 rounded-full blur-[140px] pointer-events-none -z-10" />
-      <div className="fixed bottom-0 right-1/4 w-[500px] h-[300px] bg-indigo-500/08 rounded-full blur-[140px] pointer-events-none -z-10" />
-
+    <div className="min-h-screen bg-white text-black flex flex-col relative selection:bg-accent-100 selection:text-accent-900">
       {/* ====================================================================
        * FULL-WIDTH TOP BAR
        * ==================================================================== */}
-      <header className="sticky top-0 z-40 bg-[#090A0F]/80 backdrop-blur-xl border-b border-white/[0.08] shadow-sm">
+      <header className="sticky top-0 z-40 bg-white border-b border-zinc-200 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Brand Left */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-accent-600 to-indigo-500 flex items-center justify-center text-white shadow-glow-sm">
+            <div className="w-10 h-10 rounded-xl bg-accent-600 flex items-center justify-center text-white shadow-sm">
               <Compass className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-extrabold text-white tracking-tight">Meridian</h1>
-                <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-accent-500/10 text-accent-300 border border-accent-500/20">
-                  <ShieldCheck className="w-3 h-3 text-accent-400" />
+                <h1 className="text-lg font-extrabold text-black tracking-tight">Meridian</h1>
+                <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-accent-50 text-accent-800 border border-accent-200">
+                  <ShieldCheck className="w-3 h-3 text-accent-600" />
                   Cedar Secured
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 hidden sm:block">Unified Daily Management System</p>
+              <p className="text-[11px] text-zinc-500 hidden sm:block">Unified Daily Management System</p>
             </div>
           </div>
 
           {/* User Profile + Logout Right */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2.5 pl-2">
-              <div className="w-9 h-9 rounded-full bg-accent-500/15 border border-accent-400/30 text-accent-300 flex items-center justify-center font-bold text-xs shadow-glow-sm">
+              <div className="w-9 h-9 rounded-full bg-accent-50 border border-accent-200 text-accent-800 flex items-center justify-center font-bold text-xs shadow-xs">
                 {(user?.name || user?.email || 'U').charAt(0).toUpperCase()}
               </div>
               <div className="hidden md:block text-left">
-                <p className="text-xs font-bold text-white leading-none">{user?.name || 'User'}</p>
-                <p className="text-[10px] text-slate-400 mt-0.5 truncate max-w-[150px]">{user?.email || 'authenticated'}</p>
+                <p className="text-xs font-bold text-black leading-none">{user?.name || 'User'}</p>
+                <p className="text-[10px] text-zinc-500 mt-0.5 truncate max-w-[150px]">{user?.email || 'authenticated'}</p>
               </div>
             </div>
 
             <button
               onClick={logout}
-              className="p-2 text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl border border-transparent hover:border-rose-500/20 transition"
+              className="p-2 text-zinc-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl border border-zinc-200 transition"
               title="Sign Out"
             >
               <LogOut className="w-4 h-4" />
@@ -350,23 +343,8 @@ export default function App() {
       {/* ====================================================================
        * ARCHITECTURAL FOOTER
        * ==================================================================== */}
-      <footer className="border-t border-white/[0.08] bg-[#090A0F]/60 backdrop-blur-md py-6 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-accent-400 animate-pulse shadow-glow-sm" />
-            <span className="text-slate-300">AWS Serverless Architecture</span>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2 text-[11px]">
-            <span className="px-2 py-0.5 bg-white/[0.04] border border-white/[0.06] rounded-md text-slate-300 font-medium">Lambda</span>
-            <span className="px-2 py-0.5 bg-white/[0.04] border border-white/[0.06] rounded-md text-slate-300 font-medium">API Gateway</span>
-            <span className="px-2 py-0.5 bg-white/[0.04] border border-white/[0.06] rounded-md text-slate-300 font-medium">DynamoDB</span>
-            <span className="px-2 py-0.5 bg-white/[0.04] border border-white/[0.06] rounded-md text-slate-300 font-medium">Amazon S3</span>
-            <span className="px-2 py-0.5 bg-white/[0.04] border border-white/[0.06] rounded-md text-slate-300 font-medium">EventBridge</span>
-            <span className="px-2 py-0.5 bg-white/[0.04] border border-white/[0.06] rounded-md text-slate-300 font-medium">Claude 3.5 Sonnet</span>
-            <span className="px-2 py-0.5 bg-white/[0.04] border border-white/[0.06] rounded-md text-slate-300 font-medium">AWS Cedar</span>
-          </div>
-        </div>
+      <footer className="border-t border-zinc-200 bg-white py-6 mt-12 text-center text-xs text-zinc-400">
+        made by Akshat Mohanty
       </footer>
     </div>
   );
