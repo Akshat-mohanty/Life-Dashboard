@@ -82,7 +82,21 @@ export default function App() {
   // =========================================================================
   if (!isAuthenticated && !authLoading) {
     return (
-      <div className="min-h-screen bg-white text-black flex flex-col justify-between relative selection:bg-accent-100 selection:text-accent-900">
+      <div className="min-h-screen text-black flex flex-col justify-between relative overflow-hidden selection:bg-accent-100 selection:text-accent-900">
+        {/* Background Animated Video */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
+        >
+          <source src="/cloud-animated.mp4" type="video/mp4" />
+        </video>
+
+        {/* Soft atmospheric overlay for readability */}
+        <div className="absolute inset-0 bg-white/30 backdrop-blur-[1px] pointer-events-none z-0" />
+
         {/* Minimal top branding */}
         <header className="relative z-10 max-w-7xl mx-auto w-full px-6 py-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -96,7 +110,7 @@ export default function App() {
         {/* Center Canvas */}
         <main className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 py-8 lg:py-12 flex-1 flex flex-col items-center justify-center">
           <div className="w-full max-w-md mx-auto">
-            <div className="bg-white rounded-3xl border border-zinc-200 p-7 sm:p-9 shadow-sm">
+            <div className="bg-white/95 backdrop-blur-xl rounded-3xl border border-white/80 p-7 sm:p-9 shadow-2xl">
               {/* Modern Pill Switcher */}
               <div className="flex bg-zinc-100 p-1 rounded-xl border border-zinc-200/60 mb-6">
                 <button
