@@ -36,6 +36,8 @@ import { handler as spendingList } from '../src/spending/list.js';
 import { handler as spendingSummary } from '../src/spending/summary.js';
 
 import { handler as briefingGenerate } from '../src/briefing/generate.js';
+import { handler as userGet } from '../src/user/get.js';
+import { handler as userUpdate } from '../src/user/update.js';
 
 const PORT = process.env.PORT || 3001;
 
@@ -55,6 +57,7 @@ const memoryDB = {
   docs: [],
   spending: [],
   briefing: new Map(),
+  profiles: new Map(),
 };
 
 const server = http.createServer(async (req, res) => {
@@ -368,6 +371,45 @@ Stay focused and take things one step at a time!`;
               content,
               generatedAt: new Date().toISOString(),
             },
+          }),
+        };
+      }
+    } else if (pathname === '/user/profile' && method === 'GET') {
+      lambdaResponse = await userGet(baseEvent);
+      if (!lambdaResponse || lambdaResponse.statusCode >= 500) {
+        const profile = memoryDB.profiles.get(userId) || {
+          userId,
+          name: userId === 'demo-user-1' ? 'Akshat Mohanty' : (userId ? userId.split('@')[0] : 'User'),
+          email: `${userId}@example.com`,
+          avatarUrl: '',
+        };
+        lambdaResponse = {
+          statusCode: 200,
+          body: JSON.stringify({ profile }),
+        };
+      }
+    } else if (pathname === '/user/profile' && method === 'PUT') {
+      lambdaResponse = await userUpdate(baseEvent);
+      if (!lambdaResponse || lambdaResponse.statusCode >= 500) {
+        const body = JSON.parse(bodyStr || '{}');
+        const existing = memoryDB.profiles.get(userId) || {
+          userId,
+          name: userId === 'demo-user-1' ? 'Akshat Mohanty' : (userId ? userId.split('@')[0] : 'User'),
+          email: `${userId}@example.com`,
+          avatarUrl: '',
+        };
+        const updated = {
+          ...existing,
+          ...(body.name !== undefined && { name: body.name.trim() }),
+          ...(body.avatarUrl !== undefined && { avatarUrl: body.avatarUrl }),
+          updatedAt: new Date().toISOString(),
+        };
+        memoryDB.profiles.set(userId, updated);
+        lambdaResponse = {
+          statusCode: 200,
+          body: JSON.stringify({
+            message: 'Profile updated in database.',
+            profile: updated,
           }),
         };
       }

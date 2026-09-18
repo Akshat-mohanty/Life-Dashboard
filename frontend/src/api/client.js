@@ -137,4 +137,10 @@ export const briefingApi = {
   generateNow: () => apiClient.post('/briefing/generate'),
 };
 
+// 8. User Profile API (Single-Table DB Isolation)
+export const userApi = {
+  getProfile: () => apiClient.get('/user/profile'),
+  updateProfile: (data) => apiClient.put('/user/profile', data),
+};
+
 export default apiClient;

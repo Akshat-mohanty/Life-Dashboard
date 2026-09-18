@@ -10,6 +10,7 @@ import {
   AuthenticationDetails,
   CognitoUserAttribute,
 } from 'amazon-cognito-identity-js';
+import { userApi } from '../api/client';
 
 const AuthContext = createContext(null);
 
@@ -36,7 +37,7 @@ export const AuthProvider = ({ children }) => {
 
   // Restore session from localStorage or active Cognito session on initial mount
   useEffect(() => {
-    const initializeAuth = () => {
+    const initializeAuth = async () => {
       try {
         const cachedUserStr = localStorage.getItem(STORAGE_KEYS.USER);
         const cachedToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
@@ -44,6 +45,8 @@ export const AuthProvider = ({ children }) => {
         if (cachedUserStr && cachedToken) {
           const parsedUser = JSON.parse(cachedUserStr);
           setUser({ ...parsedUser, token: cachedToken });
+          // Fetch latest authoritative profile from database in background
+          fetchRemoteProfile(parsedUser.userId);
         } else if (userPool) {
           const cognitoUser = userPool.getCurrentUser();
           if (cognitoUser) {
@@ -60,6 +63,7 @@ export const AuthProvider = ({ children }) => {
                   token: idToken,
                 };
                 saveSession(sessionUser, idToken);
+                fetchRemoteProfile(payload.sub);
               }
             });
           }
@@ -74,6 +78,27 @@ export const AuthProvider = ({ children }) => {
 
     initializeAuth();
   }, []);
+
+  // Fetch isolated profile record from database for this user
+  const fetchRemoteProfile = async (targetUserId) => {
+    try {
+      const res = await userApi.getProfile();
+      if (res?.profile) {
+        setUser((prev) => {
+          if (!prev || (prev.userId && prev.userId !== targetUserId)) return prev;
+          const merged = {
+            ...prev,
+            name: res.profile.name || prev.name,
+            avatarUrl: res.profile.avatarUrl !== undefined ? res.profile.avatarUrl : prev.avatarUrl,
+          };
+          localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(merged));
+          return merged;
+        });
+      }
+    } catch (err) {
+      // Backend may be offline or in-memory; ignore gracefully
+    }
+  };
 
   const saveSession = (userData, token) => {
     setUser(userData);
@@ -228,9 +253,40 @@ export const AuthProvider = ({ children }) => {
 
   /**
    * Update Profile (Name, Avatar URL / PFP)
+   * Strictly isolated per user: updates DynamoDB single-table record PK: USER#{userId}, SK: PROFILE
    */
   const updateProfile = async ({ name, avatarUrl }) => {
     if (!user) return null;
+
+    // 1. Send update to database API (scoped strictly to this user's PK)
+    try {
+      await userApi.updateProfile({ name, avatarUrl });
+    } catch (dbErr) {
+      console.warn('Backend database profile update warning:', dbErr);
+    }
+
+    // 2. If user is authenticated via Cognito, sync attribute to Cognito User Pool as well
+    if (userPool && name) {
+      try {
+        const cognitoUser = userPool.getCurrentUser();
+        if (cognitoUser) {
+          cognitoUser.getSession((err, session) => {
+            if (!err && session.isValid()) {
+              cognitoUser.updateAttributes(
+                [new CognitoUserAttribute({ Name: 'name', Value: name })],
+                (attrErr) => {
+                  if (attrErr) console.warn('Cognito attribute sync:', attrErr);
+                }
+              );
+            }
+          });
+        }
+      } catch (cognitoErr) {
+        console.warn('Cognito attribute update warning:', cognitoErr);
+      }
+    }
+
+    // 3. Update local user state and storage for this user
     const updatedUser = {
       ...user,
       ...(name !== undefined && { name }),

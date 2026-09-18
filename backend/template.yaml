@@ -559,6 +559,41 @@ Resources:
             Path: /briefing/today
             Method: get
 
+  ##############################################################################
+  # USER PROFILE MANAGEMENT (DynamoDB Single-Table User-Isolated Storage)
+  ##############################################################################
+  UserProfileGetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: user/get.handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /user/profile
+            Method: get
+
+  UserProfileUpdateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src/
+      Handler: user/update.handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref LifeDashboardTable
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref LifeDashboardApi
+            Path: /user/profile
+            Method: put
+
 Outputs:
   ApiEndpoint:
     Description: Base URL for API Gateway REST endpoints
