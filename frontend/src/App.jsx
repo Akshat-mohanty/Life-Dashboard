@@ -97,11 +97,6 @@ export default function App() {
               <span className="text-[11px] text-slate-400 font-medium -mt-1 block">Intelligent Daily OS</span>
             </div>
           </div>
-
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-xs text-slate-300">
-            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Serverless AWS Bedrock</span>
-          </div>
         </header>
 
         {/* Center Canvas */}
