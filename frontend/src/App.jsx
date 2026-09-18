@@ -103,7 +103,7 @@ export default function App() {
           <div className="flex items-center gap-3">
             <MeridianLogo className="w-10 h-10" />
             <div>
-              <span className="text-xl font-extrabold tracking-tight text-black block">Meridian</span>
+              <span className="text-2xl font-bold tracking-tight text-black block font-serif">Meridian</span>
             </div>
           </div>
         </header>
@@ -301,7 +301,7 @@ export default function App() {
           <div className="flex items-center gap-3">
             <MeridianLogo className="w-10 h-10" />
             <div>
-              <h1 className="text-xl font-extrabold text-black tracking-tight">Meridian</h1>
+              <h1 className="text-2xl font-bold text-black tracking-tight font-serif">Meridian</h1>
             </div>
           </div>
 
