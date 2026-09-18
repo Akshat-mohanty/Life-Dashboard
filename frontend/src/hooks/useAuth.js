@@ -39,6 +39,32 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
+        // Check for Cognito OAuth redirect tokens in hash (e.g. from Google Sign-In redirect)
+        if (window.location.hash && window.location.hash.includes('id_token=')) {
+          const hashParams = new URLSearchParams(window.location.hash.substring(1));
+          const idToken = hashParams.get('id_token');
+          if (idToken) {
+            try {
+              const base64Url = idToken.split('.')[1];
+              const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+              const payload = JSON.parse(window.atob(base64));
+              const oauthUser = {
+                userId: payload.sub,
+                email: payload.email,
+                name: payload.name || payload.email?.split('@')[0],
+                token: idToken,
+                authProvider: 'Google',
+              };
+              saveSession(oauthUser, idToken);
+              fetchRemoteProfile(payload.sub);
+              window.history.replaceState({}, document.title, window.location.pathname);
+              return;
+            } catch (e) {
+              console.warn('Failed to parse OAuth callback token:', e);
+            }
+          }
+        }
+
         const cachedUserStr = localStorage.getItem(STORAGE_KEYS.USER);
         const cachedToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
 
@@ -309,6 +335,37 @@ export const AuthProvider = ({ children }) => {
     saveSession(demoUser, demoUser.token);
   };
 
+  /**
+   * Log In with Google (Cognito Hosted UI / Social IdP / Seamless Local Fallback)
+   */
+  const loginWithGoogle = () => {
+    setError(null);
+    setLoading(true);
+
+    const COGNITO_DOMAIN = import.meta.env.VITE_COGNITO_DOMAIN || '';
+    const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI || window.location.origin;
+
+    // If Cognito Hosted UI domain is configured, redirect to Google OAuth endpoint
+    if (COGNITO_DOMAIN && CLIENT_ID) {
+      const googleAuthUrl = `https://${COGNITO_DOMAIN}/oauth2/authorize?identity_provider=Google&client_id=${CLIENT_ID}&response_type=token&scope=email+openid+profile&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
+      window.location.href = googleAuthUrl;
+      return;
+    }
+
+    // Instant Google login fallback for development / offline / mock mode
+    const googleUser = {
+      userId: 'google-user-akshat',
+      email: 'akshat.mohanty@gmail.com',
+      name: 'Akshat Mohanty',
+      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+      token: `google-oauth-mock-token-${Date.now()}`,
+      authProvider: 'Google',
+    };
+    saveSession(googleUser, googleUser.token);
+    setLoading(false);
+    return googleUser;
+  };
+
   return React.createElement(
     AuthContext.Provider,
     {
@@ -322,6 +379,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         updateProfile,
         loginAsDemo,
+        loginWithGoogle,
         isAuthenticated: Boolean(user),
       },
     },
