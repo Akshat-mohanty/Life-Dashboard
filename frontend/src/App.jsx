@@ -265,7 +265,7 @@ export default function App() {
           </div>
         </main>
 
-        <footer className="relative z-10 max-w-7xl mx-auto w-full px-6 py-6 text-center text-xs text-zinc-400 border-t border-zinc-100">
+        <footer className="relative z-10 max-w-7xl mx-auto w-full px-6 py-6 text-center text-xs text-zinc-500 font-medium">
           made by Akshat Mohanty
         </footer>
       </div>
@@ -359,7 +359,7 @@ export default function App() {
       {/* ====================================================================
        * ARCHITECTURAL FOOTER
        * ==================================================================== */}
-      <footer className="relative z-10 border-t border-zinc-200/80 bg-white/90 backdrop-blur-md py-6 mt-12 text-center text-xs text-zinc-500 font-medium">
+      <footer className="relative z-10 py-6 mt-12 text-center text-xs text-zinc-500 font-medium">
         made by Akshat Mohanty
       </footer>
     </div>
