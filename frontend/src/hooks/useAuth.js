@@ -227,6 +227,20 @@ export const AuthProvider = ({ children }) => {
   };
 
   /**
+   * Update Profile (Name, Avatar URL / PFP)
+   */
+  const updateProfile = async ({ name, avatarUrl }) => {
+    if (!user) return null;
+    const updatedUser = {
+      ...user,
+      ...(name !== undefined && { name }),
+      ...(avatarUrl !== undefined && { avatarUrl }),
+    };
+    saveSession(updatedUser, updatedUser.token || localStorage.getItem(STORAGE_KEYS.TOKEN));
+    return updatedUser;
+  };
+
+  /**
    * Quick Demo Login
    */
   const loginAsDemo = () => {
@@ -250,6 +264,7 @@ export const AuthProvider = ({ children }) => {
         signup,
         confirmSignup,
         logout,
+        updateProfile,
         loginAsDemo,
         isAuthenticated: Boolean(user),
       },

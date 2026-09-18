@@ -22,6 +22,7 @@ import CalendarView from './components/CalendarView';
 import Health from './components/Health';
 import Documents from './components/Documents';
 import Spending from './components/Spending';
+import UserProfileMenu from './components/UserProfileMenu';
 
 export default function App() {
   const {
@@ -290,25 +291,9 @@ export default function App() {
             </div>
           </div>
 
-          {/* User Profile + Logout Right */}
+          {/* User Profile Dropdown & Logout */}
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2.5 pl-2">
-              <div className="w-9 h-9 rounded-full bg-accent-50 border border-accent-200 text-accent-800 flex items-center justify-center font-bold text-xs shadow-xs">
-                {(user?.name || user?.email || 'U').charAt(0).toUpperCase()}
-              </div>
-              <div className="hidden md:block text-left">
-                <p className="text-xs font-bold text-black leading-none">{user?.name || 'User'}</p>
-                <p className="text-[10px] text-zinc-500 mt-0.5 truncate max-w-[150px]">{user?.email || 'authenticated'}</p>
-              </div>
-            </div>
-
-            <button
-              onClick={logout}
-              className="p-2 text-zinc-500 hover:text-rose-600 hover:bg-rose-50 rounded-xl border border-zinc-200 transition"
-              title="Sign Out"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
+            <UserProfileMenu />
           </div>
         </div>
       </header>
