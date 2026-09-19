@@ -268,7 +268,7 @@ export default function LandingPage({
 
           </div>
 
-          {/* Right: Dark App Preview Card */}
+          {/* Right: Dark App Preview Card — Schedule / Docs view */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -276,7 +276,7 @@ export default function LandingPage({
             className="relative w-full"
           >
             {/* Glow */}
-            <div className="absolute -inset-6 bg-gradient-to-tr from-cyan-500/20 via-indigo-500/10 to-emerald-500/20 rounded-3xl blur-2xl pointer-events-none" />
+            <div className="absolute -inset-6 bg-gradient-to-tr from-indigo-500/20 via-violet-500/10 to-cyan-500/20 rounded-3xl blur-2xl pointer-events-none" />
 
             {/* App Window */}
             <div className="relative bg-zinc-900 rounded-2xl border border-white/10 shadow-[0_32px_80px_-20px_rgba(0,0,0,0.6)] overflow-hidden select-none">
@@ -288,61 +288,75 @@ export default function LandingPage({
                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/70" />
                 </div>
                 <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-700/60 border border-white/5 text-[10px] font-semibold text-zinc-400">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>ebolt.app/dashboard</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                  <span>ebolt.app/schedule</span>
                 </div>
-                <span className="text-[10px] font-semibold text-zinc-500">Today • Sep 19</span>
+                <span className="text-[10px] font-semibold text-zinc-500">Week • Sep 19</span>
               </div>
 
               {/* Body */}
               <div className="p-4 sm:p-5 space-y-3.5 bg-zinc-900">
-                {/* Briefing card */}
-                <div className="bg-zinc-800 rounded-xl p-4 border border-white/5">
-                  <div className="flex items-center gap-2 mb-2.5">
-                    <Sparkles className="w-4 h-4 text-cyan-400" />
-                    <span className="text-xs font-bold text-white tracking-tight">Your Briefing!</span>
+
+                {/* Weekly Schedule Strip */}
+                <div className="bg-zinc-800 rounded-xl p-3.5 border border-white/5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">This Week</span>
+                    <span className="ml-auto text-[10px] font-semibold text-indigo-400">Sep 19–25</span>
                   </div>
-                  <p className="text-xs text-zinc-400 leading-relaxed">You have 2 tasks remaining for today!</p>
+                  <div className="grid grid-cols-7 gap-1 text-center">
+                    {[
+                      { d: 'M', n: '19', active: true },
+                      { d: 'T', n: '20', dot: true },
+                      { d: 'W', n: '21', dot: true },
+                      { d: 'T', n: '22' },
+                      { d: 'F', n: '23', dot: true },
+                      { d: 'S', n: '24' },
+                      { d: 'S', n: '25' },
+                    ].map((item) => (
+                      <div key={item.n} className={`flex flex-col items-center gap-1 py-1.5 rounded-lg ${item.active ? 'bg-indigo-500' : ''}`}>
+                        <span className={`text-[9px] font-bold ${item.active ? 'text-indigo-100' : 'text-zinc-500'}`}>{item.d}</span>
+                        <span className={`text-xs font-black ${item.active ? 'text-white' : 'text-zinc-300'}`}>{item.n}</span>
+                        {item.dot && !item.active && <span className="w-1 h-1 rounded-full bg-indigo-400" />}
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                {/* Tasks */}
+                {/* Upcoming Events */}
                 <div className="bg-zinc-800 rounded-xl p-3.5 border border-white/5">
-                  <div className="flex items-center justify-between mb-2.5">
-                    <div className="flex items-center gap-2">
-                      <CheckSquare className="w-4 h-4 text-cyan-500" />
-                      <span className="text-xs font-bold text-white">Today's Tasks</span>
-                    </div>
-                    <span className="text-[10px] font-semibold text-zinc-500">2 pending</span>
+                  <div className="flex items-center gap-2 mb-2.5">
+                    <span className="text-xs font-bold text-white">Upcoming</span>
+                    <span className="ml-auto text-[10px] font-semibold text-zinc-500">3 events</span>
                   </div>
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2.5 p-2 rounded-lg bg-zinc-700/50 text-xs text-zinc-300">
-                      <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
-                      <span className="font-medium truncate">Review AWS Bedrock architecture</span>
+                    <div className="flex items-center gap-2.5 p-2 rounded-lg bg-indigo-500/15 border border-indigo-500/20 text-xs">
+                      <div className="w-1 h-7 rounded-full bg-indigo-400 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-white text-[11px]">Doctor Appointment</p>
+                        <p className="text-zinc-400 text-[10px]">Tue, Sep 20 · 10:00 AM</p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2.5 p-2 rounded-lg bg-zinc-700/50 text-xs text-zinc-300">
-                      <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
-                      <span className="font-medium truncate">Pay electricity &amp; utilities</span>
+                    <div className="flex items-center gap-2.5 p-2 rounded-lg bg-violet-500/10 border border-violet-500/15 text-xs">
+                      <div className="w-1 h-7 rounded-full bg-violet-400 shrink-0" />
+                      <div>
+                        <p className="font-semibold text-white text-[11px]">Rent Due</p>
+                        <p className="text-zinc-400 text-[10px]">Fri, Sep 23 · Auto-pay on</p>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Finance grid */}
+                {/* Documents quick row */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-zinc-800 rounded-xl p-3 border border-white/5">
-                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-zinc-500 mb-1">
-                      <CreditCard className="w-3.5 h-3.5 text-cyan-600" />
-                      <span>Bills</span>
-                    </div>
-                    <p className="text-base font-black text-white">₹2,450</p>
-                    <p className="text-[10px] text-zinc-500 mt-0.5 font-medium">Due in 3 days</p>
+                    <p className="text-[10px] font-bold text-zinc-500 mb-1.5">📄 Documents</p>
+                    <p className="text-sm font-black text-white">12</p>
+                    <p className="text-[10px] text-zinc-500 mt-0.5">3 expiring soon</p>
                   </div>
                   <div className="bg-zinc-800 rounded-xl p-3 border border-white/5">
-                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-zinc-500 mb-1">
-                      <PieChartIcon className="w-3.5 h-3.5 text-indigo-500" />
-                      <span>Spending</span>
-                    </div>
-                    <p className="text-base font-black text-white">₹14,200</p>
-                    <p className="text-[10px] text-emerald-500 font-semibold mt-0.5">28% of budget</p>
+                    <p className="text-[10px] font-bold text-zinc-500 mb-1.5">🔔 Alerts</p>
+                    <p className="text-sm font-black text-white">2</p>
+                    <p className="text-[10px] text-amber-400 font-semibold mt-0.5">Need attention</p>
                   </div>
                 </div>
               </div>
