@@ -115,7 +115,7 @@ export default function LandingPage({
       {/* =====================================================================
           TOP NAVIGATION BAR
           ===================================================================== */}
-      <header className="w-full border-b border-black/5 bg-[#e8e6e3]/60 backdrop-blur-md sticky top-0 z-40">
+      <header className="w-full border-b border-black/5 bg-[#dad9de]/60 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
           {/* Left: Menu Button */}
           <button
@@ -210,7 +210,7 @@ export default function LandingPage({
       {/* =====================================================================
           HERO SECTION (Full-Bleed Nature Landscape with Centered Headline & Email Bar)
           ===================================================================== */}
-      <section className="relative w-full overflow-hidden bg-[#cbccd2]">
+      <section className="relative w-full overflow-hidden bg-[#dad9de]">
         {/* Full Nature Landscape Background Image */}
         <img
           src="/nature-hero.png"
