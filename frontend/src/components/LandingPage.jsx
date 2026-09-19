@@ -264,12 +264,7 @@ export default function LandingPage({
           </div>
 
           {/* Right: Dark App Preview Card — Schedule / Docs view */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="relative w-full"
-          >
+          <div className="relative w-full">
             {/* Glow */}
             <div className="absolute -inset-6 bg-gradient-to-tr from-indigo-500/20 via-violet-500/10 to-cyan-500/20 rounded-3xl blur-2xl pointer-events-none" />
 
@@ -356,7 +351,7 @@ export default function LandingPage({
                 </div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
 
       </section>
