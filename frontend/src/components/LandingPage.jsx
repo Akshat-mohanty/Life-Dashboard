@@ -485,15 +485,6 @@ export default function LandingPage({
               >
                 Become a Member
               </button>
-
-              <button
-                type="button"
-                onClick={onLoginAsDemo}
-                className="px-5 py-3 bg-white hover:bg-zinc-100 text-zinc-900 text-xs sm:text-sm font-semibold rounded-[3px] border border-zinc-300 shadow-2xs transition active:scale-95 cursor-pointer text-center flex items-center justify-center gap-2"
-              >
-                <Zap className="w-3.5 h-3.5 text-amber-500" />
-                <span>Try Live Demo</span>
-              </button>
             </div>
           </div>
         </div>
