@@ -65,8 +65,8 @@ export default function App() {
     error: authError,
   } = useAuth();
 
-  // Auth screen mode: 'login' | 'signup' | 'confirm'
-  const [authMode, setAuthMode] = useState('login');
+  // Auth screen mode: 'signup' | 'login' | 'confirm' (defaults to 'signup')
+  const [authMode, setAuthMode] = useState('signup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -250,15 +250,13 @@ export default function App() {
             {authMode === 'login'
               ? 'Sign in with email'
               : authMode === 'signup'
-              ? 'Create your account'
+              ? 'Sign up with email'
               : 'Confirm your email'}
           </h1>
           <p className="text-xs text-zinc-500 text-center max-w-[280px] mx-auto mt-1.5 mb-4 sm:mb-5 leading-relaxed">
-            {authMode === 'login'
-              ? 'Your personal AI life operating system to prioritize tasks, track finances, and preserve your daily archive.'
-              : authMode === 'signup'
-              ? 'Create your account to unlock your personal AI command center and secure historical archive.'
-              : `Enter the verification code sent to ${email}`}
+            {authMode === 'confirm'
+              ? `Enter the verification code sent to ${email}`
+              : 'Your personal AI life operating system to prioritize tasks, track finances, and preserve your daily archive.'}
           </p>
 
           {/* Alert messages */}
