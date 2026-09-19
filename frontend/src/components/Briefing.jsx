@@ -133,9 +133,9 @@ export default function Briefing() {
   // 3. Empty State (Ready to generate) — Compact Sleek Executive Banner
   if (!exists && !isStreaming && !displayContent) {
     return (
-      <div className="w-full bg-linear-to-r from-zinc-950 via-[#16181f] to-zinc-900 border border-zinc-800/90 rounded-2xl p-4 sm:px-5 sm:py-3.5 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 transition-all">
+      <div className="w-full bg-zinc-950 bg-gradient-to-r from-zinc-950 via-[#16181f] to-zinc-900 border border-zinc-800/90 rounded-2xl p-4 sm:px-5 sm:py-3.5 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 transition-all">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-white/10 border border-white/15 flex items-center justify-center text-cyan-300 shadow-inner flex-shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-cyan-300 shadow-inner flex-shrink-0">
             <Sparkles className="w-4 h-4 animate-pulse" />
           </div>
           <div>
@@ -146,7 +146,7 @@ export default function Briefing() {
               </span>
               <span className="text-zinc-400 text-xs hidden sm:inline">• {todayFormatted}</span>
             </div>
-            <p className="text-[11px] text-zinc-400 mt-0.5">
+            <p className="text-[11px] text-zinc-300 mt-0.5">
               Synthesize unpaid bills, priority tasks, and 7-day calendar into actionable clarity.
             </p>
           </div>
