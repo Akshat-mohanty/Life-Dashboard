@@ -509,32 +509,60 @@ const server = http.createServer(async (req, res) => {
       const targetDate = queryParams.date || new Date().toISOString().split('T')[0];
       const briefingKey = `${userId}#${targetDate}`;
       const stored = memoryDB.briefing.get(briefingKey);
-      if (stored) {
-        lambdaResponse = { statusCode: 200, body: JSON.stringify({ item: stored }) };
+
+      const userTasks = memoryDB.tasks.filter((t) => t.userId === userId);
+      const userBills = memoryDB.bills.filter((b) => b.userId === userId);
+      const userCalendar = memoryDB.calendar.filter((c) => c.userId === userId);
+      const userSpending = memoryDB.spending.filter((s) => s.userId === userId);
+      const userDocs = memoryDB.docs.filter((d) => d.userId === userId);
+      const userHealth = memoryDB.health.filter((h) => h.userId === userId);
+      const hasUserData =
+        userTasks.length > 0 ||
+        userBills.length > 0 ||
+        userCalendar.length > 0 ||
+        userSpending.length > 0 ||
+        userDocs.length > 0 ||
+        userHealth.length > 0;
+
+      if (!hasUserData) {
+        const item = {
+          userId,
+          date: targetDate,
+          content: 'No value is entered.',
+          generatedAt: new Date().toISOString(),
+        };
+        memoryDB.briefing.set(briefingKey, item);
+        saveDB();
+        lambdaResponse = { statusCode: 200, body: JSON.stringify({ item, exists: true }) };
+      } else if (stored && !stored.content?.includes('Completed task reviews and scheduled agenda items')) {
+        lambdaResponse = { statusCode: 200, body: JSON.stringify({ item: stored, exists: true }) };
       } else {
         lambdaResponse = await briefingGenerate(baseEvent);
       }
     } else if (pathname === '/briefing/generate' && method === 'POST') {
-      lambdaResponse = await briefingGenerate(baseEvent);
       const body = JSON.parse(bodyStr || '{}');
       const targetDate = body.date || new Date().toISOString().split('T')[0];
       const briefingKey = `${userId}#${targetDate}`;
 
-      if (lambdaResponse.statusCode >= 500) {
-        const content = `Executive Briefing for ${targetDate}:
+      const userTasks = memoryDB.tasks.filter((t) => t.userId === userId);
+      const userBills = memoryDB.bills.filter((b) => b.userId === userId);
+      const userCalendar = memoryDB.calendar.filter((c) => c.userId === userId);
+      const userSpending = memoryDB.spending.filter((s) => s.userId === userId);
+      const userDocs = memoryDB.docs.filter((d) => d.userId === userId);
+      const userHealth = memoryDB.health.filter((h) => h.userId === userId);
+      const hasUserData =
+        userTasks.length > 0 ||
+        userBills.length > 0 ||
+        userCalendar.length > 0 ||
+        userSpending.length > 0 ||
+        userDocs.length > 0 ||
+        userHealth.length > 0;
 
-🔴 Priorities for this date:
-- Completed task reviews and scheduled agenda items.
-
-🟡 In progress:
-- Active bills and expenses categorized.
-
-✅ Highlights:
-- Personal workspace and health goals logged.`;
+      if (!hasUserData) {
         const item = {
           userId,
           date: targetDate,
-          content,
+          content: 'No value is entered.',
           generatedAt: new Date().toISOString(),
         };
         memoryDB.briefing.set(briefingKey, item);
@@ -544,13 +572,36 @@ const server = http.createServer(async (req, res) => {
           body: JSON.stringify({ item }),
         };
       } else {
-        try {
-          const parsed = JSON.parse(lambdaResponse.body);
-          if (parsed?.item) {
-            memoryDB.briefing.set(briefingKey, parsed.item);
-            saveDB();
-          }
-        } catch {}
+        lambdaResponse = await briefingGenerate(baseEvent);
+        if (lambdaResponse.statusCode >= 500) {
+          const parts = [];
+          if (userTasks.length) parts.push(`• Tasks: ${userTasks.map((t) => t.title).slice(0, 3).join(', ')}`);
+          if (userBills.length) parts.push(`• Bills: ${userBills.map((b) => `${b.name} (₹${b.amount})`).slice(0, 3).join(', ')}`);
+          if (userCalendar.length) parts.push(`• Schedule: ${userCalendar.map((c) => `${c.title} (${c.time || 'all day'})`).slice(0, 3).join(', ')}`);
+          if (userSpending.length) parts.push(`• Spending: ₹${userSpending.reduce((sum, s) => sum + (s.amount || 0), 0)} logged`);
+
+          const content = `Executive Briefing for ${targetDate}:\n\n${parts.join('\n\n')}`;
+          const item = {
+            userId,
+            date: targetDate,
+            content,
+            generatedAt: new Date().toISOString(),
+          };
+          memoryDB.briefing.set(briefingKey, item);
+          saveDB();
+          lambdaResponse = {
+            statusCode: 200,
+            body: JSON.stringify({ item }),
+          };
+        } else {
+          try {
+            const parsed = JSON.parse(lambdaResponse.body);
+            if (parsed?.item) {
+              memoryDB.briefing.set(briefingKey, parsed.item);
+              saveDB();
+            }
+          } catch {}
+        }
       }
     } else if (pathname === '/user/profile' && method === 'GET') {
       lambdaResponse = await userGet(baseEvent);

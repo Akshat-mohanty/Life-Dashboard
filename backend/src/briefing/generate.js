@@ -292,26 +292,7 @@ async function invokeBedrockClaude(prompt) {
  * Generates high quality fallback text if Bedrock is not configured locally
  */
 function generateFallbackBriefing(prompt) {
-  const todayStr = new Date().toLocaleDateString('en-US', {
-    weekday: 'long',
-    month: 'long',
-    day: 'numeric',
-  });
-
-  return `Good morning! Hope you're having a smooth start to ${todayStr}.
-
-🔴 Needs attention today:
-- Any overdue bills and priority tasks scheduled for today need your quick action.
-- Check your morning calendar commitments to ensure seamless timing.
-
-🟡 Coming up soon:
-- Review utilities and insurance renewals coming up in the next 3 days.
-- Prepare required documents ahead of upcoming deadlines.
-
-✅ You're on top of:
-- Your core recurring health habits and recent budget tracking are on steady footing.
-
-Take things one focused step at a time today — you've got this completely under control!`;
+  return 'No value is entered.';
 }
 
 /**
@@ -324,10 +305,23 @@ async function generateAndSaveBriefingForUser(userId, userEmail = null, userName
 
   console.log(`Gathering data for user: ${userId}`);
   const userData = await gatherUserData(userId);
-  const prompt = buildBedrockPrompt(userName, today, userData);
 
-  console.log(`Invoking Bedrock for user: ${userId}...`);
-  const briefingContent = await invokeBedrockClaude(prompt);
+  const hasNoData =
+    (!userData.unpaidBills || userData.unpaidBills.length === 0) &&
+    (!userData.incompleteTasks || userData.incompleteTasks.length === 0) &&
+    (!userData.calendarEvents || userData.calendarEvents.length === 0) &&
+    (!userData.healthReminders || userData.healthReminders.length === 0) &&
+    (!userData.expiringDocs || userData.expiringDocs.length === 0) &&
+    (!userData.spendingThisMonth || userData.spendingThisMonth === 0);
+
+  let briefingContent;
+  if (hasNoData) {
+    briefingContent = 'No value is entered.';
+  } else {
+    const prompt = buildBedrockPrompt(userName, today, userData);
+    console.log(`Invoking Bedrock for user: ${userId}...`);
+    briefingContent = await invokeBedrockClaude(prompt);
+  }
 
   const briefingItem = {
     PK: `USER#${userId}`,

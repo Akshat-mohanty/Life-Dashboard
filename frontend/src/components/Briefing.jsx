@@ -109,7 +109,12 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
     generateMutation.mutate();
   };
 
-  const displayContent = isStreaming ? streamedContent : briefing?.content || '';
+  const rawContent = isStreaming ? streamedContent : briefing?.content || '';
+  const displayContent =
+    rawContent.includes('Completed task reviews and scheduled agenda items') ||
+    rawContent.includes('Personal workspace and health goals logged')
+      ? 'No value is entered.'
+      : rawContent;
 
   // 1. Loading State
   if (isLoading) {
