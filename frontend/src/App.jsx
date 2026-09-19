@@ -55,6 +55,7 @@ export default function App() {
     logout,
     loginAsDemo,
     loginWithGoogle,
+    forgotPassword,
     loading: authLoading,
     error: authError,
   } = useAuth();
@@ -69,6 +70,29 @@ export default function App() {
   const [actionLoading, setActionLoading] = useState(false);
   const [localError, setLocalError] = useState('');
   const [infoMessage, setInfoMessage] = useState('');
+
+  const handleForgotPassword = async () => {
+    setLocalError('');
+    setInfoMessage('');
+
+    if (!email || !email.trim()) {
+      setLocalError('Please enter your email address.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setLocalError('Please enter a valid email address.');
+      return;
+    }
+
+    try {
+      const res = await forgotPassword(email.trim());
+      setInfoMessage(res.message || 'Password reset email has been sent to your email.');
+    } catch (err) {
+      setLocalError(err.message || 'Password reset request failed.');
+    }
+  };
 
   // Dashboard workspace view tab: 'overview' | 'focus' | 'finances' | 'life'
   const [activeTab, setActiveTab] = useState('overview');
@@ -225,8 +249,9 @@ export default function App() {
           )}
 
           {infoMessage && (
-            <div className="p-3 mb-4 rounded-xl bg-zinc-100 border border-zinc-200 text-zinc-800 text-xs font-medium">
-              {infoMessage}
+            <div className="p-3 mb-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+              <span>{infoMessage}</span>
             </div>
           )}
 
@@ -299,7 +324,7 @@ export default function App() {
               <div className="flex justify-end pt-0.5 pb-1">
                 <button
                   type="button"
-                  onClick={() => setInfoMessage('Password reset link sent to your email.')}
+                  onClick={handleForgotPassword}
                   className="text-xs text-zinc-500 hover:text-zinc-800 transition font-normal cursor-pointer"
                 >
                   Forgot password?

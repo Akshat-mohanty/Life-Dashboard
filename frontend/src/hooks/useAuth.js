@@ -429,6 +429,77 @@ export const AuthProvider = ({ children }) => {
   };
 
   /**
+   * Request Password Reset
+   * Validates email presence, format, and verifies if the user account exists
+   */
+  const forgotPassword = async (rawEmail) => {
+    setError(null);
+    const email = rawEmail?.trim();
+
+    if (!email) {
+      const err = new Error('Please enter your email address.');
+      setError(err.message);
+      throw err;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      const err = new Error('Please enter a valid email address.');
+      setError(err.message);
+      throw err;
+    }
+
+    const normalizedEmail = email.toLowerCase();
+
+    // 1. If real Cognito User Pool is configured
+    if (userPool) {
+      return new Promise((resolve, reject) => {
+        const cognitoUser = new CognitoUser({
+          Username: normalizedEmail,
+          Pool: userPool,
+        });
+
+        cognitoUser.forgotPassword({
+          onSuccess: () => {
+            resolve({
+              success: true,
+              message: 'Password reset email has been sent to your email.',
+            });
+          },
+          onFailure: (err) => {
+            let message = err.message || 'Failed to send password reset email.';
+            if (err.code === 'UserNotFoundException') {
+              message = 'No account found with this email. Please sign up as you are not a user.';
+            }
+            const errorObj = new Error(message);
+            setError(errorObj.message);
+            reject(errorObj);
+          },
+        });
+      });
+    }
+
+    // 2. Check local accounts registry & demo user
+    const accounts = getStoredAccounts();
+    const userExists =
+      accounts.some((a) => a.email.toLowerCase() === normalizedEmail) ||
+      normalizedEmail === 'akshat@example.com';
+
+    if (!userExists) {
+      const err = new Error(
+        'No account found with this email. Please sign up as you are not a user.'
+      );
+      setError(err.message);
+      throw err;
+    }
+
+    return {
+      success: true,
+      message: 'Password reset email has been sent to your email.',
+    };
+  };
+
+  /**
    * Sign Out
    */
   const logout = () => {
@@ -549,6 +620,7 @@ export const AuthProvider = ({ children }) => {
         login,
         signup,
         confirmSignup,
+        forgotPassword,
         logout,
         updateProfile,
         loginAsDemo,
