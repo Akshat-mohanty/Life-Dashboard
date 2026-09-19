@@ -179,11 +179,6 @@ export default function HistoryArchiveModal({
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Isolated for {user?.name || user?.email?.split('@')[0] || 'User'}</span>
-              </div>
-
               <button
                 type="button"
                 onClick={onClose}
