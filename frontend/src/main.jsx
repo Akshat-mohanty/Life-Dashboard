@@ -5,6 +5,16 @@ import { AuthProvider } from './hooks/useAuth';
 import App from './App';
 import './index.css';
 
+// Always scroll to the top of the page on refresh/load, overriding browser scroll restoration
+if ('scrollRestoration' in window.history) {
+  window.history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
+
+window.addEventListener('load', () => {
+  window.scrollTo(0, 0);
+});
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
