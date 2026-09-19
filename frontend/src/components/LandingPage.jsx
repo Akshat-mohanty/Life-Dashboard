@@ -111,11 +111,11 @@ export default function LandingPage({
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f3ef] text-zinc-900 font-sans selection:bg-zinc-900 selection:text-white relative overflow-x-hidden">
+    <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-900 selection:text-white relative overflow-x-hidden">
       {/* =====================================================================
           TOP NAVIGATION BAR
           ===================================================================== */}
-      <header className="w-full border-b border-zinc-300/60 bg-[#f5f3ef]/90 backdrop-blur-md sticky top-0 z-40">
+      <header className="w-full border-b border-black/5 bg-[#e8e6e3]/60 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
           {/* Left: Menu Button */}
           <button
@@ -208,100 +208,90 @@ export default function LandingPage({
       </AnimatePresence>
 
       {/* =====================================================================
-          HERO SECTION (Centered Headline, Subtitle, Email Bar)
+          HERO SECTION (Full-Bleed Nature Landscape with Centered Headline & Email Bar)
           ===================================================================== */}
-      <section className="pt-14 sm:pt-20 pb-8 px-5 sm:px-8 text-center max-w-4xl mx-auto">
-        {/* Editorial Headline matching reference style */}
-        <motion.h1
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-4xl sm:text-6xl md:text-[68px] font-black tracking-tight text-zinc-950 leading-[1.08]"
-        >
-          Unwind. Kick Back.
-          <br />
-          Recharge.
-        </motion.h1>
+      <section className="relative w-full overflow-hidden bg-[#cbccd2]">
+        {/* Full Nature Landscape Background Image */}
+        <img
+          src="/nature-hero.png"
+          alt="Tranquil countryside landscape with fire pit and lounge chairs"
+          className="w-full h-full object-cover object-bottom absolute inset-0 z-0 pointer-events-none select-none"
+        />
 
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-sm sm:text-base text-zinc-600 max-w-lg mx-auto mt-4 sm:mt-5 leading-relaxed font-normal"
-        >
-          We unify your daily tasks, bills, schedule & documents,
-          <br className="hidden sm:inline" />
-          so you receive autonomous morning AI clarity for free.
-        </motion.p>
+        {/* Hero Interactive Content Layer */}
+        <div className="relative z-10 max-w-4xl mx-auto px-5 sm:px-8 pt-10 sm:pt-14 md:pt-18 pb-64 sm:pb-76 md:pb-[340px] lg:pb-[390px] text-center">
+          {/* Editorial Headline matching reference style */}
+          <motion.h1
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-4xl sm:text-6xl md:text-[68px] font-black tracking-tight text-zinc-950 leading-[1.08]"
+          >
+            Unwind. Kick Back.
+            <br />
+            Recharge.
+          </motion.h1>
 
-        {/* Email Signup Bar matching reference */}
-        <motion.form
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          onSubmit={handleHeroSubmit}
-          className="mt-6 sm:mt-8 max-w-md mx-auto"
-        >
-          <div className="flex items-center bg-white rounded-2xl sm:rounded-full p-1.5 border border-zinc-300 shadow-[0_4px_20px_rgba(0,0,0,0.06)] focus-within:border-zinc-500 focus-within:ring-2 focus-within:ring-zinc-900/10 transition">
-            <input
-              type="email"
-              required
-              placeholder="Your email"
-              value={heroEmail}
-              onChange={(e) => setHeroEmail(e.target.value)}
-              className="w-full px-4 sm:px-5 py-2.5 bg-transparent text-xs sm:text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="px-6 py-2.5 bg-zinc-900 hover:bg-black text-white text-xs sm:text-sm font-bold rounded-xl sm:rounded-full shadow-xs transition-all active:scale-95 cursor-pointer shrink-0"
-            >
-              Join
-            </button>
-          </div>
+          {/* Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="text-sm sm:text-base text-zinc-700 max-w-lg mx-auto mt-4 sm:mt-5 leading-relaxed font-normal"
+          >
+            We unify your daily tasks, bills, schedule & documents,
+            <br className="hidden sm:inline" />
+            so you receive autonomous morning AI clarity for free.
+          </motion.p>
 
-          {/* Agreement Checkbox */}
-          <div className="flex items-center justify-center gap-2 mt-3.5 text-[11px] text-zinc-500">
-            <input
-              type="checkbox"
-              id="terms-check"
-              checked={agreedToTerms}
-              onChange={(e) => setAgreedToTerms(e.target.checked)}
-              className="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900 cursor-pointer"
-            />
-            <label htmlFor="terms-check" className="cursor-pointer select-none">
-              I agree to the{' '}
-              <span className="underline hover:text-zinc-900">Privacy Policy</span> and{' '}
-              <span className="underline hover:text-zinc-900">Terms and Conditions</span>
-            </label>
-          </div>
-        </motion.form>
-      </section>
+          {/* Email Signup Bar matching reference */}
+          <motion.form
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            onSubmit={handleHeroSubmit}
+            className="mt-6 sm:mt-8 max-w-md mx-auto"
+          >
+            <div className="flex items-center bg-white rounded-full p-1.5 border border-black/10 shadow-[0_4px_24px_rgba(0,0,0,0.08)] focus-within:border-zinc-500 focus-within:ring-2 focus-within:ring-zinc-900/10 transition">
+              <input
+                type="email"
+                required
+                placeholder="Your email"
+                value={heroEmail}
+                onChange={(e) => setHeroEmail(e.target.value)}
+                className="w-full px-5 py-2.5 bg-transparent text-xs sm:text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="px-6 py-2.5 bg-zinc-900 hover:bg-black text-white text-xs sm:text-sm font-bold rounded-full shadow-xs transition-all active:scale-95 cursor-pointer shrink-0"
+              >
+                Join
+              </button>
+            </div>
 
-      {/* =====================================================================
-          NATURE-RELATED HERO IMAGE (Preserved Exactly In Its Place)
-          ===================================================================== */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-8 mt-2 mb-16 sm:mb-24">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.25 }}
-          className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg border border-black/10 bg-zinc-200"
-        >
-          <img
-            src="/nature-hero.png"
-            alt="Tranquil countryside landscape with fire pit and lounge chairs"
-            className="w-full h-auto object-cover max-h-[360px] sm:max-h-[440px]"
-          />
-          {/* Subtle gradient overlay to blend gently */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
-        </motion.div>
+            {/* Agreement Checkbox */}
+            <div className="flex items-center justify-center gap-2 mt-3.5 text-[11px] text-zinc-600 font-medium">
+              <input
+                type="checkbox"
+                id="terms-check"
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                className="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900 cursor-pointer"
+              />
+              <label htmlFor="terms-check" className="cursor-pointer select-none">
+                I agree to the{' '}
+                <span className="underline hover:text-zinc-900">Privacy Policy</span> and{' '}
+                <span className="underline hover:text-zinc-900">Terms and Conditions</span>
+              </label>
+            </div>
+          </motion.form>
+        </div>
       </section>
 
       {/* =====================================================================
           "WHY JOIN?" SECTION WITH 3D TILTED IPHONE (MOBILE LIFE DASHBOARD)
           ===================================================================== */}
-      <section className="max-w-6xl mx-auto px-5 sm:px-8 py-8 sm:py-16">
+      <section className="w-full bg-white py-12 sm:py-20 border-t border-zinc-100">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           {/* Left: 3D Angled iPhone Device Mockup with Floating Feature Badges */}
           <div className="lg:col-span-7 flex items-center justify-center relative py-6">
