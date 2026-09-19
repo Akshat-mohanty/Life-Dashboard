@@ -113,7 +113,7 @@ export default function LandingPage({
           TOP NAVIGATION BAR
           ===================================================================== */}
       <header className="w-full border-b border-white/5 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 h-16 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 h-16 flex items-center justify-between relative">
           {/* Left: Menu Button */}
           <button
             type="button"
@@ -129,7 +129,7 @@ export default function LandingPage({
           </button>
 
           {/* Center: Brand Logo */}
-          <div className="flex items-center gap-1">
+          <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1">
             <span className="text-xl sm:text-2xl font-black tracking-tight uppercase text-white font-serif">
               EBOLT
             </span>
