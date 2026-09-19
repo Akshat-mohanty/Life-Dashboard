@@ -233,7 +233,7 @@ export default function App() {
   });
 
   return (
-    <div className="min-h-screen bg-[#fafbfc] text-zinc-900 flex flex-col relative overflow-x-hidden selection:bg-accent-100 selection:text-accent-900">
+    <div className="dashboard-theme min-h-screen bg-[#fafbfc] text-zinc-900 flex flex-col relative overflow-x-hidden selection:bg-accent-100 selection:text-accent-900">
       {/* ====================================================================
        * SLEEK EXECUTIVE TOP BAR
        * ==================================================================== */}
@@ -246,6 +246,11 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-15 flex items-center justify-between">
           {/* Brand & Greeting */}
           <div className="flex items-center gap-3">
+            <div className="dashboard-window-controls hidden lg:flex items-center gap-2" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </div>
             <MeridianLogo className="w-8 h-8" />
             <div className="flex items-center gap-2.5">
               <span className="text-xl font-bold tracking-tight text-zinc-900 font-serif">Meridian</span>
