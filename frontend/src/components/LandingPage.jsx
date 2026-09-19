@@ -696,11 +696,13 @@ export default function LandingPage({
                 </button>
               </form>
 
-              {/* Dotted Divider */}
+              {/* Divider */}
               <div className="relative flex items-center justify-center my-3">
-                <div className="border-t border-zinc-200 w-full" />
-                <span className="bg-white px-2 text-[10px] text-zinc-400">Or continue with</span>
-                <div className="border-t border-zinc-200 w-full" />
+                <div className="border-t border-zinc-200 flex-1" />
+                <span className="bg-white px-2.5 text-[10px] text-zinc-400 whitespace-nowrap shrink-0 font-medium">
+                  Or continue with
+                </span>
+                <div className="border-t border-zinc-200 flex-1" />
               </div>
 
               {/* Social OAuth */}
