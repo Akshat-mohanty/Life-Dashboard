@@ -364,29 +364,6 @@ export default function LandingPage({
           </motion.div>
         </div>
 
-        {/* Trust Strip */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="border-t border-white/5 py-6 px-5 sm:px-8"
-        >
-          <p className="text-center text-[11px] font-semibold text-zinc-600 uppercase tracking-widest mb-5">Powered by industry-grade infrastructure</p>
-          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12">
-            {[
-              { label: 'AWS Bedrock', icon: '☁' },
-              { label: 'DynamoDB', icon: '⚡' },
-              { label: 'Amazon Cognito', icon: '🔐' },
-              { label: 'API Gateway', icon: '🌐' },
-              { label: 'Lambda', icon: '⚙' },
-            ].map((item) => (
-              <div key={item.label} className="flex items-center gap-2 text-zinc-500 hover:text-zinc-300 transition">
-                <span className="text-base">{item.icon}</span>
-                <span className="text-xs font-bold tracking-tight">{item.label}</span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
       </section>
 
       {/* =====================================================================
