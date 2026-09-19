@@ -212,16 +212,6 @@ export default function LandingPage({
 
           {/* Left: Headline + CTA */}
           <div className="flex flex-col items-start">
-            {/* Eyebrow badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[11px] font-semibold text-zinc-300 mb-5"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              AI-Powered Life Dashboard
-            </motion.div>
 
             {/* Main headline */}
             <motion.h1
