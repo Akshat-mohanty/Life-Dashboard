@@ -39,8 +39,22 @@ export default function HistoryArchiveModal({
   selectedDate,
   onSelectDate,
 }) {
-  const queryClient = useQueryClient();
-  const todayStr = new Date().toISOString().split('T')[0];
+  const getTodayStr = () => {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  };
+
+  const shiftDay = (dateStr, deltaDays) => {
+    const base = dateStr || getTodayStr();
+    const [year, month, day] = base.split('-').map(Number);
+    const date = new Date(Date.UTC(year, month - 1, day + deltaDays));
+    return date.toISOString().split('T')[0];
+  };
+
+  const todayStr = getTodayStr();
   const [viewDate, setViewDate] = useState(selectedDate || todayStr);
 
   // Keep viewDate synced with selectedDate when opened
@@ -100,7 +114,7 @@ export default function HistoryArchiveModal({
 
   if (!isOpen || typeof document === 'undefined') return null;
 
-  const dateObj = new Date(viewDate + 'T00:00:00');
+  const dateObj = new Date(viewDate + 'T12:00:00');
   const formattedDateTitle = dateObj.toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'long',
@@ -121,31 +135,19 @@ export default function HistoryArchiveModal({
   ];
 
   const handleJumpDays = (days) => {
-    const target = new Date();
-    target.setDate(target.getDate() - days);
-    const dateStr = target.toISOString().split('T')[0];
-    setViewDate(dateStr);
+    setViewDate(shiftDay(todayStr, -days));
   };
 
   const isJumpSelected = (days) => {
-    const target = new Date();
-    target.setDate(target.getDate() - days);
-    return viewDate === target.toISOString().split('T')[0];
+    return viewDate === shiftDay(todayStr, -days);
   };
 
   const handlePrevDay = () => {
-    const curr = new Date(viewDate + 'T00:00:00');
-    curr.setDate(curr.getDate() - 1);
-    setViewDate(curr.toISOString().split('T')[0]);
+    setViewDate((prev) => shiftDay(prev || todayStr, -1));
   };
 
   const handleNextDay = () => {
-    const curr = new Date(viewDate + 'T00:00:00');
-    curr.setDate(curr.getDate() + 1);
-    const nextStr = curr.toISOString().split('T')[0];
-    if (nextStr <= todayStr) {
-      setViewDate(nextStr);
-    }
+    setViewDate((prev) => shiftDay(prev || todayStr, 1));
   };
 
   const briefingRaw = archiveData?.briefing;
@@ -221,7 +223,7 @@ export default function HistoryArchiveModal({
               <button
                 type="button"
                 onClick={handlePrevDay}
-                className="p-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-100 text-zinc-700 transition cursor-pointer"
+                className="p-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-100 text-zinc-700 transition cursor-pointer active:scale-95 shadow-2xs"
                 title="Previous Day"
               >
                 <ChevronLeft className="w-4 h-4" />
@@ -231,7 +233,6 @@ export default function HistoryArchiveModal({
                 <CalendarIcon className="w-4 h-4 text-indigo-600" />
                 <input
                   type="date"
-                  max={todayStr}
                   value={viewDate}
                   onChange={(e) => {
                     if (e.target.value) setViewDate(e.target.value);
@@ -243,12 +244,7 @@ export default function HistoryArchiveModal({
               <button
                 type="button"
                 onClick={handleNextDay}
-                disabled={viewDate >= todayStr}
-                className={`p-1.5 rounded-lg border border-zinc-200 transition ${
-                  viewDate >= todayStr
-                    ? 'bg-zinc-100 text-zinc-300 cursor-not-allowed'
-                    : 'bg-white hover:bg-zinc-100 text-zinc-700 cursor-pointer'
-                }`}
+                className="p-1.5 rounded-lg border border-zinc-200 bg-white hover:bg-zinc-100 text-zinc-700 transition cursor-pointer active:scale-95 shadow-2xs"
                 title="Next Day"
               >
                 <ChevronRight className="w-4 h-4" />

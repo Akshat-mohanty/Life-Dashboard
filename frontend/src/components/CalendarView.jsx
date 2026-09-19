@@ -90,15 +90,17 @@ export default function CalendarView() {
   };
 
   const getDayLabel = (dateStr) => {
-    const todayStr = summary.todayStr || new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const todayStr =
+      summary.todayStr ||
+      `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     if (dateStr === todayStr) return 'Today';
 
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    const tm = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const tomorrowStr = `${tm.getFullYear()}-${String(tm.getMonth() + 1).padStart(2, '0')}-${String(tm.getDate()).padStart(2, '0')}`;
     if (dateStr === tomorrowStr) return 'Tomorrow';
 
-    const eventDate = new Date(dateStr + 'T00:00:00');
+    const eventDate = new Date(dateStr + 'T12:00:00');
     return eventDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
   };
 
