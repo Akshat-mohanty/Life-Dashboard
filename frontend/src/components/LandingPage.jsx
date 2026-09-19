@@ -253,9 +253,8 @@ export default function LandingPage({
                 onClick={() => {
                   onLoginAsDemo();
                 }}
-                className="px-7 py-3.5 border border-white/20 hover:border-white/40 bg-white/5 hover:bg-white/10 text-white text-sm font-semibold rounded-[3px] transition-all active:scale-95 cursor-pointer text-center flex items-center justify-center gap-2"
+                className="px-7 py-3.5 border border-white/20 hover:border-white/40 bg-white/5 hover:bg-white/10 text-white text-sm font-semibold rounded-[3px] transition-all active:scale-95 cursor-pointer text-center"
               >
-                <Zap className="w-4 h-4 text-amber-400" />
                 Try Demo Mode!
               </button>
             </motion.div>
