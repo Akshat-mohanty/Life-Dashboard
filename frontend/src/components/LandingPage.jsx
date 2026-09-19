@@ -18,7 +18,6 @@ import {
   X,
   Sparkles,
   Check,
-  CheckCircle2,
   Lock,
   Mail,
   User,
@@ -396,42 +395,6 @@ export default function LandingPage({
                   </div>
                   <span className="text-zinc-400">AWS Bedrock Powered</span>
                 </div>
-              </div>
-
-              {/* Floating Dark Pill Badges */}
-              <div className="absolute -right-3 sm:-right-6 top-8 z-20 flex flex-col gap-2.5 pointer-events-none">
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  viewport={{ once: true }}
-                  className="bg-zinc-950 text-white border border-zinc-800 px-3.5 py-2 rounded-xl text-xs font-semibold shadow-xl flex items-center gap-2"
-                >
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>Daily AI Briefing</span>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 0.35 }}
-                  viewport={{ once: true }}
-                  className="bg-zinc-950 text-white border border-zinc-800 px-3.5 py-2 rounded-xl text-xs font-semibold shadow-xl flex items-center gap-2"
-                >
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>Smart Bill Alerts</span>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.5, delay: 0.5 }}
-                  viewport={{ once: true }}
-                  className="bg-zinc-950 text-white border border-zinc-800 px-3.5 py-2 rounded-xl text-xs font-semibold shadow-xl flex items-center gap-2"
-                >
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span>Spending Tracker</span>
-                </motion.div>
               </div>
             </div>
           </div>
