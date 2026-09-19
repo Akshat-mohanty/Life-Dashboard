@@ -495,7 +495,7 @@ export default function LandingPage({
           <div className="flex items-center gap-2 font-serif font-black text-sm text-zinc-900">
             <span>EBOLT</span>
           </div>
-          <p>© 2026 Ebolt Life Dashboard. Secure Single-Table Isolation.</p>
+          <p>© 2026 Ebolt; Built with ❤️ by Akshat Mohanty</p>
         </div>
       </footer>
 
