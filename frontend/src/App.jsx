@@ -240,14 +240,6 @@ export default function App() {
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-10 w-full max-w-[365px] mx-auto bg-white/80 backdrop-blur-2xl rounded-[28px] border border-white/70 shadow-[0_20px_50px_-15px_rgba(30,50,90,0.12),0_0_30px_rgba(155,222,232,0.2)] p-6 sm:p-7"
         >
-          {/* Top Pill / Badge describing what site does */}
-          <div className="flex justify-center mb-2.5">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-50/90 border border-indigo-100/90 text-[10px] font-semibold text-indigo-700 tracking-wide">
-              <Sparkles className="w-3 h-3 text-indigo-600" />
-              <span>AI Life Management & Archive</span>
-            </span>
-          </div>
-
           {/* Top Squircle Icon */}
           <div className="w-11 h-11 rounded-xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.06)] border border-white/90 flex items-center justify-center mx-auto mb-3">
             <LogIn className="w-4 h-4 text-zinc-700 stroke-[2.2]" />
