@@ -842,7 +842,7 @@ export default function App() {
 
       {/* Architectural Footer */}
       <footer className="relative z-10 py-5 mt-8 text-center text-xs text-zinc-400 font-medium border-t border-zinc-200/60">
-        Meridian • Powered by AWS Bedrock & Claude 3.5 Sonnet
+        © 2026 Akshat Mohanty. Built with ❤️
       </footer>
     </div>
   );
