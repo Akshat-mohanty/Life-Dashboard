@@ -147,30 +147,46 @@ export default function Spending() {
     }));
 
   return (
-    <div className="bg-white/95 border border-zinc-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-sm transition-all flex flex-col h-full">
+    <div className="bg-white/95 border border-zinc-200/90 rounded-2xl p-3.5 sm:p-4 shadow-xs hover:shadow-sm transition-all flex flex-col h-full">
+      {/* Sleek Header */}
       <div className="flex items-center justify-between pb-3 border-b border-zinc-100 gap-2">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs flex-shrink-0">
-            <PieChartIcon className="w-4 h-4 text-cyan-300" />
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="w-7 h-7 rounded-lg bg-zinc-900 text-white flex items-center justify-center shadow-xs flex-shrink-0">
+            <PieChartIcon className="w-3.5 h-3.5 text-cyan-300" />
           </div>
           <div className="min-w-0">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <h3 className="font-bold text-zinc-900 text-sm tracking-tight whitespace-nowrap">Spending</h3>
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200 whitespace-nowrap">
+              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200 whitespace-nowrap">
                 ₹{summary.currentMonthTotal?.toLocaleString('en-IN') || 0}
               </span>
             </div>
-            <p className="text-[11px] text-zinc-400 whitespace-nowrap">Expenses & Monthly Budget</p>
+            <p className="text-[11px] text-zinc-400 whitespace-nowrap truncate max-w-[150px] sm:max-w-[200px]">
+              Expenses & Budget
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 flex-shrink-0">
-          {/* Month Selector */}
+        {!isAdding && (
+          <button
+            onClick={() => setIsAdding(true)}
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-zinc-900 bg-white hover:bg-zinc-50 border border-zinc-200 shadow-2xs hover:border-zinc-300 transition active:scale-95 cursor-pointer flex-shrink-0"
+          >
+            <Plus className="w-3.5 h-3.5 text-zinc-700" />
+            <span>Log</span>
+          </button>
+        )}
+      </div>
+
+      {/* Compact Budget Progress Strip */}
+      <div className="mt-3 p-2.5 bg-zinc-50/80 border border-zinc-100 rounded-xl">
+        <div className="flex items-center justify-between text-xs mb-1.5 gap-2 flex-wrap">
+          {/* Month Selector integrated into budget bar */}
           <div className="relative">
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              className="text-[11px] font-semibold pl-2 pr-6 py-1 bg-white text-zinc-800 hover:bg-zinc-50 border border-zinc-200 rounded-lg appearance-none cursor-pointer focus:outline-none transition"
+              className="text-[10px] font-bold pl-2 pr-5 py-0.5 bg-white text-zinc-800 hover:bg-zinc-50 border border-zinc-200 rounded-md appearance-none cursor-pointer focus:outline-none shadow-2xs transition"
             >
               {(summary.availableMonths || [selectedMonth]).map((m) => (
                 <option key={m} value={m}>
@@ -178,30 +194,19 @@ export default function Spending() {
                 </option>
               ))}
             </select>
-            <ChevronDown className="w-3 h-3 text-zinc-400 absolute right-1.5 top-2 pointer-events-none" />
+            <ChevronDown className="w-2.5 h-2.5 text-zinc-400 absolute right-1.5 top-1.5 pointer-events-none" />
           </div>
 
-          {!isAdding && (
-            <button
-              onClick={() => setIsAdding(true)}
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-zinc-900 bg-white hover:bg-zinc-50 border border-zinc-200 shadow-2xs hover:border-zinc-300 transition active:scale-95 cursor-pointer"
-            >
-              <Plus className="w-3.5 h-3.5 text-zinc-700" />
-              <span>Log</span>
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Compact Budget Progress Strip */}
-      <div className="mt-3 p-3 bg-zinc-50/80 border border-zinc-100 rounded-xl">
-        <div className="flex items-center justify-between text-xs mb-1.5">
-          <span className="text-[11px] font-semibold text-zinc-700">
-            ₹{summary.currentMonthTotal?.toLocaleString('en-IN') || 0} spent
-          </span>
-          <span className="text-[11px] text-zinc-500">
-            {summary.budgetConsumedPercentage || 0}% of ₹{summary.softMonthlyBudget?.toLocaleString('en-IN') || '50,000'}
-          </span>
+          <div className="flex items-center gap-1.5 text-[11px] text-zinc-500">
+            <span className="font-semibold text-zinc-800">
+              ₹{summary.currentMonthTotal?.toLocaleString('en-IN') || 0}
+            </span>
+            <span>•</span>
+            <span>
+              {summary.budgetConsumedPercentage || 0}% of ₹
+              {summary.softMonthlyBudget?.toLocaleString('en-IN') || '50,000'}
+            </span>
+          </div>
         </div>
         <div className="w-full h-1.5 bg-zinc-200 rounded-full overflow-hidden">
           <div

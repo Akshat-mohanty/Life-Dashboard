@@ -173,26 +173,28 @@ export default function Bills() {
   };
 
   return (
-    <div className="bg-white/95 border border-zinc-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-sm transition-all flex flex-col h-full">
+    <div className="bg-white/95 border border-zinc-200/90 rounded-2xl p-3.5 sm:p-4 shadow-xs hover:shadow-sm transition-all flex flex-col h-full">
       {/* Sleek Header */}
-      <div className="flex items-center justify-between pb-3.5 border-b border-zinc-100 gap-2">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs flex-shrink-0">
-            <CreditCard className="w-4 h-4 text-cyan-300" />
+      <div className="flex items-center justify-between pb-3 border-b border-zinc-100 gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="w-7 h-7 rounded-lg bg-zinc-900 text-white flex items-center justify-center shadow-xs flex-shrink-0">
+            <CreditCard className="w-3.5 h-3.5 text-cyan-300" />
           </div>
           <div className="min-w-0">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <h3 className="font-bold text-zinc-900 text-sm tracking-tight whitespace-nowrap">Bills & Payments</h3>
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200 whitespace-nowrap">
+              <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200 whitespace-nowrap">
                 ₹{summary.totalUnpaidAmount.toLocaleString('en-IN')} due
               </span>
               {summary.overdueCount > 0 && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap">
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap">
                   {summary.overdueCount} overdue
                 </span>
               )}
             </div>
-            <p className="text-[11px] text-zinc-400 whitespace-nowrap">Track due dates & recurring expenses</p>
+            <p className="text-[11px] text-zinc-400 whitespace-nowrap truncate max-w-[150px] sm:max-w-[200px]">
+              Track due dates & expenses
+            </p>
           </div>
         </div>
 
