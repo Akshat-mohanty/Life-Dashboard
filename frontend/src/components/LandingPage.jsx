@@ -1,0 +1,734 @@
+/**
+ * LandingPage.jsx
+ * Pixel-perfect editorial landing page inspired by reference design.
+ * Features:
+ * - Editorial typography & soft linen off-white palette (#f5f3ef / #faf9f6)
+ * - Hero headline ("Unwind. Kick Back. Recharge.") & email capture bar
+ * - Serene nature landscape hero banner in its dedicated place
+ * - 3D angled iPhone device mockup displaying the actual mobile Life Dashboard UI
+ * - Floating black feature badge pills (Daily AI Briefing, Smart Bill Alerts, etc.)
+ * - "Why join?" editorial value proposition section
+ * - Interactive Auth Modal supporting Email, Google OAuth, and Instant Demo Access
+ */
+
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Menu,
+  X,
+  Sparkles,
+  Check,
+  CheckCircle2,
+  Lock,
+  Mail,
+  User,
+  Eye,
+  EyeOff,
+  Zap,
+  LogIn,
+  Key,
+  Calendar,
+  CreditCard,
+  PieChart as PieChartIcon,
+  CheckSquare,
+  ShieldCheck,
+  ArrowRight,
+  ChevronRight,
+} from 'lucide-react';
+
+export default function LandingPage({
+  onLogin,
+  onSignup,
+  onConfirmSignup,
+  onForgotPassword,
+  onLoginAsDemo,
+  onLoginWithGoogle,
+  authError,
+  actionLoading,
+}) {
+  // Hero email input & terms checkbox state
+  const [heroEmail, setHeroEmail] = useState('');
+  const [agreedToTerms, setAgreedToTerms] = useState(true);
+
+  // Auth modal state
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState('signup'); // 'signup' | 'login' | 'confirm'
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+  const [confirmCode, setConfirmCode] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [localError, setLocalError] = useState('');
+  const [infoMessage, setInfoMessage] = useState('');
+
+  // Mobile navigation drawer state
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Trigger auth modal with prefilled email
+  const openAuthWithEmail = (defaultMode = 'signup') => {
+    setAuthMode(defaultMode);
+    if (heroEmail.trim()) {
+      setEmail(heroEmail.trim());
+    }
+    setLocalError('');
+    setInfoMessage('');
+    setIsAuthModalOpen(true);
+  };
+
+  const handleHeroSubmit = (e) => {
+    e.preventDefault();
+    if (!agreedToTerms) {
+      alert('Please accept the Privacy Policy and Terms and Conditions to proceed.');
+      return;
+    }
+    openAuthWithEmail('signup');
+  };
+
+  const handleAuthSubmit = async (e) => {
+    e.preventDefault();
+    setLocalError('');
+    setInfoMessage('');
+
+    try {
+      if (authMode === 'login') {
+        await onLogin(email, password);
+      } else if (authMode === 'signup') {
+        const res = await onSignup(email, password, name);
+        if (res?.isConfirmed) {
+          setInfoMessage('Account created! Logging in...');
+        } else {
+          setAuthMode('confirm');
+          setInfoMessage(`Verification code sent to ${email}.`);
+        }
+      } else if (authMode === 'confirm') {
+        await onConfirmSignup(email, confirmCode);
+        setInfoMessage('Account confirmed! Logging in...');
+        await onLogin(email, password);
+      }
+    } catch (err) {
+      setLocalError(err.message || 'Authentication failed. Please check your credentials.');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#f5f3ef] text-zinc-900 font-sans selection:bg-zinc-900 selection:text-white relative overflow-x-hidden">
+      {/* =====================================================================
+          TOP NAVIGATION BAR
+          ===================================================================== */}
+      <header className="w-full border-b border-zinc-300/60 bg-[#f5f3ef]/90 backdrop-blur-md sticky top-0 z-40">
+        <div className="max-w-6xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
+          {/* Left: Menu Button */}
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-800 hover:text-black transition cursor-pointer p-1 rounded-lg"
+          >
+            <div className="w-4 h-3 flex flex-col justify-between">
+              <span className="w-full h-0.5 bg-zinc-900 rounded-full" />
+              <span className="w-full h-0.5 bg-zinc-900 rounded-full" />
+              <span className="w-3/4 h-0.5 bg-zinc-900 rounded-full" />
+            </div>
+            <span>Menu</span>
+          </button>
+
+          {/* Center: Brand Logo */}
+          <div className="flex items-center gap-1">
+            <span className="text-xl sm:text-2xl font-black tracking-tight uppercase text-zinc-950 font-serif">
+              EBOLT
+            </span>
+            <span className="text-[10px] font-bold text-zinc-500 align-super">®</span>
+          </div>
+
+          {/* Right: Actions */}
+          <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={onLoginAsDemo}
+              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-zinc-700 hover:text-black hover:bg-zinc-200/60 transition cursor-pointer"
+            >
+              <Zap className="w-3.5 h-3.5 text-amber-500" />
+              <span>Instant Demo</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => openAuthWithEmail('login')}
+              className="px-4.5 py-2 bg-zinc-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow-xs transition active:scale-95 cursor-pointer"
+            >
+              Get Started
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Menu Dropdown */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="bg-white border-b border-zinc-200 px-6 py-4 space-y-3 z-30 shadow-md relative"
+          >
+            <div className="flex flex-col gap-2.5 text-sm font-semibold text-zinc-700">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  openAuthWithEmail('signup');
+                }}
+                className="text-left py-1 hover:text-zinc-950 cursor-pointer"
+              >
+                Sign up with Email
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  openAuthWithEmail('login');
+                }}
+                className="text-left py-1 hover:text-zinc-950 cursor-pointer"
+              >
+                Sign in to Existing Account
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  onLoginAsDemo();
+                }}
+                className="text-left py-1 text-indigo-600 font-bold flex items-center gap-1.5 cursor-pointer"
+              >
+                <Zap className="w-4 h-4 text-amber-500" />
+                <span>1-Click Demo Sandbox</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* =====================================================================
+          HERO SECTION (Centered Headline, Subtitle, Email Bar)
+          ===================================================================== */}
+      <section className="pt-14 sm:pt-20 pb-8 px-5 sm:px-8 text-center max-w-4xl mx-auto">
+        {/* Editorial Headline matching reference style */}
+        <motion.h1
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-4xl sm:text-6xl md:text-[68px] font-black tracking-tight text-zinc-950 leading-[1.08]"
+        >
+          Unwind. Kick Back.
+          <br />
+          Recharge.
+        </motion.h1>
+
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="text-sm sm:text-base text-zinc-600 max-w-lg mx-auto mt-4 sm:mt-5 leading-relaxed font-normal"
+        >
+          We unify your daily tasks, bills, schedule & documents,
+          <br className="hidden sm:inline" />
+          so you receive autonomous morning AI clarity for free.
+        </motion.p>
+
+        {/* Email Signup Bar matching reference */}
+        <motion.form
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          onSubmit={handleHeroSubmit}
+          className="mt-6 sm:mt-8 max-w-md mx-auto"
+        >
+          <div className="flex items-center bg-white rounded-2xl sm:rounded-full p-1.5 border border-zinc-300 shadow-[0_4px_20px_rgba(0,0,0,0.06)] focus-within:border-zinc-500 focus-within:ring-2 focus-within:ring-zinc-900/10 transition">
+            <input
+              type="email"
+              required
+              placeholder="Your email"
+              value={heroEmail}
+              onChange={(e) => setHeroEmail(e.target.value)}
+              className="w-full px-4 sm:px-5 py-2.5 bg-transparent text-xs sm:text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none"
+            />
+            <button
+              type="submit"
+              className="px-6 py-2.5 bg-zinc-900 hover:bg-black text-white text-xs sm:text-sm font-bold rounded-xl sm:rounded-full shadow-xs transition-all active:scale-95 cursor-pointer shrink-0"
+            >
+              Join
+            </button>
+          </div>
+
+          {/* Agreement Checkbox */}
+          <div className="flex items-center justify-center gap-2 mt-3.5 text-[11px] text-zinc-500">
+            <input
+              type="checkbox"
+              id="terms-check"
+              checked={agreedToTerms}
+              onChange={(e) => setAgreedToTerms(e.target.checked)}
+              className="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900 cursor-pointer"
+            />
+            <label htmlFor="terms-check" className="cursor-pointer select-none">
+              I agree to the{' '}
+              <span className="underline hover:text-zinc-900">Privacy Policy</span> and{' '}
+              <span className="underline hover:text-zinc-900">Terms and Conditions</span>
+            </label>
+          </div>
+        </motion.form>
+      </section>
+
+      {/* =====================================================================
+          NATURE-RELATED HERO IMAGE (Preserved Exactly In Its Place)
+          ===================================================================== */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-8 mt-2 mb-16 sm:mb-24">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
+          className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg border border-black/10 bg-zinc-200"
+        >
+          <img
+            src="/nature-hero.png"
+            alt="Tranquil countryside landscape with fire pit and lounge chairs"
+            className="w-full h-auto object-cover max-h-[360px] sm:max-h-[440px]"
+          />
+          {/* Subtle gradient overlay to blend gently */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+        </motion.div>
+      </section>
+
+      {/* =====================================================================
+          "WHY JOIN?" SECTION WITH 3D TILTED IPHONE (MOBILE LIFE DASHBOARD)
+          ===================================================================== */}
+      <section className="max-w-6xl mx-auto px-5 sm:px-8 py-8 sm:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          {/* Left: 3D Angled iPhone Device Mockup with Floating Feature Badges */}
+          <div className="lg:col-span-7 flex items-center justify-center relative py-6">
+            {/* Background ambient glow behind device */}
+            <div className="absolute w-72 h-72 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" />
+
+            {/* 3D Perspective Wrapper */}
+            <div
+              className="relative transition-transform duration-700 ease-out"
+              style={{
+                perspective: '1200px',
+              }}
+            >
+              {/* Tilted iPhone Chassis */}
+              <div
+                className="w-[280px] sm:w-[320px] rounded-[48px] bg-zinc-950 p-2.5 shadow-[-22px_32px_60px_rgba(0,0,0,0.32),0_0_0_1px_rgba(255,255,255,0.12)] border-2 border-zinc-800 relative z-10 transition-transform duration-500 hover:rotate-y-6 hover:rotate-x-2"
+                style={{
+                  transform: 'rotateY(14deg) rotateX(6deg) rotateZ(-3deg)',
+                  transformStyle: 'preserve-3d',
+                }}
+              >
+                {/* iPhone Inner Screen Frame */}
+                <div className="w-full bg-[#f8f9fa] rounded-[40px] overflow-hidden border border-zinc-900 flex flex-col relative text-zinc-900 select-none">
+                  {/* Status Bar & Dynamic Island */}
+                  <div className="pt-2 px-6 pb-1 flex items-center justify-between text-[10px] font-bold text-zinc-900 bg-white border-b border-zinc-100">
+                    <span>9:41</span>
+                    <div className="w-20 h-4.5 bg-black rounded-full mx-auto" />
+                    <div className="flex items-center gap-1 text-[9px]">
+                      <span>5G</span>
+                      <div className="w-4 h-2 rounded-xs border border-zinc-800 p-0.5 flex items-center">
+                        <div className="w-full h-full bg-zinc-900 rounded-2xs" />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Mobile Screen Header */}
+                  <div className="px-3.5 py-2.5 bg-white border-b border-zinc-100 flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-5 h-5 rounded-md bg-black text-white flex items-center justify-center font-black text-[9px]">
+                        E
+                      </div>
+                      <span className="font-extrabold text-xs tracking-tight">Ebolt</span>
+                    </div>
+                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 border border-zinc-200">
+                      Today • Sep 19
+                    </span>
+                  </div>
+
+                  {/* Mobile Screen Body: Real Life Dashboard Widgets */}
+                  <div className="p-3 space-y-2.5 bg-[#f5f6f8] text-left">
+                    {/* 1. Today's AI Morning Briefing Card */}
+                    <div className="bg-zinc-950 text-white rounded-xl p-3 border border-zinc-800 shadow-xs">
+                      <div className="flex items-center justify-between pb-1.5 border-b border-zinc-800/80 mb-1.5">
+                        <div className="flex items-center gap-1.5">
+                          <Sparkles className="w-3 h-3 text-cyan-300" />
+                          <span className="text-[10px] font-bold tracking-tight">
+                            AI Executive Briefing
+                          </span>
+                        </div>
+                        <span className="text-[8px] uppercase tracking-wider font-bold text-emerald-400 bg-emerald-500/20 px-1.5 py-0.2 rounded">
+                          Synthesized
+                        </span>
+                      </div>
+                      <p className="text-[9.5px] text-zinc-300 leading-relaxed">
+                        Good morning! 2 priority tasks need action today. Monthly spending is well within your budget limit.
+                      </p>
+                    </div>
+
+                    {/* 2. Tasks Widget */}
+                    <div className="bg-white rounded-xl p-2.5 border border-zinc-200/90 shadow-2xs">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-1.5">
+                          <CheckSquare className="w-3 h-3 text-cyan-500" />
+                          <span className="text-[10px] font-bold text-zinc-900">Today's Tasks</span>
+                        </div>
+                        <span className="text-[9px] font-semibold text-zinc-400">2 pending</span>
+                      </div>
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-2 p-1.5 rounded-lg bg-zinc-50 border border-zinc-100 text-[9px] text-zinc-800">
+                          <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
+                          <span className="font-medium truncate">Review AWS Bedrock architecture</span>
+                        </div>
+                        <div className="flex items-center gap-2 p-1.5 rounded-lg bg-zinc-50 border border-zinc-100 text-[9px] text-zinc-800">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
+                          <span className="font-medium truncate">Pay electricity & utilities</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 3. Bills & Spending Mini Grid */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="bg-white rounded-xl p-2 border border-zinc-200/90">
+                        <div className="flex items-center gap-1 text-[9px] font-bold text-zinc-500">
+                          <CreditCard className="w-2.5 h-2.5 text-cyan-600" />
+                          <span>Bills</span>
+                        </div>
+                        <p className="text-xs font-black text-zinc-900 mt-1">₹2,450</p>
+                        <p className="text-[8px] text-zinc-400 mt-0.5">Due in 3 days</p>
+                      </div>
+
+                      <div className="bg-white rounded-xl p-2 border border-zinc-200/90">
+                        <div className="flex items-center gap-1 text-[9px] font-bold text-zinc-500">
+                          <PieChartIcon className="w-2.5 h-2.5 text-indigo-600" />
+                          <span>Spending</span>
+                        </div>
+                        <p className="text-xs font-black text-zinc-900 mt-1">₹14,200</p>
+                        <p className="text-[8px] text-emerald-600 font-semibold mt-0.5">28% of budget</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom App Navigation Bar inside phone */}
+                  <div className="bg-white border-t border-zinc-100 py-2 px-5 flex items-center justify-between text-[9px] font-bold text-zinc-400">
+                    <span className="text-zinc-950">Dashboard</span>
+                    <span>Tasks</span>
+                    <span>Finance</span>
+                    <span>Archive</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Dark Pill Badges matching reference placement */}
+              <div className="absolute -right-4 sm:-right-8 top-16 z-20 flex flex-col gap-3 pointer-events-none">
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  viewport={{ once: true }}
+                  className="bg-zinc-950 text-white border border-zinc-800 px-3.5 py-2 rounded-xl text-xs font-semibold shadow-xl flex items-center gap-2"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>Daily AI Briefing</span>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.35 }}
+                  viewport={{ once: true }}
+                  className="bg-zinc-950 text-white border border-zinc-800 px-3.5 py-2 rounded-xl text-xs font-semibold shadow-xl flex items-center gap-2"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>Smart Bill Alerts</span>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                  viewport={{ once: true }}
+                  className="bg-zinc-950 text-white border border-zinc-800 px-3.5 py-2 rounded-xl text-xs font-semibold shadow-xl flex items-center gap-2"
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span>Spending Tracker</span>
+                </motion.div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right: "Why join?" Editorial Copy matching reference style */}
+          <div className="lg:col-span-5 text-left space-y-5 lg:pl-6">
+            <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-zinc-950">
+              Why join?
+            </h2>
+
+            <p className="text-sm text-zinc-700 leading-relaxed font-normal">
+              Ebolt forms seamless autonomous partnerships with your daily schedule, tasks, bills, and documents—synthesizing them into clear morning intelligence briefings.
+            </p>
+
+            <p className="text-sm text-zinc-700 leading-relaxed font-normal">
+              What does this mean for you as a user? You will have immediate clarity on urgent obligations, total visibility over your monthly expenses, and full access to your lifetime archive.
+            </p>
+
+            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <button
+                type="button"
+                onClick={() => openAuthWithEmail('signup')}
+                className="px-6 py-3.5 bg-zinc-900 hover:bg-black text-white text-xs sm:text-sm font-bold rounded-xl shadow-md transition active:scale-95 cursor-pointer text-center"
+              >
+                Become a Member
+              </button>
+
+              <button
+                type="button"
+                onClick={onLoginAsDemo}
+                className="px-5 py-3.5 bg-white hover:bg-zinc-100 text-zinc-900 text-xs sm:text-sm font-bold rounded-xl border border-zinc-300 shadow-2xs transition cursor-pointer text-center flex items-center justify-center gap-2"
+              >
+                <Zap className="w-3.5 h-3.5 text-amber-500" />
+                <span>Try Live Demo</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
+          FOOTER
+          ===================================================================== */}
+      <footer className="border-t border-zinc-300/80 py-8 px-6 text-center text-xs text-zinc-500 bg-[#f5f3ef]">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 font-serif font-black text-sm text-zinc-900">
+            <span>EBOLT</span>
+            <span className="text-zinc-400 font-sans font-normal text-xs">• Personal AI Operating System</span>
+          </div>
+          <p>© 2026 Ebolt Life Dashboard. Secure Single-Table Isolation.</p>
+        </div>
+      </footer>
+
+      {/* =====================================================================
+          AUTH MODAL POPUP (Sign Up / Login / Google OAuth / Demo)
+          ===================================================================== */}
+      <AnimatePresence>
+        {isAuthModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+            onClick={() => setIsAuthModalOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              className="bg-white rounded-[28px] border border-zinc-200 shadow-2xl p-6 sm:p-7 max-w-sm w-full relative my-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                type="button"
+                onClick={() => setIsAuthModalOpen(false)}
+                className="absolute top-4 right-4 w-7 h-7 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-600 flex items-center justify-center transition cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              {/* Icon */}
+              <div className="w-10 h-10 rounded-xl bg-zinc-900 text-white flex items-center justify-center mx-auto mb-3 shadow-xs">
+                <LogIn className="w-4 h-4" />
+              </div>
+
+              {/* Heading */}
+              <h3 className="text-lg font-bold text-zinc-900 text-center tracking-tight">
+                {authMode === 'login'
+                  ? 'Sign in with email'
+                  : authMode === 'signup'
+                  ? 'Sign up with email'
+                  : 'Confirm your email'}
+              </h3>
+              <p className="text-xs text-zinc-500 text-center mt-1 mb-4">
+                {authMode === 'confirm'
+                  ? `Enter code sent to ${email}`
+                  : 'Access your AI intelligence briefing and personal partition.'}
+              </p>
+
+              {/* Errors & Info messages */}
+              {(localError || authError) && (
+                <div className="p-2.5 mb-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
+                  {localError || authError}
+                </div>
+              )}
+              {infoMessage && (
+                <div className="p-2.5 mb-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium">
+                  {infoMessage}
+                </div>
+              )}
+
+              {/* Form */}
+              <form onSubmit={handleAuthSubmit} className="space-y-2.5">
+                {authMode === 'signup' && (
+                  <div className="relative flex items-center bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 focus-within:border-zinc-400 transition">
+                    <User className="w-4 h-4 text-zinc-400 mr-2 shrink-0" />
+                    <input
+                      type="text"
+                      required
+                      placeholder="Your Name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full bg-transparent text-xs text-zinc-900 focus:outline-none"
+                    />
+                  </div>
+                )}
+
+                {authMode !== 'confirm' ? (
+                  <>
+                    <div className="relative flex items-center bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 focus-within:border-zinc-400 transition">
+                      <Mail className="w-4 h-4 text-zinc-400 mr-2 shrink-0" />
+                      <input
+                        type="email"
+                        required
+                        placeholder="Email address"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full bg-transparent text-xs text-zinc-900 focus:outline-none"
+                      />
+                    </div>
+
+                    <div className="relative flex items-center bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 focus-within:border-zinc-400 transition">
+                      <Lock className="w-4 h-4 text-zinc-400 mr-2 shrink-0" />
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        required
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full bg-transparent text-xs text-zinc-900 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="text-zinc-400 hover:text-zinc-600 focus:outline-none cursor-pointer"
+                      >
+                        {showPassword ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="relative flex items-center bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 focus-within:border-zinc-400 transition">
+                    <Key className="w-4 h-4 text-zinc-400 mr-2 shrink-0" />
+                    <input
+                      type="text"
+                      required
+                      placeholder="6-digit verification code"
+                      value={confirmCode}
+                      onChange={(e) => setConfirmCode(e.target.value)}
+                      className="w-full bg-transparent text-xs text-zinc-900 focus:outline-none font-mono tracking-widest"
+                    />
+                  </div>
+                )}
+
+                {authMode === 'login' && (
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => onForgotPassword(email)}
+                      className="text-[11px] text-zinc-500 hover:text-zinc-900 cursor-pointer"
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={actionLoading}
+                  className="w-full py-2.5 px-4 bg-zinc-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow-xs transition active:scale-95 disabled:opacity-60 cursor-pointer mt-1"
+                >
+                  {actionLoading
+                    ? 'Processing...'
+                    : authMode === 'login'
+                    ? 'Sign In'
+                    : authMode === 'signup'
+                    ? 'Create Account'
+                    : 'Verify Code'}
+                </button>
+              </form>
+
+              {/* Dotted Divider */}
+              <div className="relative flex items-center justify-center my-3">
+                <div className="border-t border-zinc-200 w-full" />
+                <span className="bg-white px-2 text-[10px] text-zinc-400">Or continue with</span>
+                <div className="border-t border-zinc-200 w-full" />
+              </div>
+
+              {/* Social OAuth */}
+              <button
+                type="button"
+                onClick={async () => {
+                  setLocalError('');
+                  try {
+                    await onLoginWithGoogle();
+                  } catch (err) {
+                    setLocalError(err.message || 'Google OAuth is not configured yet.');
+                  }
+                }}
+                className="w-full h-9.5 bg-white hover:bg-zinc-50 border border-zinc-200 rounded-xl flex items-center justify-center gap-2 text-xs font-semibold text-zinc-800 transition active:scale-95 cursor-pointer shadow-2xs"
+              >
+                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
+                  <path
+                    fill="#4285F4"
+                    d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.36 24 12 24z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 10.03 0 12s.45 3.82 1.25 5.42l4.03-3.15z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.36 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
+                  />
+                </svg>
+                <span>Continue with Google</span>
+              </button>
+
+              {/* Mode switch & Demo */}
+              <div className="mt-3.5 text-center space-y-1.5">
+                <p className="text-[11px] text-zinc-500">
+                  {authMode === 'login' ? "Don't have an account? " : 'Already have an account? '}
+                  <button
+                    type="button"
+                    onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}
+                    className="text-zinc-950 font-bold hover:underline cursor-pointer ml-1"
+                  >
+                    {authMode === 'login' ? 'Sign up' : 'Sign in'}
+                  </button>
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsAuthModalOpen(false);
+                    onLoginAsDemo();
+                  }}
+                  className="text-[11px] text-zinc-400 hover:text-zinc-800 transition cursor-pointer inline-flex items-center gap-1 mx-auto"
+                >
+                  <Zap className="w-3 h-3 text-amber-500" />
+                  <span>Instant Demo Access</span>
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
