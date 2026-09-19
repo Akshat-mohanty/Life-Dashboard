@@ -233,53 +233,61 @@ export default function App() {
           <span className="text-xl font-bold tracking-tight text-zinc-900">Ebolt</span>
         </div>
 
-        {/* Center Floating Glassmorphic Card */}
+        {/* Center Floating Glassmorphic Card (Compacted & Balanced) */}
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="relative z-10 w-full max-w-[425px] mx-auto bg-white/80 backdrop-blur-2xl rounded-[32px] border border-white/70 shadow-[0_25px_60px_-15px_rgba(30,50,90,0.12),0_0_35px_rgba(155,222,232,0.2)] p-8 sm:p-9"
+          className="relative z-10 w-full max-w-[365px] mx-auto bg-white/80 backdrop-blur-2xl rounded-[28px] border border-white/70 shadow-[0_20px_50px_-15px_rgba(30,50,90,0.12),0_0_30px_rgba(155,222,232,0.2)] p-6 sm:p-7"
         >
-          {/* Top Squircle Icon */}
-          <div className="w-14 h-14 rounded-2xl bg-white shadow-[0_4px_16px_rgba(0,0,0,0.06)] border border-white/90 flex items-center justify-center mx-auto mb-5">
-            <LogIn className="w-5 h-5 text-zinc-700 stroke-[2.2]" />
+          {/* Top Pill / Badge describing what site does */}
+          <div className="flex justify-center mb-2.5">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-50/90 border border-indigo-100/90 text-[10px] font-semibold text-indigo-700 tracking-wide">
+              <Sparkles className="w-3 h-3 text-indigo-600" />
+              <span>AI Life Management & Archive</span>
+            </span>
           </div>
 
-          {/* Heading & Subtitle */}
-          <h1 className="text-[22px] sm:text-2xl font-bold text-zinc-900 tracking-tight text-center">
+          {/* Top Squircle Icon */}
+          <div className="w-11 h-11 rounded-xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.06)] border border-white/90 flex items-center justify-center mx-auto mb-3">
+            <LogIn className="w-4 h-4 text-zinc-700 stroke-[2.2]" />
+          </div>
+
+          {/* Heading & 1-2 Line Site Description */}
+          <h1 className="text-xl font-bold text-zinc-900 tracking-tight text-center">
             {authMode === 'login'
               ? 'Sign in with email'
               : authMode === 'signup'
               ? 'Create your account'
               : 'Confirm your email'}
           </h1>
-          <p className="text-xs text-zinc-500 text-center max-w-[280px] mx-auto mt-2 mb-6 leading-relaxed">
+          <p className="text-xs text-zinc-500 text-center max-w-[280px] mx-auto mt-1.5 mb-4 sm:mb-5 leading-relaxed">
             {authMode === 'login'
-              ? 'Make a new doc to bring your words, data, and teams together. For free'
+              ? 'Your personal AI life operating system to prioritize tasks, track finances, and preserve your daily archive.'
               : authMode === 'signup'
-              ? 'Bring your metrics, daily tasks, and data together. For free'
+              ? 'Create your account to unlock your personal AI command center and secure historical archive.'
               : `Enter the verification code sent to ${email}`}
           </p>
 
           {/* Alert messages */}
           {(localError || authError) && (
-            <div className="p-3 mb-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
+            <div className="p-2.5 mb-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
               {localError || authError}
             </div>
           )}
 
           {infoMessage && (
-            <div className="p-3 mb-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center gap-2">
+            <div className="p-2.5 mb-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
               <span>{infoMessage}</span>
             </div>
           )}
 
           {/* Auth Form */}
-          <form onSubmit={handleAuthSubmit} className="space-y-3">
+          <form onSubmit={handleAuthSubmit} className="space-y-2.5">
             {authMode === 'signup' && (
-              <div className="relative flex items-center bg-[#f1f4f8]/90 hover:bg-[#ebf0f6] focus-within:bg-white focus-within:border-zinc-300 focus-within:ring-2 focus-within:ring-zinc-400/20 rounded-2xl px-4 py-3.5 transition-all border border-transparent">
-                <User className="w-4 h-4 text-zinc-400 mr-3 flex-shrink-0" />
+              <div className="relative flex items-center bg-[#f1f4f8]/90 hover:bg-[#ebf0f6] focus-within:bg-white focus-within:border-zinc-300 focus-within:ring-2 focus-within:ring-zinc-400/20 rounded-xl px-3.5 py-2.5 sm:py-3 transition-all border border-transparent">
+                <User className="w-4 h-4 text-zinc-400 mr-2.5 flex-shrink-0" />
                 <input
                   type="text"
                   required
@@ -294,8 +302,8 @@ export default function App() {
             {authMode !== 'confirm' ? (
               <>
                 {/* Email Input */}
-                <div className="relative flex items-center bg-[#f1f4f8]/90 hover:bg-[#ebf0f6] focus-within:bg-white focus-within:border-zinc-300 focus-within:ring-2 focus-within:ring-zinc-400/20 rounded-2xl px-4 py-3.5 transition-all border border-transparent">
-                  <Mail className="w-4 h-4 text-zinc-400 mr-3 flex-shrink-0" />
+                <div className="relative flex items-center bg-[#f1f4f8]/90 hover:bg-[#ebf0f6] focus-within:bg-white focus-within:border-zinc-300 focus-within:ring-2 focus-within:ring-zinc-400/20 rounded-xl px-3.5 py-2.5 sm:py-3 transition-all border border-transparent">
+                  <Mail className="w-4 h-4 text-zinc-400 mr-2.5 flex-shrink-0" />
                   <input
                     type="email"
                     required
@@ -307,8 +315,8 @@ export default function App() {
                 </div>
 
                 {/* Password Input */}
-                <div className="relative flex items-center bg-[#f1f4f8]/90 hover:bg-[#ebf0f6] focus-within:bg-white focus-within:border-zinc-300 focus-within:ring-2 focus-within:ring-zinc-400/20 rounded-2xl px-4 py-3.5 transition-all border border-transparent">
-                  <Lock className="w-4 h-4 text-zinc-400 mr-3 flex-shrink-0" />
+                <div className="relative flex items-center bg-[#f1f4f8]/90 hover:bg-[#ebf0f6] focus-within:bg-white focus-within:border-zinc-300 focus-within:ring-2 focus-within:ring-zinc-400/20 rounded-xl px-3.5 py-2.5 sm:py-3 transition-all border border-transparent">
+                  <Lock className="w-4 h-4 text-zinc-400 mr-2.5 flex-shrink-0" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
@@ -327,8 +335,8 @@ export default function App() {
                 </div>
               </>
             ) : (
-              <div className="relative flex items-center bg-[#f1f4f8]/90 hover:bg-[#ebf0f6] focus-within:bg-white focus-within:border-zinc-300 focus-within:ring-2 focus-within:ring-zinc-400/20 rounded-2xl px-4 py-3.5 transition-all border border-transparent">
-                <Key className="w-4 h-4 text-zinc-400 mr-3 flex-shrink-0" />
+              <div className="relative flex items-center bg-[#f1f4f8]/90 hover:bg-[#ebf0f6] focus-within:bg-white focus-within:border-zinc-300 focus-within:ring-2 focus-within:ring-zinc-400/20 rounded-xl px-3.5 py-2.5 sm:py-3 transition-all border border-transparent">
+                <Key className="w-4 h-4 text-zinc-400 mr-2.5 flex-shrink-0" />
                 <input
                   type="text"
                   required
@@ -341,11 +349,11 @@ export default function App() {
             )}
 
             {authMode === 'login' && (
-              <div className="flex justify-end pt-0.5 pb-1">
+              <div className="flex justify-end pt-0.5 pb-0.5">
                 <button
                   type="button"
                   onClick={handleForgotPassword}
-                  className="text-xs text-zinc-500 hover:text-zinc-800 transition font-normal cursor-pointer"
+                  className="text-[11px] text-zinc-500 hover:text-zinc-800 transition font-normal cursor-pointer"
                 >
                   Forgot password?
                 </button>
@@ -356,7 +364,7 @@ export default function App() {
             <button
               type="submit"
               disabled={actionLoading}
-              className="w-full py-3.5 px-4 bg-[#1d1f27] hover:bg-[#121318] text-white text-xs sm:text-sm font-semibold rounded-2xl shadow-[0_6px_20px_rgba(0,0,0,0.15)] transition-all active:scale-[0.99] disabled:opacity-60 cursor-pointer flex items-center justify-center gap-2 mt-2"
+              className="w-full py-2.5 sm:py-3 px-4 bg-[#1d1f27] hover:bg-[#121318] text-white text-xs sm:text-sm font-semibold rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition-all active:scale-[0.99] disabled:opacity-60 cursor-pointer flex items-center justify-center gap-2 mt-1"
             >
               {actionLoading ? (
                 'Processing...'
@@ -371,16 +379,16 @@ export default function App() {
           </form>
 
           {/* Dotted Divider */}
-          <div className="relative flex items-center justify-center my-5">
+          <div className="relative flex items-center justify-center my-3.5">
             <div className="border-t border-dotted border-zinc-300 w-full" />
-            <span className="bg-transparent px-3 text-[11px] text-zinc-400 font-normal tracking-wide whitespace-nowrap">
+            <span className="bg-transparent px-2.5 text-[10px] text-zinc-400 font-normal tracking-wide whitespace-nowrap">
               Or sign in with
             </span>
             <div className="border-t border-dotted border-zinc-300 w-full" />
           </div>
 
           {/* Social Row: Google, Facebook, Apple */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-2.5">
             {/* Google */}
             <button
               type="button"
@@ -388,10 +396,10 @@ export default function App() {
                 setLocalError('');
                 loginWithGoogle();
               }}
-              className="h-11 bg-white hover:bg-zinc-50 border border-zinc-200/90 rounded-2xl flex items-center justify-center shadow-xs hover:border-zinc-300 transition-all active:scale-95 cursor-pointer"
+              className="h-9 sm:h-10 bg-white hover:bg-zinc-50 border border-zinc-200/90 rounded-xl flex items-center justify-center shadow-2xs hover:border-zinc-300 transition-all active:scale-95 cursor-pointer"
               title="Sign in with Google"
             >
-              <svg className="w-4 h-4" viewBox="0 0 24 24">
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"
@@ -418,10 +426,10 @@ export default function App() {
                 setInfoMessage('');
                 setLocalError('Sign in with Facebook is not configured yet. Please sign in with email or use Instant Demo.');
               }}
-              className="h-11 bg-white hover:bg-zinc-50 border border-zinc-200/90 rounded-2xl flex items-center justify-center shadow-xs hover:border-zinc-300 transition-all active:scale-95 cursor-pointer"
+              className="h-9 sm:h-10 bg-white hover:bg-zinc-50 border border-zinc-200/90 rounded-xl flex items-center justify-center shadow-2xs hover:border-zinc-300 transition-all active:scale-95 cursor-pointer"
               title="Sign in with Facebook"
             >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#1877F2">
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#1877F2">
                 <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
               </svg>
             </button>
@@ -433,18 +441,18 @@ export default function App() {
                 setInfoMessage('');
                 setLocalError('Sign in with Apple is not configured yet. Please sign in with email or use Instant Demo.');
               }}
-              className="h-11 bg-white hover:bg-zinc-50 border border-zinc-200/90 rounded-2xl flex items-center justify-center shadow-xs hover:border-zinc-300 transition-all active:scale-95 cursor-pointer text-zinc-900"
+              className="h-9 sm:h-10 bg-white hover:bg-zinc-50 border border-zinc-200/90 rounded-xl flex items-center justify-center shadow-2xs hover:border-zinc-300 transition-all active:scale-95 cursor-pointer text-zinc-900"
               title="Sign in with Apple"
             >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.37c.62-.75 1.04-1.8 0.92-2.85-.9.04-2 .6-2.65 1.36-.58.67-.99 1.74-.86 2.78 1.01.08 1.97-.54 2.59-1.29z" />
               </svg>
             </button>
           </div>
 
           {/* Mode Switcher & Quick Demo */}
-          <div className="mt-5 text-center space-y-2">
-            <p className="text-xs text-zinc-500">
+          <div className="mt-3.5 text-center space-y-1.5">
+            <p className="text-[11px] text-zinc-500">
               {authMode === 'login' ? "Don't have an account? " : 'Already have an account? '}
               <button
                 type="button"
