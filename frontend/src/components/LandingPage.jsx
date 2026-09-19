@@ -607,9 +607,9 @@ export default function LandingPage({
               )}
 
               {/* Form */}
-              <form onSubmit={handleAuthSubmit} className="space-y-2.5">
+              <form onSubmit={handleAuthSubmit} className="space-y-3">
                 {authMode === 'signup' && (
-                  <div className="relative flex items-center bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 focus-within:border-zinc-400 transition">
+                  <div className="relative flex items-center bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-3 focus-within:border-zinc-400 transition">
                     <User className="w-4 h-4 text-zinc-400 mr-2 shrink-0" />
                     <input
                       type="text"
@@ -617,14 +617,14 @@ export default function LandingPage({
                       placeholder="Your Name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full bg-transparent text-xs text-zinc-900 focus:outline-none"
+                      className="w-full bg-transparent text-xs sm:text-sm text-zinc-900 focus:outline-none"
                     />
                   </div>
                 )}
 
                 {authMode !== 'confirm' ? (
                   <>
-                    <div className="relative flex items-center bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 focus-within:border-zinc-400 transition">
+                    <div className="relative flex items-center bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-3 focus-within:border-zinc-400 transition">
                       <Mail className="w-4 h-4 text-zinc-400 mr-2 shrink-0" />
                       <input
                         type="email"
@@ -632,11 +632,11 @@ export default function LandingPage({
                         placeholder="Email address"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full bg-transparent text-xs text-zinc-900 focus:outline-none"
+                        className="w-full bg-transparent text-xs sm:text-sm text-zinc-900 focus:outline-none"
                       />
                     </div>
 
-                    <div className="relative flex items-center bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 focus-within:border-zinc-400 transition">
+                    <div className="relative flex items-center bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-3 focus-within:border-zinc-400 transition">
                       <Lock className="w-4 h-4 text-zinc-400 mr-2 shrink-0" />
                       <input
                         type={showPassword ? 'text' : 'password'}
@@ -644,19 +644,19 @@ export default function LandingPage({
                         placeholder="Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full bg-transparent text-xs text-zinc-900 focus:outline-none"
+                        className="w-full bg-transparent text-xs sm:text-sm text-zinc-900 focus:outline-none"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
                         className="text-zinc-400 hover:text-zinc-600 focus:outline-none cursor-pointer"
                       >
-                        {showPassword ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
+                        {showPassword ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                       </button>
                     </div>
                   </>
                 ) : (
-                  <div className="relative flex items-center bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2.5 focus-within:border-zinc-400 transition">
+                  <div className="relative flex items-center bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-3 focus-within:border-zinc-400 transition">
                     <Key className="w-4 h-4 text-zinc-400 mr-2 shrink-0" />
                     <input
                       type="text"
@@ -664,17 +664,17 @@ export default function LandingPage({
                       placeholder="6-digit verification code"
                       value={confirmCode}
                       onChange={(e) => setConfirmCode(e.target.value)}
-                      className="w-full bg-transparent text-xs text-zinc-900 focus:outline-none font-mono tracking-widest"
+                      className="w-full bg-transparent text-xs sm:text-sm text-zinc-900 focus:outline-none font-mono tracking-widest"
                     />
                   </div>
                 )}
 
                 {authMode === 'login' && (
-                  <div className="flex justify-end">
+                  <div className="flex justify-end pt-0.5">
                     <button
                       type="button"
                       onClick={() => onForgotPassword(email)}
-                      className="text-[11px] text-zinc-500 hover:text-zinc-900 cursor-pointer"
+                      className="text-xs text-zinc-500 hover:text-zinc-900 cursor-pointer"
                     >
                       Forgot password?
                     </button>
@@ -684,7 +684,7 @@ export default function LandingPage({
                 <button
                   type="submit"
                   disabled={actionLoading}
-                  className="w-full py-2.5 px-4 bg-zinc-900 hover:bg-black text-white text-xs font-bold rounded-xl shadow-xs transition active:scale-95 disabled:opacity-60 cursor-pointer mt-1"
+                  className="w-full py-3 px-4 bg-zinc-900 hover:bg-black text-white text-xs sm:text-sm font-semibold rounded-xl shadow-xs transition active:scale-95 disabled:opacity-60 cursor-pointer mt-1"
                 >
                   {actionLoading
                     ? 'Processing...'
@@ -697,9 +697,9 @@ export default function LandingPage({
               </form>
 
               {/* Divider */}
-              <div className="relative flex items-center justify-center my-3">
+              <div className="relative flex items-center justify-center my-4">
                 <div className="border-t border-zinc-200 flex-1" />
-                <span className="bg-white px-2.5 text-[10px] text-zinc-400 whitespace-nowrap shrink-0 font-medium">
+                <span className="bg-white px-3 text-[11px] text-zinc-400 whitespace-nowrap shrink-0 font-medium">
                   Or continue with
                 </span>
                 <div className="border-t border-zinc-200 flex-1" />
@@ -716,9 +716,9 @@ export default function LandingPage({
                     setLocalError(err.message || 'Google OAuth is not configured yet.');
                   }
                 }}
-                className="w-full h-9.5 bg-white hover:bg-zinc-50 border border-zinc-200 rounded-xl flex items-center justify-center gap-2 text-xs font-semibold text-zinc-800 transition active:scale-95 cursor-pointer shadow-2xs"
+                className="w-full py-3 px-4 bg-white hover:bg-zinc-50 border border-zinc-200 hover:border-zinc-300 rounded-xl flex items-center justify-center gap-2.5 text-xs sm:text-sm font-semibold text-zinc-800 transition active:scale-95 cursor-pointer shadow-2xs hover:shadow-xs"
               >
-                <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                   <path
                     fill="#4285F4"
                     d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"
