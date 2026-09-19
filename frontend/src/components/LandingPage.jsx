@@ -220,10 +220,7 @@ export default function LandingPage({
               transition={{ duration: 0.5, delay: 0.05 }}
               className="text-4xl sm:text-5xl md:text-[58px] font-black tracking-tight text-white leading-[1.05]"
             >
-              Unwind.{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">
-                Kick Back.
-              </span>
+              Unwind. Kick Back.
               <br />
               Recharge.
             </motion.h1>
