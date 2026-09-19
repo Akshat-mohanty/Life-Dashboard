@@ -12,7 +12,6 @@ import {
   RefreshCw,
   AlertCircle,
   Clock,
-  CheckCircle2,
   ChevronRight,
   ChevronUp,
   ChevronDown,
@@ -290,21 +289,6 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
                 <span className="inline-block w-1.5 h-3.5 bg-zinc-900 ml-1 animate-pulse align-middle" />
               )}
             </div>
-
-            {briefing?.generatedAt && !isStreaming && (
-              <div className="flex items-center justify-between mt-2.5 text-[11px] text-zinc-400 font-medium">
-                <span className="flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                  Generated via AWS Bedrock
-                </span>
-                <span>
-                  {new Date(briefing.generatedAt).toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </span>
-              </div>
-            )}
           </motion.div>
         )}
       </AnimatePresence>
