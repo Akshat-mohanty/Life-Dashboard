@@ -29,7 +29,6 @@ import {
   CreditCard,
   PieChart as PieChartIcon,
   CheckSquare,
-  ShieldCheck,
   ArrowRight,
   ChevronRight,
 } from 'lucide-react';
@@ -387,14 +386,6 @@ export default function LandingPage({
                   </div>
                 </div>
 
-                {/* Window Status Bar */}
-                <div className="bg-white border-t border-zinc-100 py-2.5 px-4 flex items-center justify-between text-[10px] font-semibold text-zinc-500">
-                  <div className="flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Single-Table Isolated Storage</span>
-                  </div>
-                  <span className="text-zinc-400">AWS Bedrock Powered</span>
-                </div>
               </div>
             </div>
           </div>
