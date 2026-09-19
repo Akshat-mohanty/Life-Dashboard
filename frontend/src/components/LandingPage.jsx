@@ -197,7 +197,7 @@ export default function LandingPage({
                 className="text-left py-1 text-indigo-600 font-bold flex items-center gap-1.5 cursor-pointer"
               >
                 <Zap className="w-4 h-4 text-amber-500" />
-                <span>1-Click Demo Sandbox</span>
+                <span>Try Demo Mode!</span>
               </button>
             </div>
           </motion.div>
