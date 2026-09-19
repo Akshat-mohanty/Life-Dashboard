@@ -112,25 +112,25 @@ export default function LandingPage({
       {/* =====================================================================
           TOP NAVIGATION BAR
           ===================================================================== */}
-      <header className="w-full border-b border-black/5 bg-[#dad9de]/60 backdrop-blur-md sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
+      <header className="w-full border-b border-white/5 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 h-16 flex items-center justify-between">
           {/* Left: Menu Button */}
           <button
             type="button"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-800 hover:text-black transition cursor-pointer p-1 rounded-lg"
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-zinc-300 hover:text-white transition cursor-pointer p-1 rounded-lg"
           >
             <div className="w-4 h-3 flex flex-col justify-between">
-              <span className="w-full h-0.5 bg-zinc-900 rounded-full" />
-              <span className="w-full h-0.5 bg-zinc-900 rounded-full" />
-              <span className="w-3/4 h-0.5 bg-zinc-900 rounded-full" />
+              <span className="w-full h-0.5 bg-zinc-400 rounded-full" />
+              <span className="w-full h-0.5 bg-zinc-400 rounded-full" />
+              <span className="w-3/4 h-0.5 bg-zinc-400 rounded-full" />
             </div>
             <span>Menu</span>
           </button>
 
           {/* Center: Brand Logo */}
           <div className="flex items-center gap-1">
-            <span className="text-xl sm:text-2xl font-black tracking-tight uppercase text-zinc-950 font-serif">
+            <span className="text-xl sm:text-2xl font-black tracking-tight uppercase text-white font-serif">
               EBOLT
             </span>
             <span className="text-[10px] font-bold text-zinc-500 align-super">®</span>
@@ -141,16 +141,16 @@ export default function LandingPage({
             <button
               type="button"
               onClick={onLoginAsDemo}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[3px] text-xs font-medium text-zinc-700 hover:text-black hover:bg-black/5 transition cursor-pointer"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[3px] text-xs font-medium text-zinc-400 hover:text-white hover:bg-white/5 transition cursor-pointer"
             >
-              <Zap className="w-3.5 h-3.5 text-amber-500" />
+              <Zap className="w-3.5 h-3.5 text-amber-400" />
               <span>Instant Demo</span>
             </button>
 
             <button
               type="button"
               onClick={() => openAuthWithEmail('login')}
-              className="px-5 py-2.5 bg-zinc-900 hover:bg-black text-white text-xs font-semibold rounded-[3px] shadow-2xs hover:shadow-xs transition-all active:scale-95 cursor-pointer whitespace-nowrap tracking-normal"
+              className="px-5 py-2.5 bg-white hover:bg-zinc-100 text-zinc-950 text-xs font-semibold rounded-[3px] shadow-2xs hover:shadow-xs transition-all active:scale-95 cursor-pointer whitespace-nowrap tracking-normal"
             >
               Get Started
             </button>
@@ -165,16 +165,16 @@ export default function LandingPage({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="bg-white border-b border-zinc-200 px-6 py-4 space-y-3 z-30 shadow-md relative"
+            className="bg-zinc-900 border-b border-white/5 px-6 py-4 space-y-3 z-30 shadow-md relative"
           >
-            <div className="flex flex-col gap-2.5 text-sm font-semibold text-zinc-700">
+            <div className="flex flex-col gap-2.5 text-sm font-semibold text-zinc-300">
               <button
                 type="button"
                 onClick={() => {
                   setIsMenuOpen(false);
                   openAuthWithEmail('signup');
                 }}
-                className="text-left py-1 hover:text-zinc-950 cursor-pointer"
+                className="text-left py-1 hover:text-white cursor-pointer"
               >
                 Sign up with Email
               </button>
@@ -184,7 +184,7 @@ export default function LandingPage({
                   setIsMenuOpen(false);
                   openAuthWithEmail('login');
                 }}
-                className="text-left py-1 hover:text-zinc-950 cursor-pointer"
+                className="text-left py-1 hover:text-white cursor-pointer"
               >
                 Sign in to Existing Account
               </button>
@@ -194,9 +194,9 @@ export default function LandingPage({
                   setIsMenuOpen(false);
                   onLoginAsDemo();
                 }}
-                className="text-left py-1 text-indigo-600 font-bold flex items-center gap-1.5 cursor-pointer"
+                className="text-left py-1 text-cyan-400 font-bold flex items-center gap-1.5 cursor-pointer"
               >
-                <Zap className="w-4 h-4 text-amber-500" />
+                <Zap className="w-4 h-4 text-amber-400" />
                 <span>Try Demo Mode!</span>
               </button>
             </div>
@@ -205,84 +205,191 @@ export default function LandingPage({
       </AnimatePresence>
 
       {/* =====================================================================
-          HERO SECTION (Full-Bleed Nature Landscape with Centered Headline & Email Bar)
+          HERO SECTION — Dark Split Layout
           ===================================================================== */}
-      <section className="relative w-full overflow-hidden bg-[#dad9de]">
-        {/* Full Nature Landscape Background Image */}
-        <img
-          src="/nature-hero.png"
-          alt="Tranquil countryside landscape with fire pit and lounge chairs"
-          className="w-full h-full object-cover object-bottom absolute inset-0 z-0 pointer-events-none select-none"
-        />
+      <section className="w-full bg-zinc-950 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-16 sm:pt-20 md:pt-24 pb-12 sm:pb-16 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
-        {/* Hero Interactive Content Layer */}
-        <div className="relative z-10 max-w-4xl mx-auto px-5 sm:px-8 pt-10 sm:pt-14 md:pt-18 pb-64 sm:pb-76 md:pb-[340px] lg:pb-[390px] text-center">
-          {/* Editorial Headline matching reference style */}
-          <motion.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-4xl sm:text-6xl md:text-[68px] font-black tracking-tight text-zinc-950 leading-[1.08]"
-          >
-            Unwind. Kick Back.
-            <br />
-            Recharge.
-          </motion.h1>
+          {/* Left: Headline + CTA */}
+          <div className="flex flex-col items-start">
+            {/* Eyebrow badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[11px] font-semibold text-zinc-300 mb-5"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              AI-Powered Life Dashboard
+            </motion.div>
 
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-sm sm:text-base text-zinc-700 max-w-lg mx-auto mt-4 sm:mt-5 leading-relaxed font-normal"
-          >
-            We unify your daily tasks, bills, schedule & documents,
-            <br className="hidden sm:inline" />
-            so you receive autonomous morning AI clarity for free.
-          </motion.p>
+            {/* Main headline */}
+            <motion.h1
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.05 }}
+              className="text-4xl sm:text-5xl md:text-[58px] font-black tracking-tight text-white leading-[1.05]"
+            >
+              Unwind.{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-emerald-400">
+                Kick Back.
+              </span>
+              <br />
+              Recharge.
+            </motion.h1>
 
-          {/* Email Signup Bar matching reference */}
-          <motion.form
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            onSubmit={handleHeroSubmit}
-            className="mt-6 sm:mt-8 max-w-md mx-auto"
-          >
-            <div className="flex items-center bg-white rounded-full p-1.5 border border-black/10 shadow-[0_4px_24px_rgba(0,0,0,0.08)] focus-within:border-zinc-500 focus-within:ring-2 focus-within:ring-zinc-900/10 transition">
-              <input
-                type="email"
-                required
-                placeholder="Your email"
-                value={heroEmail}
-                onChange={(e) => setHeroEmail(e.target.value)}
-                className="w-full px-5 py-2.5 bg-transparent text-xs sm:text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none"
-              />
+            {/* Subtitle */}
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.12 }}
+              className="text-sm sm:text-base text-zinc-400 max-w-md mt-5 leading-relaxed font-normal"
+            >
+              We unify your daily tasks, bills, schedule &amp; documents — so you receive autonomous morning AI clarity, for free.
+            </motion.p>
+
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-8"
+            >
               <button
-                type="submit"
-                className="px-6 py-2.5 bg-zinc-900 hover:bg-black text-white text-xs sm:text-sm font-bold rounded-full shadow-xs transition-all active:scale-95 cursor-pointer shrink-0"
+                type="button"
+                onClick={() => openAuthWithEmail('signup')}
+                className="px-7 py-3.5 bg-white hover:bg-zinc-100 text-zinc-950 text-sm font-bold rounded-[3px] shadow-lg transition-all active:scale-95 cursor-pointer text-center"
               >
-                Join
+                Get Started — Free
               </button>
-            </div>
+              <button
+                type="button"
+                onClick={() => {
+                  onLoginAsDemo();
+                }}
+                className="px-7 py-3.5 border border-white/20 hover:border-white/40 bg-white/5 hover:bg-white/10 text-white text-sm font-semibold rounded-[3px] transition-all active:scale-95 cursor-pointer text-center flex items-center justify-center gap-2"
+              >
+                <Zap className="w-4 h-4 text-amber-400" />
+                Try Demo Mode!
+              </button>
+            </motion.div>
 
-            {/* Agreement Checkbox */}
-            <div className="flex items-center justify-center gap-2 mt-3.5 text-[11px] text-zinc-600 font-medium">
-              <input
-                type="checkbox"
-                id="terms-check"
-                checked={agreedToTerms}
-                onChange={(e) => setAgreedToTerms(e.target.checked)}
-                className="rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900 cursor-pointer"
-              />
-              <label htmlFor="terms-check" className="cursor-pointer select-none">
-                I agree to the{' '}
-                <span className="underline hover:text-zinc-900">Privacy Policy</span> and{' '}
-                <span className="underline hover:text-zinc-900">Terms and Conditions</span>
-              </label>
+            {/* Social proof */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.35 }}
+              className="mt-5 text-[11px] text-zinc-500 font-medium"
+            >
+              Free forever · No credit card required
+            </motion.p>
+          </div>
+
+          {/* Right: Dark App Preview Card */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="relative w-full"
+          >
+            {/* Glow */}
+            <div className="absolute -inset-6 bg-gradient-to-tr from-cyan-500/20 via-indigo-500/10 to-emerald-500/20 rounded-3xl blur-2xl pointer-events-none" />
+
+            {/* App Window */}
+            <div className="relative bg-zinc-900 rounded-2xl border border-white/10 shadow-[0_32px_80px_-20px_rgba(0,0,0,0.6)] overflow-hidden select-none">
+              {/* Window chrome */}
+              <div className="px-4 py-3 bg-zinc-800/80 border-b border-white/5 flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-rose-500/70" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500/70" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/70" />
+                </div>
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-700/60 border border-white/5 text-[10px] font-semibold text-zinc-400">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>ebolt.app/dashboard</span>
+                </div>
+                <span className="text-[10px] font-semibold text-zinc-500">Today • Sep 19</span>
+              </div>
+
+              {/* Body */}
+              <div className="p-4 sm:p-5 space-y-3.5 bg-zinc-900">
+                {/* Briefing card */}
+                <div className="bg-zinc-800 rounded-xl p-4 border border-white/5">
+                  <div className="flex items-center gap-2 mb-2.5">
+                    <Sparkles className="w-4 h-4 text-cyan-400" />
+                    <span className="text-xs font-bold text-white tracking-tight">Your Briefing!</span>
+                  </div>
+                  <p className="text-xs text-zinc-400 leading-relaxed">You have 2 tasks remaining for today!</p>
+                </div>
+
+                {/* Tasks */}
+                <div className="bg-zinc-800 rounded-xl p-3.5 border border-white/5">
+                  <div className="flex items-center justify-between mb-2.5">
+                    <div className="flex items-center gap-2">
+                      <CheckSquare className="w-4 h-4 text-cyan-500" />
+                      <span className="text-xs font-bold text-white">Today's Tasks</span>
+                    </div>
+                    <span className="text-[10px] font-semibold text-zinc-500">2 pending</span>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2.5 p-2 rounded-lg bg-zinc-700/50 text-xs text-zinc-300">
+                      <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
+                      <span className="font-medium truncate">Review AWS Bedrock architecture</span>
+                    </div>
+                    <div className="flex items-center gap-2.5 p-2 rounded-lg bg-zinc-700/50 text-xs text-zinc-300">
+                      <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
+                      <span className="font-medium truncate">Pay electricity &amp; utilities</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Finance grid */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-zinc-800 rounded-xl p-3 border border-white/5">
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-zinc-500 mb-1">
+                      <CreditCard className="w-3.5 h-3.5 text-cyan-600" />
+                      <span>Bills</span>
+                    </div>
+                    <p className="text-base font-black text-white">₹2,450</p>
+                    <p className="text-[10px] text-zinc-500 mt-0.5 font-medium">Due in 3 days</p>
+                  </div>
+                  <div className="bg-zinc-800 rounded-xl p-3 border border-white/5">
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-zinc-500 mb-1">
+                      <PieChartIcon className="w-3.5 h-3.5 text-indigo-500" />
+                      <span>Spending</span>
+                    </div>
+                    <p className="text-base font-black text-white">₹14,200</p>
+                    <p className="text-[10px] text-emerald-500 font-semibold mt-0.5">28% of budget</p>
+                  </div>
+                </div>
+              </div>
             </div>
-          </motion.form>
+          </motion.div>
         </div>
+
+        {/* Trust Strip */}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="border-t border-white/5 py-6 px-5 sm:px-8"
+        >
+          <p className="text-center text-[11px] font-semibold text-zinc-600 uppercase tracking-widest mb-5">Powered by industry-grade infrastructure</p>
+          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12">
+            {[
+              { label: 'AWS Bedrock', icon: '☁' },
+              { label: 'DynamoDB', icon: '⚡' },
+              { label: 'Amazon Cognito', icon: '🔐' },
+              { label: 'API Gateway', icon: '🌐' },
+              { label: 'Lambda', icon: '⚙' },
+            ].map((item) => (
+              <div key={item.label} className="flex items-center gap-2 text-zinc-500 hover:text-zinc-300 transition">
+                <span className="text-base">{item.icon}</span>
+                <span className="text-xs font-bold tracking-tight">{item.label}</span>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </section>
 
       {/* =====================================================================
