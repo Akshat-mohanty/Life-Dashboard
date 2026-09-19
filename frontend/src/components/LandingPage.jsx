@@ -25,7 +25,6 @@ import {
   Eye,
   EyeOff,
   Zap,
-  LogIn,
   Key,
   Calendar,
   CreditCard,
@@ -575,13 +574,8 @@ export default function LandingPage({
                 <X className="w-4 h-4" />
               </button>
 
-              {/* Icon */}
-              <div className="w-10 h-10 rounded-xl bg-zinc-900 text-white flex items-center justify-center mx-auto mb-3 shadow-xs">
-                <LogIn className="w-4 h-4" />
-              </div>
-
               {/* Heading */}
-              <h3 className="text-lg font-bold text-zinc-900 text-center tracking-tight">
+              <h3 className="text-xl font-bold text-zinc-900 text-center tracking-tight pt-1">
                 {authMode === 'login'
                   ? 'Sign in with email'
                   : authMode === 'signup'

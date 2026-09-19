@@ -13,7 +13,6 @@ import {
   Mail,
   ArrowRight,
   Zap,
-  LogIn,
   Eye,
   EyeOff,
   Key,
