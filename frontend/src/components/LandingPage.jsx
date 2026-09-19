@@ -531,18 +531,18 @@ export default function LandingPage({
               </button>
 
               {/* Heading */}
-              <h3 className="text-xl font-bold text-zinc-900 text-center tracking-tight pt-1">
+              <h3 className={`text-xl font-bold text-zinc-900 text-center tracking-tight pt-1 ${authMode !== 'confirm' ? 'mb-5' : ''}`}>
                 {authMode === 'login'
                   ? 'Sign in with email'
                   : authMode === 'signup'
                   ? 'Sign up with email'
                   : 'Confirm your email'}
               </h3>
-              <p className="text-xs text-zinc-500 text-center mt-1.5 mb-5">
-                {authMode === 'confirm'
-                  ? `Enter code sent to ${email}`
-                  : 'Access your AI intelligence briefing and personal partition.'}
-              </p>
+              {authMode === 'confirm' && (
+                <p className="text-xs text-zinc-500 text-center mt-1.5 mb-5">
+                  Enter code sent to {email}
+                </p>
+              )}
 
               {/* Errors & Info messages */}
               {(localError || authError) && (
