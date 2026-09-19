@@ -193,7 +193,7 @@ export default function LandingPage({
                   setIsMenuOpen(false);
                   onLoginAsDemo();
                 }}
-                className="text-left py-1 text-cyan-400 font-bold flex items-center gap-1.5 cursor-pointer"
+                className="text-left py-1 text-white font-bold flex items-center gap-1.5 cursor-pointer"
               >
                 <Zap className="w-4 h-4 text-amber-400" />
                 <span>Try Demo Mode!</span>
