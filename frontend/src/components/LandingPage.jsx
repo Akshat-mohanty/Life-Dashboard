@@ -275,14 +275,7 @@ export default function LandingPage({
             </motion.div>
 
             {/* Social proof */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.35 }}
-              className="mt-5 text-[11px] text-zinc-500 font-medium"
-            >
-              Free forever · No credit card required
-            </motion.p>
+
           </div>
 
           {/* Right: Dark App Preview Card */}
