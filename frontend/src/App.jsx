@@ -489,11 +489,6 @@ export default function App() {
 
           {/* Right Controls: Status & User Profile */}
           <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200/70 text-[11px] font-semibold text-emerald-700">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Bedrock AI Active</span>
-            </div>
-
             <UserProfileMenu />
           </div>
         </div>
