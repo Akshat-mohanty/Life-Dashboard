@@ -684,8 +684,8 @@ export default function LandingPage({
                 <span>Continue with Google</span>
               </button>
 
-              {/* Mode switch & Demo */}
-              <div className="mt-5 sm:mt-6 text-center space-y-3">
+              {/* Mode switch */}
+              <div className="mt-5 sm:mt-6 text-center">
                 <p className="text-xs sm:text-[13px] text-zinc-500">
                   {authMode === 'login' ? "Don't have an account? " : 'Already have an account? '}
                   <button
@@ -697,17 +697,6 @@ export default function LandingPage({
                   </button>
                 </p>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsAuthModalOpen(false);
-                    onLoginAsDemo();
-                  }}
-                  className="text-xs text-zinc-400 hover:text-zinc-800 transition cursor-pointer inline-flex items-center gap-1.5 mx-auto pt-0.5"
-                >
-                  <Zap className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Instant Demo Access</span>
-                </button>
               </div>
             </motion.div>
           </motion.div>
