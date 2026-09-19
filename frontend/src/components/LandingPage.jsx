@@ -144,7 +144,7 @@ export default function LandingPage({
             <button
               type="button"
               onClick={onLoginAsDemo}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium text-zinc-700 hover:text-black hover:bg-black/5 transition cursor-pointer"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[3px] text-xs font-medium text-zinc-700 hover:text-black hover:bg-black/5 transition cursor-pointer"
             >
               <Zap className="w-3.5 h-3.5 text-amber-500" />
               <span>Instant Demo</span>
@@ -153,7 +153,7 @@ export default function LandingPage({
             <button
               type="button"
               onClick={() => openAuthWithEmail('login')}
-              className="px-5 py-2.25 bg-zinc-900 hover:bg-black text-white text-xs font-medium rounded-lg shadow-2xs hover:shadow-xs transition-all active:scale-95 cursor-pointer whitespace-nowrap"
+              className="px-5 py-2.5 bg-zinc-900 hover:bg-black text-white text-xs font-semibold rounded-[3px] shadow-2xs hover:shadow-xs transition-all active:scale-95 cursor-pointer whitespace-nowrap tracking-normal"
             >
               Get Started
             </button>
@@ -469,7 +469,7 @@ export default function LandingPage({
               <button
                 type="button"
                 onClick={() => openAuthWithEmail('signup')}
-                className="px-6 py-3 bg-zinc-900 hover:bg-black text-white text-xs sm:text-sm font-semibold rounded-lg shadow-xs hover:shadow-sm transition active:scale-95 cursor-pointer text-center"
+                className="px-6 py-3 bg-zinc-900 hover:bg-black text-white text-xs sm:text-sm font-semibold rounded-[3px] shadow-xs hover:shadow-sm transition active:scale-95 cursor-pointer text-center"
               >
                 Become a Member
               </button>
@@ -477,7 +477,7 @@ export default function LandingPage({
               <button
                 type="button"
                 onClick={onLoginAsDemo}
-                className="px-5 py-3 bg-white hover:bg-zinc-100 text-zinc-900 text-xs sm:text-sm font-semibold rounded-lg border border-zinc-300 shadow-2xs transition active:scale-95 cursor-pointer text-center flex items-center justify-center gap-2"
+                className="px-5 py-3 bg-white hover:bg-zinc-100 text-zinc-900 text-xs sm:text-sm font-semibold rounded-[3px] border border-zinc-300 shadow-2xs transition active:scale-95 cursor-pointer text-center flex items-center justify-center gap-2"
               >
                 <Zap className="w-3.5 h-3.5 text-amber-500" />
                 <span>Try Live Demo</span>
