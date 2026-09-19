@@ -28,6 +28,7 @@ import {
   AlertCircle,
   FolderArchive,
   CalendarDays,
+  Trash2,
 } from 'lucide-react';
 import { archiveApi, briefingApi } from '../api/client';
 
@@ -86,6 +87,17 @@ export default function HistoryArchiveModal({
     },
   });
 
+  // Trigger to delete briefing for viewDate
+  const deleteBriefingMutation = useMutation({
+    mutationFn: async () => {
+      return await briefingApi.delete({ date: viewDate });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['archive', 'daily', user?.userId, viewDate] });
+      queryClient.invalidateQueries({ queryKey: ['briefing'] });
+    },
+  });
+
   if (!isOpen || typeof document === 'undefined') return null;
 
   const dateObj = new Date(viewDate + 'T00:00:00');
@@ -136,7 +148,13 @@ export default function HistoryArchiveModal({
     }
   };
 
-  const briefing = archiveData?.briefing;
+  const briefingRaw = archiveData?.briefing;
+  const briefing =
+    briefingRaw &&
+    !briefingRaw.content?.includes('Completed task reviews and scheduled agenda items') &&
+    !briefingRaw.content?.includes('Personal workspace and health goals logged')
+      ? briefingRaw
+      : null;
   const tasks = archiveData?.tasks || [];
   const spending = archiveData?.spending || [];
   const calendar = archiveData?.calendar || [];
@@ -362,7 +380,20 @@ export default function HistoryArchiveModal({
                           AI Executive Reflection
                         </span>
                       </div>
-                      <span className="text-[11px] text-zinc-400 font-mono">{viewDate}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[11px] text-zinc-400 font-mono">{viewDate}</span>
+                        {briefing && (
+                          <button
+                            type="button"
+                            onClick={() => deleteBriefingMutation.mutate()}
+                            disabled={deleteBriefingMutation.isPending}
+                            className="p-1 rounded-md text-zinc-400 hover:text-rose-400 hover:bg-zinc-800 transition cursor-pointer"
+                            title="Delete this briefing"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        )}
+                      </div>
                     </div>
 
                     {briefing ? (

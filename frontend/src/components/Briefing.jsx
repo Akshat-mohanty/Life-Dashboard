@@ -17,6 +17,7 @@ import {
   ChevronDown,
   FolderArchive,
   Calendar,
+  Trash2,
 } from 'lucide-react';
 import { briefingApi } from '../api/client';
 
@@ -52,8 +53,12 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
     },
   });
 
-  const briefing = briefingData?.item;
-  const exists = briefingData?.exists;
+  const rawBriefing = briefingData?.item;
+  const isMock =
+    rawBriefing?.content?.includes('Completed task reviews and scheduled agenda items') ||
+    rawBriefing?.content?.includes('Personal workspace and health goals logged');
+  const briefing = isMock ? null : rawBriefing;
+  const exists = Boolean(briefingData?.exists && !isMock && briefing?.content);
 
   // Stream text character-by-character using ReadableStream
   const streamText = async (fullText) => {
@@ -104,8 +109,23 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
     },
   });
 
+  // Mutation to delete current briefing
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      return await briefingApi.delete({ date: effectiveDate });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['briefing', effectiveDate] });
+      queryClient.invalidateQueries({ queryKey: ['archive'] });
+    },
+  });
+
   const handleGenerate = () => {
     generateMutation.mutate();
+  };
+
+  const handleDelete = () => {
+    deleteMutation.mutate();
   };
 
   const rawContent = isStreaming ? streamedContent : briefing?.content || '';
@@ -261,6 +281,15 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
               }`}
             />
             <span className="hidden sm:inline">Regenerate</span>
+          </button>
+
+          <button
+            onClick={handleDelete}
+            disabled={deleteMutation.isPending}
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-rose-600 hover:bg-rose-50 transition cursor-pointer"
+            title="Delete briefing"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
           </button>
 
           <button

@@ -135,6 +135,7 @@ export const spendingApi = {
 export const briefingApi = {
   getToday: (params) => apiClient.get('/briefing/today', { params }),
   generateNow: (data) => apiClient.post('/briefing/generate', data),
+  delete: (params) => apiClient.delete('/briefing', { params }),
 };
 
 // 8. User Profile API (Single-Table DB Isolation)

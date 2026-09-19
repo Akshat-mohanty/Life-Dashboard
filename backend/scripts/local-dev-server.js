@@ -468,7 +468,18 @@ const server = http.createServer(async (req, res) => {
     else if (pathname === '/archive/daily' && method === 'GET') {
       const targetDate = queryParams.date || new Date().toISOString().split('T')[0];
       const briefingKey = `${userId}#${targetDate}`;
-      const briefingItem = memoryDB.briefing.get(briefingKey) || null;
+      let briefingItem = memoryDB.briefing.get(briefingKey) || null;
+
+      // Purge any legacy mock briefings
+      if (
+        briefingItem &&
+        (briefingItem.content?.includes('Completed task reviews and scheduled agenda items') ||
+          briefingItem.content?.includes('Personal workspace and health goals logged'))
+      ) {
+        memoryDB.briefing.delete(briefingKey);
+        saveDB();
+        briefingItem = null;
+      }
 
       const userTasks = memoryDB.tasks.filter(
         (t) => t.userId === userId && (t.dueDate === targetDate || t.createdAt?.startsWith(targetDate))
@@ -508,37 +519,36 @@ const server = http.createServer(async (req, res) => {
     else if ((pathname === '/briefing/today' || pathname === '/briefing') && method === 'GET') {
       const targetDate = queryParams.date || new Date().toISOString().split('T')[0];
       const briefingKey = `${userId}#${targetDate}`;
-      const stored = memoryDB.briefing.get(briefingKey);
+      let stored = memoryDB.briefing.get(briefingKey);
 
-      const userTasks = memoryDB.tasks.filter((t) => t.userId === userId);
-      const userBills = memoryDB.bills.filter((b) => b.userId === userId);
-      const userCalendar = memoryDB.calendar.filter((c) => c.userId === userId);
-      const userSpending = memoryDB.spending.filter((s) => s.userId === userId);
-      const userDocs = memoryDB.docs.filter((d) => d.userId === userId);
-      const userHealth = memoryDB.health.filter((h) => h.userId === userId);
-      const hasUserData =
-        userTasks.length > 0 ||
-        userBills.length > 0 ||
-        userCalendar.length > 0 ||
-        userSpending.length > 0 ||
-        userDocs.length > 0 ||
-        userHealth.length > 0;
-
-      if (!hasUserData) {
-        const item = {
-          userId,
-          date: targetDate,
-          content: 'No value is entered.',
-          generatedAt: new Date().toISOString(),
-        };
-        memoryDB.briefing.set(briefingKey, item);
+      // Purge any legacy mock briefings
+      if (
+        stored &&
+        (stored.content?.includes('Completed task reviews and scheduled agenda items') ||
+          stored.content?.includes('Personal workspace and health goals logged'))
+      ) {
+        memoryDB.briefing.delete(briefingKey);
         saveDB();
-        lambdaResponse = { statusCode: 200, body: JSON.stringify({ item, exists: true }) };
-      } else if (stored && !stored.content?.includes('Completed task reviews and scheduled agenda items')) {
+        stored = null;
+      }
+
+      if (stored) {
         lambdaResponse = { statusCode: 200, body: JSON.stringify({ item: stored, exists: true }) };
       } else {
-        lambdaResponse = await briefingGenerate(baseEvent);
+        lambdaResponse = {
+          statusCode: 200,
+          body: JSON.stringify({ item: null, exists: false, message: 'No briefing generated yet.' }),
+        };
       }
+    } else if ((pathname === '/briefing' || pathname === '/briefing/today') && method === 'DELETE') {
+      const targetDate = queryParams.date || new Date().toISOString().split('T')[0];
+      const briefingKey = `${userId}#${targetDate}`;
+      memoryDB.briefing.delete(briefingKey);
+      saveDB();
+      lambdaResponse = {
+        statusCode: 200,
+        body: JSON.stringify({ message: 'Briefing deleted successfully', exists: false, item: null }),
+      };
     } else if (pathname === '/briefing/generate' && method === 'POST') {
       const body = JSON.parse(bodyStr || '{}');
       const targetDate = body.date || new Date().toISOString().split('T')[0];
