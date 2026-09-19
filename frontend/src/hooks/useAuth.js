@@ -18,7 +18,12 @@ const USER_POOL_ID = import.meta.env.VITE_COGNITO_USER_POOL_ID || '';
 const CLIENT_ID = import.meta.env.VITE_COGNITO_CLIENT_ID || '';
 
 let userPool = null;
-if (USER_POOL_ID && CLIENT_ID) {
+if (
+  USER_POOL_ID &&
+  CLIENT_ID &&
+  !USER_POOL_ID.includes('example') &&
+  !CLIENT_ID.includes('example')
+) {
   userPool = new CognitoUserPool({
     UserPoolId: USER_POOL_ID,
     ClientId: CLIENT_ID,
@@ -28,6 +33,20 @@ if (USER_POOL_ID && CLIENT_ID) {
 const STORAGE_KEYS = {
   USER: 'life_dashboard_user',
   TOKEN: 'life_dashboard_jwt',
+  ACCOUNTS: 'life_dashboard_accounts',
+  OAUTH_IN_PROGRESS: 'life_dashboard_oauth_in_progress',
+};
+
+const getStoredAccounts = () => {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEYS.ACCOUNTS) || '[]');
+  } catch {
+    return [];
+  }
+};
+
+const saveStoredAccounts = (accounts) => {
+  localStorage.setItem(STORAGE_KEYS.ACCOUNTS, JSON.stringify(accounts));
 };
 
 export const AuthProvider = ({ children }) => {
@@ -35,16 +54,46 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Restore session from localStorage or active Cognito session on initial mount
+  // Restore session or process OAuth callback on initial mount
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        // Check for OAuth redirect tokens in hash (from Google OAuth or Cognito Hosted UI)
-        if (window.location.hash && (window.location.hash.includes('id_token=') || window.location.hash.includes('access_token='))) {
-          const hashParams = new URLSearchParams(window.location.hash.substring(1));
-          const idToken = hashParams.get('id_token');
-          const accessToken = hashParams.get('access_token');
+        const searchParams = new URLSearchParams(window.location.search);
+        const hashString = window.location.hash.startsWith('#')
+          ? window.location.hash.substring(1)
+          : window.location.hash;
+        const hashParams = new URLSearchParams(hashString);
 
+        // 1. Check for OAuth error returned from Google/IdP in hash or query
+        const oauthError = searchParams.get('error') || hashParams.get('error');
+        const oauthErrorDesc =
+          searchParams.get('error_description') || hashParams.get('error_description');
+
+        if (oauthError) {
+          sessionStorage.removeItem(STORAGE_KEYS.OAUTH_IN_PROGRESS);
+          clearSession();
+          window.history.replaceState({}, document.title, window.location.pathname);
+          setError(`Google sign-in was cancelled or failed: ${oauthErrorDesc || oauthError}`);
+          return;
+        }
+
+        // 2. Check if an OAuth redirect flow was initiated
+        const wasOAuthInProgress = sessionStorage.getItem(STORAGE_KEYS.OAUTH_IN_PROGRESS);
+        const idToken = hashParams.get('id_token') || searchParams.get('id_token');
+        const accessToken = hashParams.get('access_token') || searchParams.get('access_token');
+
+        // If user came back from Google without tokens (e.g. Back button, cancelled auth, or closed prompt)
+        if (wasOAuthInProgress && !idToken && !accessToken) {
+          sessionStorage.removeItem(STORAGE_KEYS.OAUTH_IN_PROGRESS);
+          clearSession();
+          window.history.replaceState({}, document.title, window.location.pathname);
+          setError('Google sign-in was not completed.');
+          return;
+        }
+
+        // 3. Process successful OAuth tokens
+        if (idToken || accessToken) {
+          sessionStorage.removeItem(STORAGE_KEYS.OAUTH_IN_PROGRESS);
           if (idToken) {
             try {
               const base64Url = idToken.split('.')[1];
@@ -64,6 +113,10 @@ export const AuthProvider = ({ children }) => {
               return;
             } catch (e) {
               console.warn('Failed to parse OAuth id_token:', e);
+              clearSession();
+              setError('Failed to process Google sign-in response.');
+              window.history.replaceState({}, document.title, window.location.pathname);
+              return;
             }
           } else if (accessToken) {
             try {
@@ -87,18 +140,30 @@ export const AuthProvider = ({ children }) => {
               }
             } catch (e) {
               console.warn('Failed to fetch Google user profile from access_token:', e);
+              clearSession();
+              setError('Failed to verify Google account credentials.');
+              window.history.replaceState({}, document.title, window.location.pathname);
+              return;
             }
           }
         }
 
+        // 4. Restore valid existing session from localStorage if present
         const cachedUserStr = localStorage.getItem(STORAGE_KEYS.USER);
         const cachedToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
 
         if (cachedUserStr && cachedToken) {
-          const parsedUser = JSON.parse(cachedUserStr);
-          setUser({ ...parsedUser, token: cachedToken });
-          // Fetch latest authoritative profile from database in background
-          fetchRemoteProfile(parsedUser.userId);
+          try {
+            const parsedUser = JSON.parse(cachedUserStr);
+            if (parsedUser && parsedUser.userId) {
+              setUser({ ...parsedUser, token: cachedToken });
+              fetchRemoteProfile(parsedUser.userId);
+            } else {
+              clearSession();
+            }
+          } catch {
+            clearSession();
+          }
         } else if (userPool) {
           const cognitoUser = userPool.getCurrentUser();
           if (cognitoUser) {
@@ -106,15 +171,15 @@ export const AuthProvider = ({ children }) => {
               if (err || !session.isValid()) {
                 clearSession();
               } else {
-                const idToken = session.getIdToken().getJwtToken();
+                const sessionToken = session.getIdToken().getJwtToken();
                 const payload = session.getIdToken().decodePayload();
                 const sessionUser = {
                   userId: payload.sub,
                   email: payload.email,
                   name: payload.name || payload.email.split('@')[0],
-                  token: idToken,
+                  token: sessionToken,
                 };
-                saveSession(sessionUser, idToken);
+                saveSession(sessionUser, sessionToken);
                 fetchRemoteProfile(payload.sub);
               }
             });
@@ -162,6 +227,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem(STORAGE_KEYS.USER);
     localStorage.removeItem(STORAGE_KEYS.TOKEN);
+    sessionStorage.removeItem(STORAGE_KEYS.OAUTH_IN_PROGRESS);
     if (userPool) {
       const cognitoUser = userPool.getCurrentUser();
       if (cognitoUser) {
@@ -177,18 +243,46 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     setLoading(true);
 
-    // Local / Demo Mode fallback if Cognito credentials are not yet supplied
-    if (!userPool) {
-      console.info('Cognito User Pool not configured. Using Demo Account mode.');
-      const demoUser = {
-        userId: 'demo-user-1',
-        email: email || 'akshat@example.com',
-        name: (email ? email.split('@')[0] : 'Akshat'),
-        token: `mock-jwt-token-demo-user-1-${Date.now()}`,
-      };
-      saveSession(demoUser, demoUser.token);
+    if (!email || !password) {
       setLoading(false);
-      return demoUser;
+      const err = new Error('Please enter both email and password.');
+      setError(err.message);
+      throw err;
+    }
+
+    // Local account authentication if Cognito User Pool is not configured
+    if (!userPool) {
+      const accounts = getStoredAccounts();
+      const normalizedEmail = email.trim().toLowerCase();
+      const matched = accounts.find((a) => a.email.toLowerCase() === normalizedEmail);
+
+      if (!matched) {
+        setLoading(false);
+        const err = new Error(
+          'No account found with this email. Please sign up or click Instant Demo Access.'
+        );
+        setError(err.message);
+        throw err;
+      }
+
+      if (matched.password !== password) {
+        setLoading(false);
+        const err = new Error('Incorrect password. Please try again.');
+        setError(err.message);
+        throw err;
+      }
+
+      const sessionUser = {
+        userId: matched.userId,
+        email: matched.email,
+        name: matched.name,
+        avatarUrl: matched.avatarUrl || '',
+        token: matched.token || `jwt-mock-${matched.userId}-${Date.now()}`,
+        authProvider: 'Email',
+      };
+      saveSession(sessionUser, sessionUser.token);
+      setLoading(false);
+      return sessionUser;
     }
 
     return new Promise((resolve, reject) => {
@@ -232,17 +326,55 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     setLoading(true);
 
-    if (!userPool) {
-      console.info('Cognito User Pool not configured. Simulating instant signup.');
-      const demoUser = {
-        userId: `user-${Date.now()}`,
-        email,
-        name: name || email.split('@')[0],
-        token: `mock-jwt-token-${Date.now()}`,
-      };
-      saveSession(demoUser, demoUser.token);
+    if (!email || !password) {
       setLoading(false);
-      return { isConfirmed: true, user: demoUser };
+      const err = new Error('Please provide both email and password.');
+      setError(err.message);
+      throw err;
+    }
+
+    if (password.length < 6) {
+      setLoading(false);
+      const err = new Error('Password must be at least 6 characters.');
+      setError(err.message);
+      throw err;
+    }
+
+    // Local account registration if Cognito User Pool is not configured
+    if (!userPool) {
+      const accounts = getStoredAccounts();
+      const normalizedEmail = email.trim().toLowerCase();
+      const existing = accounts.find((a) => a.email.toLowerCase() === normalizedEmail);
+
+      if (existing) {
+        setLoading(false);
+        const err = new Error('An account with this email already exists. Please sign in instead.');
+        setError(err.message);
+        throw err;
+      }
+
+      const newAccount = {
+        userId: `user-${Date.now()}`,
+        email: normalizedEmail,
+        password: password,
+        name: name?.trim() || normalizedEmail.split('@')[0],
+        token: `mock-jwt-token-${Date.now()}`,
+        createdAt: new Date().toISOString(),
+      };
+
+      accounts.push(newAccount);
+      saveStoredAccounts(accounts);
+
+      const sessionUser = {
+        userId: newAccount.userId,
+        email: newAccount.email,
+        name: newAccount.name,
+        token: newAccount.token,
+        authProvider: 'Email',
+      };
+      saveSession(sessionUser, sessionUser.token);
+      setLoading(false);
+      return { isConfirmed: true, user: sessionUser };
     }
 
     return new Promise((resolve, reject) => {
@@ -317,7 +449,20 @@ export const AuthProvider = ({ children }) => {
       console.warn('Backend database profile update warning:', dbErr);
     }
 
-    // 2. If user is authenticated via Cognito, sync attribute to Cognito User Pool as well
+    // 2. If user exists in local accounts registry, sync it
+    try {
+      const accounts = getStoredAccounts();
+      const idx = accounts.findIndex((a) => a.userId === user.userId || a.email === user.email);
+      if (idx !== -1) {
+        if (name !== undefined) accounts[idx].name = name;
+        if (avatarUrl !== undefined) accounts[idx].avatarUrl = avatarUrl;
+        saveStoredAccounts(accounts);
+      }
+    } catch {
+      // ignore
+    }
+
+    // 3. If user is authenticated via Cognito, sync attribute to Cognito User Pool as well
     if (userPool && name) {
       try {
         const cognitoUser = userPool.getCurrentUser();
@@ -338,7 +483,7 @@ export const AuthProvider = ({ children }) => {
       }
     }
 
-    // 3. Update local user state and storage for this user
+    // 4. Update local user state and storage for this user
     const updatedUser = {
       ...user,
       ...(name !== undefined && { name }),
@@ -349,24 +494,31 @@ export const AuthProvider = ({ children }) => {
   };
 
   /**
-   * Quick Demo Login
+   * Quick Demo Login (ONLY accessible via explicit Instant Demo Access button)
    */
   const loginAsDemo = () => {
+    setError(null);
     const demoUser = {
       userId: 'demo-user-1',
       email: 'akshat@example.com',
       name: 'Akshat Mohanty',
       token: 'demo-jwt-token-life-dashboard',
+      isDemo: true,
+      authProvider: 'Demo',
     };
     saveSession(demoUser, demoUser.token);
   };
 
   /**
    * Log In with Google
-   * Redirects user directly to Google's authentication page
+   * Prepares OAuth session tracking and redirects directly to Google's authentication page
    */
   const loginWithGoogle = () => {
     setError(null);
+    // Clear any previous session so failed/cancelled OAuth cannot resurrect stale credentials
+    clearSession();
+    // Record that an OAuth flow was initiated
+    sessionStorage.setItem(STORAGE_KEYS.OAUTH_IN_PROGRESS, 'google');
     setLoading(true);
 
     const COGNITO_DOMAIN = import.meta.env.VITE_COGNITO_DOMAIN || '';
@@ -374,7 +526,7 @@ export const AuthProvider = ({ children }) => {
     const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI || `${window.location.origin}/`;
 
     // 1. If Cognito Hosted UI domain is configured, redirect via Cognito Google IdP
-    if (COGNITO_DOMAIN && CLIENT_ID && CLIENT_ID !== 'exampleclientid12345') {
+    if (COGNITO_DOMAIN && CLIENT_ID && !CLIENT_ID.includes('example')) {
       const googleAuthUrl = `https://${COGNITO_DOMAIN}/oauth2/authorize?identity_provider=Google&client_id=${CLIENT_ID}&response_type=token&scope=email+openid+profile&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
       window.location.href = googleAuthUrl;
       return;

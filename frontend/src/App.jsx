@@ -369,7 +369,10 @@ export default function App() {
             {/* Facebook */}
             <button
               type="button"
-              onClick={loginAsDemo}
+              onClick={() => {
+                setInfoMessage('');
+                setLocalError('Sign in with Facebook is not configured yet. Please sign in with email or use Instant Demo.');
+              }}
               className="h-11 bg-white hover:bg-zinc-50 border border-zinc-200/90 rounded-2xl flex items-center justify-center shadow-xs hover:border-zinc-300 transition-all active:scale-95 cursor-pointer"
               title="Sign in with Facebook"
             >
@@ -381,7 +384,10 @@ export default function App() {
             {/* Apple */}
             <button
               type="button"
-              onClick={loginAsDemo}
+              onClick={() => {
+                setInfoMessage('');
+                setLocalError('Sign in with Apple is not configured yet. Please sign in with email or use Instant Demo.');
+              }}
               className="h-11 bg-white hover:bg-zinc-50 border border-zinc-200/90 rounded-2xl flex items-center justify-center shadow-xs hover:border-zinc-300 transition-all active:scale-95 cursor-pointer text-zinc-900"
               title="Sign in with Apple"
             >
