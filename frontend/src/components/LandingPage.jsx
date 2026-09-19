@@ -494,7 +494,6 @@ export default function LandingPage({
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 font-serif font-black text-sm text-zinc-900">
             <span>EBOLT</span>
-            <span className="text-zinc-400 font-sans font-normal text-xs">• Personal AI Operating System</span>
           </div>
           <p>© 2026 Ebolt Life Dashboard. Secure Single-Table Isolation.</p>
         </div>
