@@ -331,7 +331,7 @@ export default function LandingPage({
                       <div className="flex items-center gap-2">
                         <Sparkles className="w-4 h-4 text-cyan-300" />
                         <span className="text-xs font-bold tracking-tight">
-                          AI Executive Briefing
+                          Your Briefing!
                         </span>
                       </div>
                       <span className="text-[9px] uppercase tracking-wider font-bold text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-md">
@@ -339,7 +339,7 @@ export default function LandingPage({
                       </span>
                     </div>
                     <p className="text-xs text-zinc-300 leading-relaxed font-normal">
-                      Good morning! 2 priority tasks need action today. Monthly spending is well within your budget limit.
+                      You have 2 tasks remaining for today!
                     </p>
                   </div>
 
