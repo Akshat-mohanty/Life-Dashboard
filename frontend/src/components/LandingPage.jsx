@@ -334,9 +334,6 @@ export default function LandingPage({
                           Your Briefing!
                         </span>
                       </div>
-                      <span className="text-[9px] uppercase tracking-wider font-bold text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded-md">
-                        Synthesized
-                      </span>
                     </div>
                     <p className="text-xs text-zinc-300 leading-relaxed font-normal">
                       You have 2 tasks remaining for today!
