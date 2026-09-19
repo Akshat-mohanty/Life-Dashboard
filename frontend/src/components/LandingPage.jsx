@@ -563,7 +563,7 @@ export default function LandingPage({
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="bg-white rounded-[28px] border border-zinc-200 shadow-2xl p-6 sm:p-7 max-w-sm w-full relative my-auto"
+              className="bg-white rounded-[28px] border border-zinc-200 shadow-2xl p-6 sm:p-8 max-w-[420px] w-full relative my-auto"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
@@ -588,7 +588,7 @@ export default function LandingPage({
                   ? 'Sign up with email'
                   : 'Confirm your email'}
               </h3>
-              <p className="text-xs text-zinc-500 text-center mt-1 mb-4">
+              <p className="text-xs text-zinc-500 text-center mt-1.5 mb-5">
                 {authMode === 'confirm'
                   ? `Enter code sent to ${email}`
                   : 'Access your AI intelligence briefing and personal partition.'}
@@ -607,7 +607,7 @@ export default function LandingPage({
               )}
 
               {/* Form */}
-              <form onSubmit={handleAuthSubmit} className="space-y-3">
+              <form onSubmit={handleAuthSubmit} className="space-y-3.5">
                 {authMode === 'signup' && (
                   <div className="relative flex items-center bg-zinc-50 border border-zinc-200 rounded-xl px-3.5 py-3 focus-within:border-zinc-400 transition">
                     <User className="w-4 h-4 text-zinc-400 mr-2 shrink-0" />
@@ -670,7 +670,7 @@ export default function LandingPage({
                 )}
 
                 {authMode === 'login' && (
-                  <div className="flex justify-end pt-0.5">
+                  <div className="flex justify-end pt-1">
                     <button
                       type="button"
                       onClick={() => onForgotPassword(email)}
@@ -684,7 +684,7 @@ export default function LandingPage({
                 <button
                   type="submit"
                   disabled={actionLoading}
-                  className="w-full py-3 px-4 bg-zinc-900 hover:bg-black text-white text-xs sm:text-sm font-semibold rounded-xl shadow-xs transition active:scale-95 disabled:opacity-60 cursor-pointer mt-1"
+                  className="w-full py-3 px-4 bg-zinc-900 hover:bg-black text-white text-xs sm:text-sm font-semibold rounded-xl shadow-xs transition active:scale-95 disabled:opacity-60 cursor-pointer mt-2"
                 >
                   {actionLoading
                     ? 'Processing...'
@@ -697,9 +697,9 @@ export default function LandingPage({
               </form>
 
               {/* Divider */}
-              <div className="relative flex items-center justify-center my-4">
+              <div className="relative flex items-center justify-center my-5 sm:my-6">
                 <div className="border-t border-zinc-200 flex-1" />
-                <span className="bg-white px-3 text-[11px] text-zinc-400 whitespace-nowrap shrink-0 font-medium">
+                <span className="bg-white px-3.5 text-xs text-zinc-400 whitespace-nowrap shrink-0 font-medium">
                   Or continue with
                 </span>
                 <div className="border-t border-zinc-200 flex-1" />
@@ -740,8 +740,8 @@ export default function LandingPage({
               </button>
 
               {/* Mode switch & Demo */}
-              <div className="mt-3.5 text-center space-y-1.5">
-                <p className="text-[11px] text-zinc-500">
+              <div className="mt-5 sm:mt-6 text-center space-y-3">
+                <p className="text-xs sm:text-[13px] text-zinc-500">
                   {authMode === 'login' ? "Don't have an account? " : 'Already have an account? '}
                   <button
                     type="button"
@@ -758,9 +758,9 @@ export default function LandingPage({
                     setIsAuthModalOpen(false);
                     onLoginAsDemo();
                   }}
-                  className="text-[11px] text-zinc-400 hover:text-zinc-800 transition cursor-pointer inline-flex items-center gap-1 mx-auto"
+                  className="text-xs text-zinc-400 hover:text-zinc-800 transition cursor-pointer inline-flex items-center gap-1.5 mx-auto pt-0.5"
                 >
-                  <Zap className="w-3 h-3 text-amber-500" />
+                  <Zap className="w-3.5 h-3.5 text-amber-500" />
                   <span>Instant Demo Access</span>
                 </button>
               </div>
