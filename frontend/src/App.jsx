@@ -3,9 +3,9 @@
  * Redesigned with Obsidian Black (#090A0F), Pure White, and Electric Indigo (#6366F1).
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   LogOut,
   User,
@@ -25,6 +25,10 @@ import {
   Calendar,
   FileText,
   Sparkles,
+  FolderArchive,
+  Compass,
+  ShieldCheck,
+  History,
 } from 'lucide-react';
 import MeridianLogo from './components/MeridianLogo';
 import { useAuth } from './hooks/useAuth';
@@ -36,6 +40,7 @@ import Health from './components/Health';
 import Documents from './components/Documents';
 import Spending from './components/Spending';
 import UserProfileMenu from './components/UserProfileMenu';
+import HistoryArchiveModal from './components/HistoryArchiveModal';
 import {
   tasksApi,
   billsApi,
@@ -93,6 +98,21 @@ export default function App() {
       setLocalError(err.message || 'Password reset request failed.');
     }
   };
+
+  const queryClient = useQueryClient();
+
+  // Historical Archive / Time Machine state (defaults to today YYYY-MM-DD)
+  const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
+
+  // Reset or invalidate queries when switching users so no cached data leaks across accounts
+  useEffect(() => {
+    if (user?.userId) {
+      queryClient.invalidateQueries();
+    } else {
+      queryClient.clear();
+    }
+  }, [user?.userId, queryClient]);
 
   // Dashboard workspace view tab: 'overview' | 'focus' | 'finances' | 'life'
   const [activeTab, setActiveTab] = useState('overview');
@@ -457,7 +477,10 @@ export default function App() {
   // AUTHENTICATED: EXECUTIVE DASHBOARD (NON-BULKY BENTO WORKSPACE)
   // =========================================================================
   const displayName = user?.name || (user?.email ? user.email.split('@')[0] : 'Akshat');
-  const todayFormattedHeader = new Date().toLocaleDateString('en-US', {
+  const todayIso = new Date().toISOString().split('T')[0];
+  const isTimeTravelActive = Boolean(selectedDate && selectedDate !== todayIso);
+  const activeDateObj = new Date((selectedDate || todayIso) + 'T00:00:00');
+  const activeDateFormattedHeader = activeDateObj.toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'short',
     day: 'numeric',
@@ -498,6 +521,45 @@ export default function App() {
        * MAIN EXECUTIVE WORKSPACE CANVAS
        * ==================================================================== */}
       <main className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-5 sm:py-6 flex-1">
+        {/* Time-Travel Historical Banner */}
+        {isTimeTravelActive && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-5 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50/80 border border-amber-200/90 flex flex-wrap items-center justify-between gap-3 text-amber-900 text-xs shadow-2xs"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-amber-200 text-amber-900 flex items-center justify-center font-bold shadow-2xs">
+                <Compass className="w-4 h-4 text-amber-900" />
+              </div>
+              <div>
+                <div className="font-bold text-amber-950 flex items-center gap-2">
+                  <span>Historical Life Archive Active:</span>
+                  <span className="underline decoration-amber-400 font-extrabold">{activeDateFormattedHeader}</span>
+                </div>
+                <p className="text-[11px] text-amber-800 mt-0.5">
+                  Browsing saved past records strictly isolated to your account ({user?.name || user?.email} • <code className="font-mono font-semibold">{user?.userId}</code>).
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setIsArchiveModalOpen(true)}
+                className="px-3 py-1.5 rounded-xl bg-white border border-amber-300 font-semibold hover:bg-amber-100 text-amber-900 transition cursor-pointer shadow-2xs"
+              >
+                Change Date
+              </button>
+              <button
+                type="button"
+                onClick={() => setSelectedDate(todayIso)}
+                className="px-3.5 py-1.5 rounded-xl bg-amber-600 text-white font-bold hover:bg-amber-700 shadow-2xs transition cursor-pointer"
+              >
+                Return to Today
+              </button>
+            </div>
+          </motion.div>
+        )}
         {/* 1. Executive Horizon Pulse Ribbon */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -743,9 +805,29 @@ export default function App() {
             </button>
           </div>
 
-          <div className="text-xs text-zinc-400 font-medium hidden sm:block">
-            {todayFormattedHeader}
-          </div>
+          {/* Interactive Date & Historical Life Archive Launcher */}
+          <button
+            type="button"
+            onClick={() => setIsArchiveModalOpen(true)}
+            className={`group flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer shadow-2xs ${
+              isTimeTravelActive
+                ? 'bg-amber-50 text-amber-900 border-amber-300 ring-2 ring-amber-400/20'
+                : 'bg-white hover:bg-zinc-50 text-zinc-700 hover:text-zinc-900 border-zinc-200/90'
+            }`}
+            title="Click to browse your past saved data & historical life archive"
+          >
+            <Calendar className="w-3.5 h-3.5 text-indigo-600 group-hover:scale-110 transition-transform" />
+            <span>{activeDateFormattedHeader}</span>
+            {isTimeTravelActive ? (
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-200 text-amber-800">
+                Historical
+              </span>
+            ) : (
+              <span className="text-[10px] font-medium text-zinc-400 group-hover:text-indigo-600 transition-colors">
+                Archive ↗
+              </span>
+            )}
+          </button>
         </div>
 
         {/* 3. Main Dynamic Content by Workspace View */}
@@ -759,7 +841,10 @@ export default function App() {
               transition={{ duration: 0.25 }}
             >
               {/* Sleek Intelligence Banner */}
-              <Briefing />
+              <Briefing
+                selectedDate={selectedDate}
+                onOpenArchive={() => setIsArchiveModalOpen(true)}
+              />
 
               {/* Bento Grid Architecture */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
@@ -790,7 +875,10 @@ export default function App() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
             >
-              <Briefing />
+              <Briefing
+                selectedDate={selectedDate}
+                onOpenArchive={() => setIsArchiveModalOpen(true)}
+              />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
                 <div>
                   <Tasks />
@@ -844,6 +932,15 @@ export default function App() {
       <footer className="relative z-10 py-5 mt-8 text-center text-xs text-zinc-400 font-medium border-t border-zinc-200/60">
         © 2026 Akshat Mohanty. Built with ❤️
       </footer>
+
+      {/* Historical Life Archive & Time Machine Modal */}
+      <HistoryArchiveModal
+        isOpen={isArchiveModalOpen}
+        onClose={() => setIsArchiveModalOpen(false)}
+        user={user}
+        selectedDate={selectedDate}
+        onSelectDate={(newDate) => setSelectedDate(newDate)}
+      />
     </div>
   );
 }

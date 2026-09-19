@@ -133,14 +133,19 @@ export const spendingApi = {
 
 // 7. Morning Briefing API
 export const briefingApi = {
-  getToday: () => apiClient.get('/briefing/today'),
-  generateNow: () => apiClient.post('/briefing/generate'),
+  getToday: (params) => apiClient.get('/briefing/today', { params }),
+  generateNow: (data) => apiClient.post('/briefing/generate', data),
 };
 
 // 8. User Profile API (Single-Table DB Isolation)
 export const userApi = {
   getProfile: () => apiClient.get('/user/profile'),
   updateProfile: (data) => apiClient.put('/user/profile', data),
+};
+
+// 9. Historical Life Archive API (Strictly Scoped to Current User)
+export const archiveApi = {
+  getDaily: (date) => apiClient.get('/archive/daily', { params: { date } }),
 };
 
 export default apiClient;

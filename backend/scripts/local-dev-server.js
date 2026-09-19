@@ -7,6 +7,69 @@
 import http from 'http';
 import { URL } from 'url';
 import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const DB_FILE = path.join(__dirname, '../data/local-memory-db.json');
+
+// Ensure data directory exists
+const dataDir = path.dirname(DB_FILE);
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+
+function loadDB() {
+  try {
+    if (fs.existsSync(DB_FILE)) {
+      const raw = JSON.parse(fs.readFileSync(DB_FILE, 'utf-8'));
+      return {
+        bills: raw.bills || [],
+        tasks: raw.tasks || [],
+        calendar: raw.calendar || [],
+        health: raw.health || [],
+        docs: raw.docs || [],
+        spending: raw.spending || [],
+        briefing: new Map(raw.briefing || []),
+        profiles: new Map(raw.profiles || []),
+      };
+    }
+  } catch (e) {
+    console.warn('Could not read DB_FILE, starting with empty state:', e.message);
+  }
+  return {
+    bills: [],
+    tasks: [],
+    calendar: [],
+    health: [],
+    docs: [],
+    spending: [],
+    briefing: new Map(),
+    profiles: new Map(),
+  };
+}
+
+const memoryDB = loadDB();
+
+function saveDB() {
+  try {
+    const serialized = {
+      bills: memoryDB.bills,
+      tasks: memoryDB.tasks,
+      calendar: memoryDB.calendar,
+      health: memoryDB.health,
+      docs: memoryDB.docs,
+      spending: memoryDB.spending,
+      briefing: Array.from(memoryDB.briefing.entries()),
+      profiles: Array.from(memoryDB.profiles.entries()),
+    };
+    fs.writeFileSync(DB_FILE, JSON.stringify(serialized, null, 2), 'utf-8');
+  } catch (e) {
+    console.warn('Could not save DB_FILE:', e.message);
+  }
+}
 
 // Import Lambda Handlers
 import { handler as billsCreate } from '../src/bills/create.js';
@@ -48,17 +111,6 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
 };
 
-// In-Memory Storage for Standalone Local Development
-const memoryDB = {
-  bills: [],
-  tasks: [],
-  calendar: [],
-  health: [],
-  docs: [],
-  spending: [],
-  briefing: new Map(),
-  profiles: new Map(),
-};
 
 const server = http.createServer(async (req, res) => {
   if (req.method === 'OPTIONS') {
@@ -123,6 +175,7 @@ const server = http.createServer(async (req, res) => {
           status: body.isPaid ? 'paid' : 'upcoming',
         };
         memoryDB.bills.push(item);
+        saveDB();
         lambdaResponse = { statusCode: 201, body: JSON.stringify({ item }) };
       }
     } else if (pathname === '/bills' && method === 'GET') {
@@ -145,11 +198,20 @@ const server = http.createServer(async (req, res) => {
       lambdaResponse = await billsUpdate({ ...baseEvent, pathParameters: { id } });
       if (lambdaResponse.statusCode >= 500) {
         const body = JSON.parse(bodyStr || '{}');
-        const bill = memoryDB.bills.find((b) => b.id === id);
+        const bill = memoryDB.bills.find((b) => b.id === id && b.userId === userId);
         if (bill) {
           Object.assign(bill, body, { updatedAt: new Date().toISOString() });
+          saveDB();
           lambdaResponse = { statusCode: 200, body: JSON.stringify({ item: bill }) };
         }
+      }
+    } else if (pathname.startsWith('/bills/') && method === 'DELETE') {
+      const id = pathname.replace('/bills/', '');
+      lambdaResponse = await billsDelete({ ...baseEvent, pathParameters: { id } });
+      if (lambdaResponse.statusCode >= 500) {
+        memoryDB.bills = memoryDB.bills.filter((b) => !(b.id === id && b.userId === userId));
+        saveDB();
+        lambdaResponse = { statusCode: 200, body: JSON.stringify({ message: 'Bill deleted' }) };
       }
     }
 
@@ -171,12 +233,16 @@ const server = http.createServer(async (req, res) => {
           updatedAt: new Date().toISOString(),
         };
         memoryDB.tasks.push(item);
+        saveDB();
         lambdaResponse = { statusCode: 201, body: JSON.stringify({ item }) };
       }
     } else if (pathname === '/tasks' && method === 'GET') {
       lambdaResponse = await tasksList(baseEvent);
       if (lambdaResponse.statusCode >= 500) {
-        const userTasks = memoryDB.tasks.filter((t) => t.userId === userId);
+        let userTasks = memoryDB.tasks.filter((t) => t.userId === userId);
+        if (queryParams.date) {
+          userTasks = userTasks.filter((t) => t.dueDate === queryParams.date || t.createdAt?.startsWith(queryParams.date));
+        }
         lambdaResponse = {
           statusCode: 200,
           body: JSON.stringify({
@@ -190,11 +256,20 @@ const server = http.createServer(async (req, res) => {
       lambdaResponse = await tasksUpdate({ ...baseEvent, pathParameters: { id } });
       if (lambdaResponse.statusCode >= 500) {
         const body = JSON.parse(bodyStr || '{}');
-        const task = memoryDB.tasks.find((t) => t.id === id);
+        const task = memoryDB.tasks.find((t) => t.id === id && t.userId === userId);
         if (task) {
           Object.assign(task, body, { updatedAt: new Date().toISOString() });
+          saveDB();
           lambdaResponse = { statusCode: 200, body: JSON.stringify({ item: task }) };
         }
+      }
+    } else if (pathname.startsWith('/tasks/') && method === 'DELETE') {
+      const id = pathname.replace('/tasks/', '');
+      lambdaResponse = await tasksDelete({ ...baseEvent, pathParameters: { id } });
+      if (lambdaResponse.statusCode >= 500) {
+        memoryDB.tasks = memoryDB.tasks.filter((t) => !(t.id === id && t.userId === userId));
+        saveDB();
+        lambdaResponse = { statusCode: 200, body: JSON.stringify({ message: 'Task deleted' }) };
       }
     }
 
@@ -215,12 +290,16 @@ const server = http.createServer(async (req, res) => {
           updatedAt: new Date().toISOString(),
         };
         memoryDB.calendar.push(item);
+        saveDB();
         lambdaResponse = { statusCode: 201, body: JSON.stringify({ item }) };
       }
     } else if (pathname === '/calendar' && method === 'GET') {
       lambdaResponse = await calendarList(baseEvent);
       if (lambdaResponse.statusCode >= 500) {
-        const userEvents = memoryDB.calendar.filter((e) => e.userId === userId);
+        let userEvents = memoryDB.calendar.filter((e) => e.userId === userId);
+        if (queryParams.date) {
+          userEvents = userEvents.filter((e) => e.date === queryParams.date);
+        }
         lambdaResponse = {
           statusCode: 200,
           body: JSON.stringify({
@@ -228,6 +307,14 @@ const server = http.createServer(async (req, res) => {
             summary: { todayCount: userEvents.length, next7DaysCount: userEvents.length, totalCount: userEvents.length },
           }),
         };
+      }
+    } else if (pathname.startsWith('/calendar/') && method === 'DELETE') {
+      const id = pathname.replace('/calendar/', '');
+      lambdaResponse = await calendarDelete({ ...baseEvent, pathParameters: { id } });
+      if (lambdaResponse.statusCode >= 500) {
+        memoryDB.calendar = memoryDB.calendar.filter((c) => !(c.id === id && c.userId === userId));
+        saveDB();
+        lambdaResponse = { statusCode: 200, body: JSON.stringify({ message: 'Calendar event deleted' }) };
       }
     }
 
@@ -247,6 +334,7 @@ const server = http.createServer(async (req, res) => {
           updatedAt: new Date().toISOString(),
         };
         memoryDB.health.push(item);
+        saveDB();
         lambdaResponse = { statusCode: 201, body: JSON.stringify({ item }) };
       }
     } else if (pathname === '/health' && method === 'GET') {
@@ -260,6 +348,14 @@ const server = http.createServer(async (req, res) => {
             summary: { totalCount: userReminders.length, dailyCount: userReminders.length, weeklyCount: 0, smsAlertsEnabledCount: 0 },
           }),
         };
+      }
+    } else if (pathname.startsWith('/health/') && method === 'DELETE') {
+      const id = pathname.replace('/health/', '');
+      lambdaResponse = await healthDelete({ ...baseEvent, pathParameters: { id } });
+      if (lambdaResponse.statusCode >= 500) {
+        memoryDB.health = memoryDB.health.filter((h) => !(h.id === id && h.userId === userId));
+        saveDB();
+        lambdaResponse = { statusCode: 200, body: JSON.stringify({ message: 'Health reminder deleted' }) };
       }
     }
 
@@ -279,6 +375,7 @@ const server = http.createServer(async (req, res) => {
           createdAt: new Date().toISOString(),
         };
         memoryDB.docs.push(item);
+        saveDB();
         lambdaResponse = {
           statusCode: 201,
           body: JSON.stringify({
@@ -300,6 +397,14 @@ const server = http.createServer(async (req, res) => {
           }),
         };
       }
+    } else if (pathname.startsWith('/documents/') && method === 'DELETE') {
+      const id = pathname.replace('/documents/', '');
+      lambdaResponse = await docsDelete({ ...baseEvent, pathParameters: { id } });
+      if (lambdaResponse.statusCode >= 500) {
+        memoryDB.docs = memoryDB.docs.filter((d) => !(d.id === id && d.userId === userId));
+        saveDB();
+        lambdaResponse = { statusCode: 200, body: JSON.stringify({ message: 'Document deleted' }) };
+      }
     }
 
     // 6. SPENDING
@@ -317,8 +422,25 @@ const server = http.createServer(async (req, res) => {
           createdAt: new Date().toISOString(),
         };
         memoryDB.spending.push(item);
+        saveDB();
         lambdaResponse = { statusCode: 201, body: JSON.stringify({ item }) };
       }
+    } else if (pathname === '/spending' && method === 'GET') {
+      lambdaResponse = await spendingList(baseEvent);
+      if (lambdaResponse.statusCode >= 500) {
+        let userSpend = memoryDB.spending.filter((s) => s.userId === userId);
+        if (queryParams.date) {
+          userSpend = userSpend.filter((s) => s.date === queryParams.date);
+        } else if (queryParams.month) {
+          userSpend = userSpend.filter((s) => s.date?.startsWith(queryParams.month));
+        }
+        lambdaResponse = { statusCode: 200, body: JSON.stringify({ items: userSpend }) };
+      }
+    } else if (pathname.startsWith('/spending/') && method === 'DELETE') {
+      const id = pathname.replace('/spending/', '');
+      memoryDB.spending = memoryDB.spending.filter((s) => !(s.id === id && s.userId === userId));
+      saveDB();
+      lambdaResponse = { statusCode: 200, body: JSON.stringify({ message: 'Expense deleted' }) };
     } else if (pathname === '/spending/summary' && method === 'GET') {
       lambdaResponse = await spendingSummary(baseEvent);
       if (lambdaResponse.statusCode >= 500) {
@@ -342,37 +464,93 @@ const server = http.createServer(async (req, res) => {
       }
     }
 
-    // 7. BRIEFING
-    else if (pathname === '/briefing/today' && method === 'GET') {
-      lambdaResponse = await briefingGenerate(baseEvent);
+    // 7. DAILY HISTORICAL ARCHIVE (Strictly Isolated to userId)
+    else if (pathname === '/archive/daily' && method === 'GET') {
+      const targetDate = queryParams.date || new Date().toISOString().split('T')[0];
+      const briefingKey = `${userId}#${targetDate}`;
+      const briefingItem = memoryDB.briefing.get(briefingKey) || null;
+
+      const userTasks = memoryDB.tasks.filter(
+        (t) => t.userId === userId && (t.dueDate === targetDate || t.createdAt?.startsWith(targetDate))
+      );
+      const userCalendar = memoryDB.calendar.filter(
+        (c) => c.userId === userId && c.date === targetDate
+      );
+      const userSpending = memoryDB.spending.filter(
+        (s) => s.userId === userId && s.date === targetDate
+      );
+      const userBills = memoryDB.bills.filter(
+        (b) => b.userId === userId && (b.dueDate === targetDate || b.createdAt?.startsWith(targetDate))
+      );
+      const userDocs = memoryDB.docs.filter(
+        (d) => d.userId === userId && d.createdAt?.startsWith(targetDate)
+      );
+
+      const dailySpendingTotal = userSpending.reduce((sum, s) => sum + (s.amount || 0), 0);
+
+      lambdaResponse = {
+        statusCode: 200,
+        body: JSON.stringify({
+          userId,
+          date: targetDate,
+          briefing: briefingItem,
+          tasks: userTasks,
+          calendar: userCalendar,
+          spending: userSpending,
+          spendingTotal: dailySpendingTotal,
+          bills: userBills,
+          documents: userDocs,
+        }),
+      };
+    }
+
+    // 8. BRIEFING
+    else if ((pathname === '/briefing/today' || pathname === '/briefing') && method === 'GET') {
+      const targetDate = queryParams.date || new Date().toISOString().split('T')[0];
+      const briefingKey = `${userId}#${targetDate}`;
+      const stored = memoryDB.briefing.get(briefingKey);
+      if (stored) {
+        lambdaResponse = { statusCode: 200, body: JSON.stringify({ item: stored }) };
+      } else {
+        lambdaResponse = await briefingGenerate(baseEvent);
+      }
     } else if (pathname === '/briefing/generate' && method === 'POST') {
       lambdaResponse = await briefingGenerate(baseEvent);
+      const body = JSON.parse(bodyStr || '{}');
+      const targetDate = body.date || new Date().toISOString().split('T')[0];
+      const briefingKey = `${userId}#${targetDate}`;
+
       if (lambdaResponse.statusCode >= 500) {
-        const todayStr = new Date().toISOString().split('T')[0];
-        const content = `Good morning Akshat! Today is Thursday, ${todayStr}.
+        const content = `Executive Briefing for ${targetDate}:
 
-🔴 Needs attention today:
-- Check your urgent items and morning schedule.
-- Ensure pending deadlines are tracked.
+🔴 Priorities for this date:
+- Completed task reviews and scheduled agenda items.
 
-🟡 Coming up soon:
-- Review utility renewals and upcoming appointments.
+🟡 In progress:
+- Active bills and expenses categorized.
 
-✅ You're on top of:
-- Your daily hydration and task list are organized.
-
-Stay focused and take things one step at a time!`;
+✅ Highlights:
+- Personal workspace and health goals logged.`;
+        const item = {
+          userId,
+          date: targetDate,
+          content,
+          generatedAt: new Date().toISOString(),
+        };
+        memoryDB.briefing.set(briefingKey, item);
+        saveDB();
         lambdaResponse = {
           statusCode: 200,
-          body: JSON.stringify({
-            item: {
-              userId,
-              date: todayStr,
-              content,
-              generatedAt: new Date().toISOString(),
-            },
-          }),
+          body: JSON.stringify({ item }),
         };
+      } else {
+        try {
+          const parsed = JSON.parse(lambdaResponse.body);
+          if (parsed?.item) {
+            memoryDB.briefing.set(briefingKey, parsed.item);
+            saveDB();
+          }
+        } catch {}
       }
     } else if (pathname === '/user/profile' && method === 'GET') {
       lambdaResponse = await userGet(baseEvent);

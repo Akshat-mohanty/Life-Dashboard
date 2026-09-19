@@ -7,22 +7,38 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, RefreshCw, AlertCircle, Clock, CheckCircle2, ChevronRight } from 'lucide-react';
+import {
+  Sparkles,
+  RefreshCw,
+  AlertCircle,
+  Clock,
+  CheckCircle2,
+  ChevronRight,
+  ChevronUp,
+  ChevronDown,
+  FolderArchive,
+  Calendar,
+} from 'lucide-react';
 import { briefingApi } from '../api/client';
 
-export default function Briefing() {
+export default function Briefing({ selectedDate, onOpenArchive }) {
   const queryClient = useQueryClient();
   const [streamedContent, setStreamedContent] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
 
-  const todayFormatted = new Date().toLocaleDateString('en-US', {
+  const todayIso = new Date().toISOString().split('T')[0];
+  const effectiveDate = selectedDate || todayIso;
+  const isToday = effectiveDate === todayIso;
+
+  const dateObj = new Date(effectiveDate + 'T00:00:00');
+  const dateFormatted = dateObj.toLocaleDateString('en-US', {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
   });
 
-  // Query today's briefing
+  // Query briefing for the active date
   const {
     data: briefingData,
     isLoading,
@@ -30,9 +46,9 @@ export default function Briefing() {
     error,
     refetch,
   } = useQuery({
-    queryKey: ['briefing', 'today'],
+    queryKey: ['briefing', effectiveDate],
     queryFn: async () => {
-      const res = await briefingApi.getToday();
+      const res = await briefingApi.getToday({ date: effectiveDate });
       return res;
     },
   });
@@ -76,11 +92,12 @@ export default function Briefing() {
   // Mutation to trigger manual briefing generation
   const generateMutation = useMutation({
     mutationFn: async () => {
-      const res = await briefingApi.generateNow();
+      const res = await briefingApi.generateNow({ date: effectiveDate });
       return res;
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['briefing', 'today'] });
+      queryClient.invalidateQueries({ queryKey: ['briefing', effectiveDate] });
+      queryClient.invalidateQueries({ queryKey: ['archive'] });
       queryClient.invalidateQueries({ queryKey: ['tasks'] }); // Refresh re-ranked tasks
       if (data?.item?.content) {
         streamText(data.item.content);
@@ -140,36 +157,53 @@ export default function Briefing() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-xs sm:text-sm font-bold text-white tracking-tight">AI Morning Briefing</h2>
+              <h2 className="text-xs sm:text-sm font-bold text-white tracking-tight">
+                {isToday ? 'AI Morning Briefing' : 'Historical AI Briefing'}
+              </h2>
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                Ready
+                {isToday ? 'Ready' : 'Archive'}
               </span>
-              <span className="text-zinc-400 text-xs hidden sm:inline">• {todayFormatted}</span>
+              <span className="text-zinc-400 text-xs hidden sm:inline">• {dateFormatted}</span>
             </div>
             <p className="text-[11px] text-zinc-300 mt-0.5">
-              Synthesize unpaid bills, priority tasks, and 7-day calendar into actionable clarity.
+              {isToday
+                ? 'Synthesize unpaid bills, priority tasks, and 7-day calendar into actionable clarity.'
+                : `Synthesize or generate reflection for historical date ${effectiveDate}.`}
             </p>
           </div>
         </div>
 
-        <button
-          onClick={handleGenerate}
-          disabled={generateMutation.isPending}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-zinc-900 bg-white hover:bg-zinc-100 shadow-xs transition-all active:scale-95 disabled:opacity-60 cursor-pointer flex-shrink-0"
-        >
-          {generateMutation.isPending ? (
-            <>
-              <RefreshCw className="w-3.5 h-3.5 animate-spin text-zinc-900" />
-              <span>Synthesizing...</span>
-            </>
-          ) : (
-            <>
-              <Sparkles className="w-3.5 h-3.5 text-zinc-900" />
-              <span>Generate Briefing</span>
-              <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
-            </>
+        <div className="flex items-center gap-2">
+          {onOpenArchive && (
+            <button
+              type="button"
+              onClick={onOpenArchive}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 transition cursor-pointer"
+            >
+              <FolderArchive className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Past Archive</span>
+            </button>
           )}
-        </button>
+
+          <button
+            onClick={handleGenerate}
+            disabled={generateMutation.isPending}
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-zinc-900 bg-white hover:bg-zinc-100 shadow-xs transition-all active:scale-95 disabled:opacity-60 cursor-pointer flex-shrink-0"
+          >
+            {generateMutation.isPending ? (
+              <>
+                <RefreshCw className="w-3.5 h-3.5 animate-spin text-zinc-900" />
+                <span>Synthesizing...</span>
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-3.5 h-3.5 text-zinc-900" />
+                <span>{isToday ? 'Generate Briefing' : 'Generate Reflection'}</span>
+                <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
+              </>
+            )}
+          </button>
+        </div>
       </div>
     );
   }
@@ -185,13 +219,32 @@ export default function Briefing() {
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-sm font-bold text-zinc-900 tracking-tight">Today's AI Intelligence Briefing</h2>
-              <span className="text-[11px] text-zinc-400 font-medium">{todayFormatted}</span>
+              <h2 className="text-sm font-bold text-zinc-900 tracking-tight">
+                {isToday ? "Today's AI Intelligence Briefing" : 'Historical AI Reflection'}
+              </h2>
+              <span className="text-[11px] text-zinc-400 font-medium">{dateFormatted}</span>
+              {!isToday && (
+                <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">
+                  Archive
+                </span>
+              )}
             </div>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
+          {onOpenArchive && (
+            <button
+              type="button"
+              onClick={onOpenArchive}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold text-zinc-700 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 shadow-2xs transition cursor-pointer"
+              title="Open Historical Life Archive"
+            >
+              <FolderArchive className="w-3.5 h-3.5 text-indigo-600" />
+              <span className="hidden sm:inline">Archive</span>
+            </button>
+          )}
+
           <button
             onClick={handleGenerate}
             disabled={generateMutation.isPending || isStreaming}

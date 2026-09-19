@@ -18,3 +18,6 @@ Thumbs.db
 # Environment variables
 .env.local
 .env.*.local
+
+# Local dev server database
+backend/data/
