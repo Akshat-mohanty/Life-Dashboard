@@ -129,32 +129,31 @@ export default function Documents() {
 
   return (
     <div className="bg-white/95 border border-zinc-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-sm transition-all flex flex-col h-full">
-      {/* Sleek Header */}
-      <div className="flex items-center justify-between pb-3 mb-1 border-b border-zinc-100">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs">
+      <div className="flex items-center justify-between pb-3.5 border-b border-zinc-100 gap-2">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs flex-shrink-0">
             <FileText className="w-4 h-4 text-cyan-300" />
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h3 className="font-bold text-zinc-900 text-sm tracking-tight">Documents</h3>
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
+              <h3 className="font-bold text-zinc-900 text-sm tracking-tight whitespace-nowrap">Documents</h3>
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200 whitespace-nowrap">
                 {summary.totalCount} files
               </span>
               {summary.expiringSoonCount > 0 && (
-                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200">
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 whitespace-nowrap">
                   {summary.expiringSoonCount} expiring
                 </span>
               )}
             </div>
-            <p className="text-[11px] text-zinc-400">Encrypted Cloud Vault & Expiry Warnings</p>
+            <p className="text-[11px] text-zinc-400 whitespace-nowrap">Encrypted Cloud Vault & Expiry Warnings</p>
           </div>
         </div>
 
         {!isAdding && (
           <button
             onClick={() => setIsAdding(true)}
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-zinc-900 bg-white hover:bg-zinc-50 border border-zinc-200 shadow-2xs hover:border-zinc-300 transition active:scale-95 cursor-pointer"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-zinc-900 bg-white hover:bg-zinc-50 border border-zinc-200 shadow-2xs hover:border-zinc-300 transition active:scale-95 cursor-pointer flex-shrink-0"
           >
             <Plus className="w-3.5 h-3.5 text-zinc-700" />
             <span>Upload</span>

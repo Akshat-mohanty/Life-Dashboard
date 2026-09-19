@@ -148,24 +148,23 @@ export default function Spending() {
 
   return (
     <div className="bg-white/95 border border-zinc-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-sm transition-all flex flex-col h-full">
-      {/* Sleek Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs">
+      <div className="flex items-center justify-between pb-3 border-b border-zinc-100 gap-2">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs flex-shrink-0">
             <PieChartIcon className="w-4 h-4 text-cyan-300" />
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h3 className="font-bold text-zinc-900 text-sm tracking-tight">Spending</h3>
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
+              <h3 className="font-bold text-zinc-900 text-sm tracking-tight whitespace-nowrap">Spending</h3>
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200 whitespace-nowrap">
                 ₹{summary.currentMonthTotal?.toLocaleString('en-IN') || 0}
               </span>
             </div>
-            <p className="text-[11px] text-zinc-400">Expenses & Monthly Budget</p>
+            <p className="text-[11px] text-zinc-400 whitespace-nowrap">Expenses & Monthly Budget</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
           {/* Month Selector */}
           <div className="relative">
             <select
