@@ -147,16 +147,21 @@ export default function Spending() {
     }));
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col h-full">
-      {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-zinc-100">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-accent-50 border border-accent-200 text-accent-700 flex items-center justify-center shadow-xs">
-            <PieChartIcon className="w-4 h-4" />
+    <div className="bg-white/95 border border-zinc-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-sm transition-all flex flex-col h-full">
+      {/* Sleek Header */}
+      <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs">
+            <PieChartIcon className="w-4 h-4 text-cyan-300" />
           </div>
           <div>
-            <h3 className="font-bold text-black text-base tracking-tight">Spending</h3>
-            <p className="text-xs text-zinc-500">Expenses & Budget Trends</p>
+            <div className="flex items-center gap-2">
+              <h3 className="font-bold text-zinc-900 text-sm tracking-tight">Spending</h3>
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
+                ₹{summary.currentMonthTotal?.toLocaleString('en-IN') || 0}
+              </span>
+            </div>
+            <p className="text-[11px] text-zinc-400">Expenses & Monthly Budget</p>
           </div>
         </div>
 
@@ -166,7 +171,7 @@ export default function Spending() {
             <select
               value={selectedMonth}
               onChange={(e) => setSelectedMonth(e.target.value)}
-              className="text-xs font-semibold pl-2.5 pr-7 py-1.5 bg-white text-black hover:bg-zinc-50 border border-zinc-300 rounded-lg appearance-none cursor-pointer focus:outline-none focus:border-accent-600 transition"
+              className="text-[11px] font-semibold pl-2 pr-6 py-1 bg-white text-zinc-800 hover:bg-zinc-50 border border-zinc-200 rounded-lg appearance-none cursor-pointer focus:outline-none transition"
             >
               {(summary.availableMonths || [selectedMonth]).map((m) => (
                 <option key={m} value={m}>
@@ -174,13 +179,13 @@ export default function Spending() {
                 </option>
               ))}
             </select>
-            <ChevronDown className="w-3 h-3 text-zinc-400 absolute right-2 top-2.5 pointer-events-none" />
+            <ChevronDown className="w-3 h-3 text-zinc-400 absolute right-1.5 top-2 pointer-events-none" />
           </div>
 
           {!isAdding && (
             <button
               onClick={() => setIsAdding(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-black bg-white hover:bg-zinc-50 border border-zinc-300 hover:border-zinc-400 shadow-xs transition-all hover:scale-105 cursor-pointer"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-zinc-900 bg-white hover:bg-zinc-50 border border-zinc-200 shadow-2xs hover:border-zinc-300 transition active:scale-95 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5 text-zinc-700" />
               <span>Log</span>
@@ -189,55 +194,27 @@ export default function Spending() {
         </div>
       </div>
 
-      {/* Budget & Running Total Metric Bar */}
-      <div className="mt-4 p-4 bg-zinc-50 border border-zinc-100 rounded-xl">
-        <div className="flex items-center justify-between">
-          <div>
-            <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider block">Total Spent</span>
-            <span className="text-2xl font-extrabold text-black tracking-tight">
-              ₹{summary.currentMonthTotal?.toLocaleString('en-IN')}
-            </span>
-          </div>
-
-          <div className="text-right">
-            <span className="text-[11px] font-medium text-zinc-500 block">
-              Budget: ₹{summary.softMonthlyBudget?.toLocaleString('en-IN')}
-            </span>
-            {summary.monthOverMonthPctChange !== 0 && (
-              <span
-                className={`text-xs font-semibold inline-flex items-center gap-0.5 ${
-                  summary.monthOverMonthPctChange > 0 ? 'text-rose-600' : 'text-accent-700'
-                }`}
-              >
-                {summary.monthOverMonthPctChange > 0 ? (
-                  <TrendingUp className="w-3 h-3" />
-                ) : (
-                  <TrendingDown className="w-3 h-3" />
-                )}
-                {Math.abs(summary.monthOverMonthPctChange)}% vs last mo
-              </span>
-            )}
-          </div>
+      {/* Compact Budget Progress Strip */}
+      <div className="mt-3 p-3 bg-zinc-50/80 border border-zinc-100 rounded-xl">
+        <div className="flex items-center justify-between text-xs mb-1.5">
+          <span className="text-[11px] font-semibold text-zinc-700">
+            ₹{summary.currentMonthTotal?.toLocaleString('en-IN') || 0} spent
+          </span>
+          <span className="text-[11px] text-zinc-500">
+            {summary.budgetConsumedPercentage || 0}% of ₹{summary.softMonthlyBudget?.toLocaleString('en-IN') || '50,000'}
+          </span>
         </div>
-
-        {/* Budget Progress Bar */}
-        <div className="mt-3">
-          <div className="w-full h-2 bg-zinc-200 rounded-full overflow-hidden">
-            <div
-              className={`h-full transition-all duration-500 ${
-                summary.budgetConsumedPercentage > 90
-                  ? 'bg-rose-500'
-                  : summary.budgetConsumedPercentage > 75
-                  ? 'bg-amber-500'
-                  : 'bg-accent-600'
-              }`}
-              style={{ width: `${Math.min(100, summary.budgetConsumedPercentage || 0)}%` }}
-            />
-          </div>
-          <div className="flex justify-between text-[10px] text-zinc-500 mt-1.5">
-            <span>{summary.budgetConsumedPercentage}% consumed</span>
-            <span>₹{Math.max(0, summary.budgetRemaining)?.toLocaleString('en-IN')} remaining</span>
-          </div>
+        <div className="w-full h-1.5 bg-zinc-200 rounded-full overflow-hidden">
+          <div
+            className={`h-full transition-all duration-500 ${
+              summary.budgetConsumedPercentage > 90
+                ? 'bg-rose-500'
+                : summary.budgetConsumedPercentage > 75
+                ? 'bg-amber-500'
+                : 'bg-zinc-900'
+            }`}
+            style={{ width: `${Math.min(100, summary.budgetConsumedPercentage || 0)}%` }}
+          />
         </div>
       </div>
 
@@ -420,9 +397,10 @@ export default function Spending() {
             ))}
           </div>
         ) : items.length === 0 ? (
-          <div className="text-center py-6 text-zinc-400">
-            <Receipt className="w-7 h-7 mx-auto mb-1.5 opacity-30 text-zinc-400" />
-            <p className="text-xs font-medium text-zinc-600">No expenses logged for {selectedMonth}.</p>
+          <div className="text-center py-6 px-4 bg-zinc-50/50 rounded-xl border border-dashed border-zinc-200">
+            <Receipt className="w-5 h-5 mx-auto mb-1.5 text-zinc-300" />
+            <p className="text-xs font-semibold text-zinc-700">No expenses logged</p>
+            <p className="text-[11px] text-zinc-400 mt-0.5">Track daily expenses, groceries, and travel</p>
           </div>
         ) : (
           <AnimatePresence initial={false}>

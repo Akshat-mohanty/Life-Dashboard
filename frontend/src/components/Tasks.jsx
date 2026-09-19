@@ -205,23 +205,33 @@ export default function Tasks() {
   };
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex flex-col h-full">
-      {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-zinc-100">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-accent-50 border border-accent-200 text-accent-700 flex items-center justify-center shadow-xs">
-            <CheckSquare className="w-4 h-4" />
+    <div className="bg-white/95 border border-zinc-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-sm transition-all flex flex-col h-full">
+      {/* Sleek Compact Header */}
+      <div className="flex items-center justify-between pb-3 mb-3 border-b border-zinc-100">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs">
+            <CheckSquare className="w-4 h-4 text-cyan-300" />
           </div>
           <div>
-            <h3 className="font-bold text-black text-base tracking-tight">Tasks</h3>
-            <p className="text-xs text-zinc-500">AI re-ranked daily by urgency</p>
+            <div className="flex items-center gap-2">
+              <h3 className="font-bold text-zinc-900 text-sm tracking-tight">Tasks</h3>
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
+                {summary.pendingCount} pending
+              </span>
+              {summary.completedCount > 0 && (
+                <span className="text-[11px] text-zinc-400 hidden sm:inline">
+                  • {summary.completedCount} done
+                </span>
+              )}
+            </div>
+            <p className="text-[11px] text-zinc-400">AI re-ranked daily by urgency</p>
           </div>
         </div>
 
         {!isAdding && !editingId && (
           <button
             onClick={() => setIsAdding(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-black bg-white hover:bg-zinc-50 border border-zinc-300 hover:border-zinc-400 shadow-xs transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-zinc-900 bg-white hover:bg-zinc-50 border border-zinc-200 shadow-2xs hover:border-zinc-300 transition active:scale-95 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5 text-zinc-700" />
             <span>Add</span>
@@ -229,25 +239,39 @@ export default function Tasks() {
         )}
       </div>
 
-      {/* Tally Metric Bar */}
-      <div className="mt-4 p-3.5 bg-zinc-50 border border-zinc-100 rounded-xl flex items-center justify-between">
-        <div>
-          <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider block">Pending Tasks</span>
-          <span className="text-2xl font-extrabold text-black tracking-tight">{summary.pendingCount}</span>
-        </div>
-        <div className="flex items-center gap-3 text-right">
-          {summary.highPriorityCount > 0 && (
-            <div>
-              <span className="text-[11px] font-semibold text-rose-600 block">High Priority</span>
-              <span className="text-sm text-rose-700 font-bold">{summary.highPriorityCount}</span>
-            </div>
-          )}
-          <div>
-            <span className="text-[11px] font-semibold text-accent-700 block">Completed</span>
-            <span className="text-sm text-accent-800 font-bold">{summary.completedCount}</span>
-          </div>
-        </div>
-      </div>
+      {/* Quick Add Inline Input */}
+      {!isAdding && !editingId && (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!formData.title.trim()) return;
+            createMutation.mutate({
+              title: formData.title.trim(),
+              description: '',
+              dueDate: new Date().toISOString().split('T')[0],
+              priority: 'medium',
+            });
+            setFormData((prev) => ({ ...prev, title: '' }));
+          }}
+          className="relative flex items-center bg-zinc-50/80 hover:bg-zinc-100/70 focus-within:bg-white border border-zinc-200/80 rounded-xl px-3 py-1.5 transition-all mb-3.5"
+        >
+          <input
+            type="text"
+            placeholder="Quick task... (press Enter)"
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            className="w-full bg-transparent text-xs text-zinc-800 placeholder-zinc-400 focus:outline-none pr-6"
+          />
+          <button
+            type="submit"
+            disabled={!formData.title.trim() || createMutation.isPending}
+            className="text-[11px] font-mono text-zinc-400 hover:text-zinc-900 transition disabled:opacity-30 cursor-pointer"
+            title="Press Enter or click to add"
+          >
+            ↵
+          </button>
+        </form>
+      )}
 
       {/* Add Task Modal Popup */}
       <AnimatePresence>
@@ -371,10 +395,10 @@ export default function Tasks() {
         ) : isError ? (
           <p className="text-xs text-rose-600 p-2">Error loading tasks: {error.message}</p>
         ) : localItems.length === 0 ? (
-          <div className="text-center py-8 text-zinc-400">
-            <CheckSquare className="w-8 h-8 mx-auto mb-2 opacity-30 text-zinc-400" />
-            <p className="text-xs font-medium text-zinc-600">No tasks recorded.</p>
-            <p className="text-[11px] text-zinc-400 mt-0.5">Add tasks and let Bedrock organize by urgency.</p>
+          <div className="text-center py-6 px-4 bg-zinc-50/50 rounded-xl border border-dashed border-zinc-200">
+            <CheckCircle2 className="w-5 h-5 mx-auto mb-1.5 text-zinc-300" />
+            <p className="text-xs font-semibold text-zinc-700">All caught up</p>
+            <p className="text-[11px] text-zinc-400 mt-0.5">Use the quick add field above to record next actions</p>
           </div>
         ) : (
           <AnimatePresence initial={false}>

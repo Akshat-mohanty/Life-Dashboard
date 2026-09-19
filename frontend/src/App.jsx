@@ -5,6 +5,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
 import {
   LogOut,
   User,
@@ -16,6 +17,14 @@ import {
   Eye,
   EyeOff,
   Key,
+  LayoutGrid,
+  CheckSquare,
+  CreditCard,
+  PieChart,
+  HeartPulse,
+  Calendar,
+  FileText,
+  Sparkles,
 } from 'lucide-react';
 import MeridianLogo from './components/MeridianLogo';
 import { useAuth } from './hooks/useAuth';
@@ -27,6 +36,14 @@ import Health from './components/Health';
 import Documents from './components/Documents';
 import Spending from './components/Spending';
 import UserProfileMenu from './components/UserProfileMenu';
+import {
+  tasksApi,
+  billsApi,
+  spendingApi,
+  calendarApi,
+  healthApi,
+  documentsApi,
+} from './api/client';
 
 export default function App() {
   const {
@@ -52,6 +69,52 @@ export default function App() {
   const [actionLoading, setActionLoading] = useState(false);
   const [localError, setLocalError] = useState('');
   const [infoMessage, setInfoMessage] = useState('');
+
+  // Dashboard workspace view tab: 'overview' | 'focus' | 'finances' | 'life'
+  const [activeTab, setActiveTab] = useState('overview');
+
+  // Cached summary telemetry for the Horizon Pulse Bar
+  const { data: tasksData } = useQuery({
+    queryKey: ['tasks'],
+    queryFn: tasksApi.list,
+    enabled: isAuthenticated,
+  });
+  const { data: billsData } = useQuery({
+    queryKey: ['bills'],
+    queryFn: billsApi.list,
+    enabled: isAuthenticated,
+  });
+  const { data: calendarData } = useQuery({
+    queryKey: ['calendar'],
+    queryFn: () => calendarApi.list(),
+    enabled: isAuthenticated,
+  });
+  const { data: healthData } = useQuery({
+    queryKey: ['health'],
+    queryFn: healthApi.list,
+    enabled: isAuthenticated,
+  });
+  const { data: docsData } = useQuery({
+    queryKey: ['documents'],
+    queryFn: documentsApi.list,
+    enabled: isAuthenticated,
+  });
+  const currentMonthStr = new Date().toISOString().slice(0, 7);
+  const { data: spendingSummaryData } = useQuery({
+    queryKey: ['spending', 'summary', currentMonthStr],
+    queryFn: () => spendingApi.summary(currentMonthStr, 50000),
+    enabled: isAuthenticated,
+  });
+
+  const tasksSummary = tasksData?.summary || { pendingCount: 0, completedCount: 0 };
+  const billsSummary = billsData?.summary || { totalUnpaidAmount: 0, overdueCount: 0 };
+  const calendarSummary = calendarData?.summary || { todayCount: 0, next7DaysCount: 0 };
+  const healthSummary = healthData?.summary || { totalCount: 0 };
+  const docsSummary = docsData?.summary || { totalCount: 0 };
+  const spendingSummary = spendingSummaryData?.summary || {
+    currentMonthTotal: 0,
+    softMonthlyBudget: 50000,
+  };
 
   const handleAuthSubmit = async (e) => {
     e.preventDefault();
@@ -360,96 +423,401 @@ export default function App() {
   }
 
   // =========================================================================
-  // AUTHENTICATED: DASHBOARD (CLEAN MONOCHROME WHITE CANVAS)
+  // AUTHENTICATED: EXECUTIVE DASHBOARD (NON-BULKY BENTO WORKSPACE)
   // =========================================================================
+  const displayName = user?.name || (user?.email ? user.email.split('@')[0] : 'Akshat');
+  const todayFormattedHeader = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric',
+  });
+
   return (
-    <div className="min-h-screen bg-white text-black flex flex-col relative overflow-x-hidden selection:bg-accent-100 selection:text-accent-900">
+    <div className="min-h-screen bg-[#fafbfc] text-zinc-900 flex flex-col relative overflow-x-hidden selection:bg-accent-100 selection:text-accent-900">
       {/* ====================================================================
-       * FULL-WIDTH TOP BAR
+       * SLEEK EXECUTIVE TOP BAR
        * ==================================================================== */}
       <motion.header
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-zinc-200 shadow-xs"
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-zinc-200/80 shadow-2xs"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          {/* Brand Left */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-15 flex items-center justify-between">
+          {/* Brand & Greeting */}
           <div className="flex items-center gap-3">
-            <MeridianLogo className="w-10 h-10" />
-            <div>
-              <h1 className="text-2xl font-bold text-black tracking-tight font-serif">Meridian</h1>
+            <MeridianLogo className="w-8 h-8" />
+            <div className="flex items-center gap-2.5">
+              <span className="text-xl font-bold tracking-tight text-zinc-900 font-serif">Meridian</span>
+              <span className="hidden sm:inline text-zinc-300">/</span>
+              <span className="hidden sm:inline text-xs font-medium text-zinc-500">
+                Welcome, <span className="font-semibold text-zinc-800">{displayName}</span>
+              </span>
             </div>
           </div>
 
-          {/* User Profile Dropdown & Logout */}
+          {/* Right Controls: Status & User Profile */}
           <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200/70 text-[11px] font-semibold text-emerald-700">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Bedrock AI Active</span>
+            </div>
+
             <UserProfileMenu />
           </div>
         </div>
       </motion.header>
 
       {/* ====================================================================
-       * MAIN CONTENT CANVAS
+       * MAIN EXECUTIVE WORKSPACE CANVAS
        * ==================================================================== */}
-      <main className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 flex-1">
-        {/* 1. Full-Width AI Morning Briefing (Loads First) */}
+      <main className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-5 sm:py-6 flex-1">
+        {/* 1. Executive Horizon Pulse Ribbon */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.4, delay: 0.05 }}
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-5"
         >
-          <Briefing />
+          {/* Tasks Pulse */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('focus')}
+            className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
+              activeTab === 'focus'
+                ? 'bg-zinc-900 text-white border-zinc-900 shadow-sm'
+                : 'bg-white hover:bg-zinc-50 border-zinc-200/80 text-zinc-900 shadow-2xs'
+            }`}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <span
+                className={`text-[10px] font-bold uppercase tracking-wider ${
+                  activeTab === 'focus' ? 'text-zinc-400' : 'text-zinc-400'
+                }`}
+              >
+                Pending Tasks
+              </span>
+              <CheckSquare
+                className={`w-3.5 h-3.5 ${
+                  activeTab === 'focus' ? 'text-cyan-300' : 'text-zinc-500'
+                }`}
+              />
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-lg font-extrabold tracking-tight">
+                {tasksSummary.pendingCount}
+              </span>
+              <span
+                className={`text-[10px] ${
+                  activeTab === 'focus' ? 'text-zinc-400' : 'text-zinc-500'
+                }`}
+              >
+                ({tasksSummary.completedCount} done)
+              </span>
+            </div>
+          </button>
+
+          {/* Bills Pulse */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('finances')}
+            className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
+              activeTab === 'finances'
+                ? 'bg-zinc-900 text-white border-zinc-900 shadow-sm'
+                : 'bg-white hover:bg-zinc-50 border-zinc-200/80 text-zinc-900 shadow-2xs'
+            }`}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <span
+                className={`text-[10px] font-bold uppercase tracking-wider ${
+                  activeTab === 'finances' ? 'text-zinc-400' : 'text-zinc-400'
+                }`}
+              >
+                Unpaid Bills
+              </span>
+              <CreditCard
+                className={`w-3.5 h-3.5 ${
+                  activeTab === 'finances' ? 'text-cyan-300' : 'text-zinc-500'
+                }`}
+              />
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-lg font-extrabold tracking-tight">
+                ₹{(billsSummary.totalUnpaidAmount || 0).toLocaleString('en-IN')}
+              </span>
+              {billsSummary.overdueCount > 0 && (
+                <span className="text-[10px] font-bold text-rose-500">
+                  {billsSummary.overdueCount} overdue
+                </span>
+              )}
+            </div>
+          </button>
+
+          {/* Spending Pulse */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('finances')}
+            className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
+              activeTab === 'finances'
+                ? 'bg-zinc-900 text-white border-zinc-900 shadow-sm'
+                : 'bg-white hover:bg-zinc-50 border-zinc-200/80 text-zinc-900 shadow-2xs'
+            }`}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <span
+                className={`text-[10px] font-bold uppercase tracking-wider ${
+                  activeTab === 'finances' ? 'text-zinc-400' : 'text-zinc-400'
+                }`}
+              >
+                Monthly Spend
+              </span>
+              <PieChart
+                className={`w-3.5 h-3.5 ${
+                  activeTab === 'finances' ? 'text-cyan-300' : 'text-zinc-500'
+                }`}
+              />
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-lg font-extrabold tracking-tight">
+                ₹{(spendingSummary.currentMonthTotal || 0).toLocaleString('en-IN')}
+              </span>
+            </div>
+          </button>
+
+          {/* Calendar Pulse */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('focus')}
+            className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
+              activeTab === 'focus'
+                ? 'bg-zinc-900 text-white border-zinc-900 shadow-sm'
+                : 'bg-white hover:bg-zinc-50 border-zinc-200/80 text-zinc-900 shadow-2xs'
+            }`}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <span
+                className={`text-[10px] font-bold uppercase tracking-wider ${
+                  activeTab === 'focus' ? 'text-zinc-400' : 'text-zinc-400'
+                }`}
+              >
+                Next 7 Days
+              </span>
+              <Calendar
+                className={`w-3.5 h-3.5 ${
+                  activeTab === 'focus' ? 'text-cyan-300' : 'text-zinc-500'
+                }`}
+              />
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-lg font-extrabold tracking-tight">
+                {calendarSummary.next7DaysCount || 0}
+              </span>
+              <span
+                className={`text-[10px] ${
+                  activeTab === 'focus' ? 'text-zinc-400' : 'text-zinc-500'
+                }`}
+              >
+                Events
+              </span>
+            </div>
+          </button>
+
+          {/* Habits & Vault Pulse */}
+          <button
+            type="button"
+            onClick={() => setActiveTab('life')}
+            className={`p-3 rounded-2xl border text-left transition-all cursor-pointer col-span-2 sm:col-span-1 ${
+              activeTab === 'life'
+                ? 'bg-zinc-900 text-white border-zinc-900 shadow-sm'
+                : 'bg-white hover:bg-zinc-50 border-zinc-200/80 text-zinc-900 shadow-2xs'
+            }`}
+          >
+            <div className="flex items-center justify-between mb-1">
+              <span
+                className={`text-[10px] font-bold uppercase tracking-wider ${
+                  activeTab === 'life' ? 'text-zinc-400' : 'text-zinc-400'
+                }`}
+              >
+                Habits & Vault
+              </span>
+              <HeartPulse
+                className={`w-3.5 h-3.5 ${
+                  activeTab === 'life' ? 'text-cyan-300' : 'text-zinc-500'
+                }`}
+              />
+            </div>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-lg font-extrabold tracking-tight">
+                {healthSummary.totalCount || 0}
+              </span>
+              <span
+                className={`text-[10px] ${
+                  activeTab === 'life' ? 'text-zinc-400' : 'text-zinc-500'
+                }`}
+              >
+                habits • {docsSummary.totalCount || 0} docs
+              </span>
+            </div>
+          </button>
         </motion.div>
 
-        {/* 2. Three-Column Desktop Grid (1-Column on Mobile) */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-          {/* Left Column: Bills + Spending */}
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-6"
-          >
-            <Bills />
-            <Spending />
-          </motion.div>
+        {/* 2. Workspace Segmented Navigation */}
+        <div className="flex items-center justify-between flex-wrap gap-3 mb-5">
+          <div className="flex items-center gap-1 p-1 bg-zinc-200/70 rounded-xl">
+            <button
+              type="button"
+              onClick={() => setActiveTab('overview')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'overview'
+                  ? 'bg-white text-zinc-900 shadow-2xs font-bold'
+                  : 'text-zinc-600 hover:text-zinc-900'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span>Overview</span>
+            </button>
 
-          {/* Center Column: Tasks + Calendar */}
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-6"
-          >
-            <Tasks />
-            <CalendarView />
-          </motion.div>
+            <button
+              type="button"
+              onClick={() => setActiveTab('focus')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'focus'
+                  ? 'bg-white text-zinc-900 shadow-2xs font-bold'
+                  : 'text-zinc-600 hover:text-zinc-900'
+              }`}
+            >
+              <CheckSquare className="w-3.5 h-3.5" />
+              <span>Tasks & Schedule</span>
+            </button>
 
-          {/* Right Column: Health + Documents */}
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="space-y-6"
-          >
-            <Health />
-            <Documents />
-          </motion.div>
+            <button
+              type="button"
+              onClick={() => setActiveTab('finances')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'finances'
+                  ? 'bg-white text-zinc-900 shadow-2xs font-bold'
+                  : 'text-zinc-600 hover:text-zinc-900'
+              }`}
+            >
+              <CreditCard className="w-3.5 h-3.5" />
+              <span>Finances & Spending</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('life')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'life'
+                  ? 'bg-white text-zinc-900 shadow-2xs font-bold'
+                  : 'text-zinc-600 hover:text-zinc-900'
+              }`}
+            >
+              <HeartPulse className="w-3.5 h-3.5" />
+              <span>Health & Documents</span>
+            </button>
+          </div>
+
+          <div className="text-xs text-zinc-400 font-medium hidden sm:block">
+            {todayFormattedHeader}
+          </div>
         </div>
+
+        {/* 3. Main Dynamic Content by Workspace View */}
+        <AnimatePresence mode="wait">
+          {activeTab === 'overview' && (
+            <motion.div
+              key="overview"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              {/* Sleek Intelligence Banner */}
+              <Briefing />
+
+              {/* Bento Grid Architecture */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+                {/* Left Column (7 cols / ~58%) */}
+                <div className="lg:col-span-7 space-y-5">
+                  <Tasks />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <Bills />
+                    <Spending />
+                  </div>
+                </div>
+
+                {/* Right Column (5 cols / ~42%) */}
+                <div className="lg:col-span-5 space-y-5">
+                  <CalendarView />
+                  <Health />
+                  <Documents />
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'focus' && (
+            <motion.div
+              key="focus"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <Briefing />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+                <div>
+                  <Tasks />
+                </div>
+                <div>
+                  <CalendarView />
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'finances' && (
+            <motion.div
+              key="finances"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start"
+            >
+              <div>
+                <Bills />
+              </div>
+              <div>
+                <Spending />
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'life' && (
+            <motion.div
+              key="life"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start"
+            >
+              <div>
+                <Health />
+              </div>
+              <div>
+                <Documents />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
 
-      {/* ====================================================================
-       * ARCHITECTURAL FOOTER
-       * ==================================================================== */}
-      <motion.footer
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 0.5 }}
-        className="relative z-10 py-6 mt-12 text-center text-xs text-zinc-500 font-medium"
-      >
-        made by Akshat Mohanty
-      </motion.footer>
+      {/* Architectural Footer */}
+      <footer className="relative z-10 py-5 mt-8 text-center text-xs text-zinc-400 font-medium border-t border-zinc-200/60">
+        Meridian • Powered by AWS Bedrock & Claude 3.5 Sonnet
+      </footer>
     </div>
   );
 }

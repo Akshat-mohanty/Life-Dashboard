@@ -101,46 +101,38 @@ export default function Health() {
   };
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col h-full">
-      {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-zinc-100">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-accent-50 border border-accent-200 text-accent-700 flex items-center justify-center shadow-xs">
-            <HeartPulse className="w-4 h-4" />
+    <div className="bg-white/95 border border-zinc-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-sm transition-all flex flex-col h-full">
+      {/* Sleek Header */}
+      <div className="flex items-center justify-between pb-3 mb-1 border-b border-zinc-100">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs">
+            <HeartPulse className="w-4 h-4 text-cyan-300" />
           </div>
           <div>
-            <h3 className="font-bold text-black text-base tracking-tight">Health Reminders</h3>
-            <p className="text-xs text-zinc-500">Medicines, habits & SMS alerts</p>
+            <div className="flex items-center gap-2">
+              <h3 className="font-bold text-zinc-900 text-sm tracking-tight">Health & Habits</h3>
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
+                {summary.totalCount} active
+              </span>
+              {summary.smsAlertsEnabledCount > 0 && (
+                <span className="text-[10px] text-zinc-400 font-medium hidden sm:inline">
+                  • {summary.smsAlertsEnabledCount} SMS
+                </span>
+              )}
+            </div>
+            <p className="text-[11px] text-zinc-400">Medicines, daily habits & SMS alerts</p>
           </div>
         </div>
 
         {!isAdding && (
           <button
             onClick={() => setIsAdding(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-black bg-white hover:bg-zinc-50 border border-zinc-300 hover:border-zinc-400 shadow-xs transition-all hover:scale-105 cursor-pointer"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-zinc-900 bg-white hover:bg-zinc-50 border border-zinc-200 shadow-2xs hover:border-zinc-300 transition active:scale-95 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5 text-zinc-700" />
             <span>Add</span>
           </button>
         )}
-      </div>
-
-      {/* Summary Chips */}
-      <div className="mt-4 p-3.5 bg-zinc-50 border border-zinc-100 rounded-xl flex items-center justify-between">
-        <div>
-          <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider block">Active Habits</span>
-          <span className="text-2xl font-extrabold text-black tracking-tight">{summary.totalCount}</span>
-        </div>
-        <div className="text-right">
-          <span className="text-xs font-semibold text-accent-700 block flex items-center gap-1 justify-end">
-            <Repeat className="w-3 h-3" /> {summary.dailyCount} Daily
-          </span>
-          {summary.smsAlertsEnabledCount > 0 && (
-            <span className="text-[11px] text-zinc-500 font-medium flex items-center gap-1 justify-end mt-0.5">
-              <Smartphone className="w-3 h-3 text-accent-600" /> {summary.smsAlertsEnabledCount} SMS active
-            </span>
-          )}
-        </div>
       </div>
 
       {/* Add Health Habit Modal Popup */}
@@ -270,10 +262,10 @@ export default function Health() {
         ) : isError ? (
           <p className="text-xs text-rose-600 p-2">Error loading health habits: {error.message}</p>
         ) : reminders.length === 0 ? (
-          <div className="text-center py-8 text-zinc-400">
-            <HeartPulse className="w-8 h-8 mx-auto mb-2 opacity-30 text-zinc-400" />
-            <p className="text-xs font-medium text-zinc-600">No health reminders added.</p>
-            <p className="text-[11px] text-zinc-400 mt-0.5">Schedule daily water, vitamins, or walking habits.</p>
+          <div className="text-center py-6 px-4 bg-zinc-50/50 rounded-xl border border-dashed border-zinc-200">
+            <HeartPulse className="w-5 h-5 mx-auto mb-1.5 text-zinc-300" />
+            <p className="text-xs font-semibold text-zinc-700">No active habits</p>
+            <p className="text-[11px] text-zinc-400 mt-0.5">Schedule hydration, vitamins, exercise, or medicines</p>
           </div>
         ) : (
           <AnimatePresence initial={false}>
