@@ -305,110 +305,158 @@ export default function LandingPage({
                 perspective: '1200px',
               }}
             >
-              {/* Tilted iPhone Chassis */}
+              {/* Photorealistic 3D Angled Apple iPhone Device */}
               <div
-                className="w-[280px] sm:w-[320px] rounded-[48px] bg-zinc-950 p-2.5 shadow-[-22px_32px_60px_rgba(0,0,0,0.32),0_0_0_1px_rgba(255,255,255,0.12)] border-2 border-zinc-800 relative z-10 transition-transform duration-500 hover:rotate-y-6 hover:rotate-x-2"
+                className="relative w-[285px] sm:w-[325px] transition-transform duration-500 hover:rotate-y-6 hover:rotate-x-2 select-none"
                 style={{
-                  transform: 'rotateY(14deg) rotateX(6deg) rotateZ(-3deg)',
+                  transform: 'rotateY(16deg) rotateX(7deg) rotateZ(-4deg)',
                   transformStyle: 'preserve-3d',
                 }}
               >
-                {/* iPhone Inner Screen Frame */}
-                <div className="w-full bg-[#f8f9fa] rounded-[40px] overflow-hidden border border-zinc-900 flex flex-col relative text-zinc-900 select-none">
-                  {/* Status Bar & Dynamic Island */}
-                  <div className="pt-2 px-6 pb-1 flex items-center justify-between text-[10px] font-bold text-zinc-900 bg-white border-b border-zinc-100">
-                    <span>9:41</span>
-                    <div className="w-20 h-4.5 bg-black rounded-full mx-auto" />
-                    <div className="flex items-center gap-1 text-[9px]">
-                      <span>5G</span>
-                      <div className="w-4 h-2 rounded-xs border border-zinc-800 p-0.5 flex items-center">
-                        <div className="w-full h-full bg-zinc-900 rounded-2xs" />
-                      </div>
-                    </div>
-                  </div>
+                {/* 1. Realistic 3D Silver / Natural Titanium Left Side Rail (Visible Depth in Perspective) */}
+                <div className="absolute -left-[10px] top-[14px] bottom-[14px] w-[12px] rounded-l-[14px] bg-gradient-to-r from-[#b3b2b7] via-[#e2e1e7] to-[#8d8c91] border-l border-white/70 shadow-[-10px_16px_30px_rgba(0,0,0,0.22)] z-0 pointer-events-none">
+                  {/* Top Antenna Line */}
+                  <div className="absolute top-10 left-0 right-0 h-[2px] bg-[#68676c]" />
+                  {/* Action / Silent Switch */}
+                  <div className="absolute top-16 -left-[3px] w-[3px] h-6 rounded-l-xs bg-[#939298] border-l border-white/60 shadow-2xs" />
+                  {/* Volume Up */}
+                  <div className="absolute top-28 -left-[3px] w-[3px] h-12 rounded-l-xs bg-[#939298] border-l border-white/60 shadow-2xs" />
+                  {/* Volume Down */}
+                  <div className="absolute top-44 -left-[3px] w-[3px] h-12 rounded-l-xs bg-[#939298] border-l border-white/60 shadow-2xs" />
+                  {/* Bottom Antenna Line */}
+                  <div className="absolute bottom-16 left-0 right-0 h-[2px] bg-[#68676c]" />
+                </div>
 
-                  {/* Mobile Screen Header */}
-                  <div className="px-3.5 py-2.5 bg-white border-b border-zinc-100 flex items-center justify-between">
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-5 h-5 rounded-md bg-black text-white flex items-center justify-center font-black text-[9px]">
-                        E
-                      </div>
-                      <span className="font-extrabold text-xs tracking-tight">Ebolt</span>
-                    </div>
-                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 border border-zinc-200">
-                      Today • Sep 19
-                    </span>
-                  </div>
+                {/* Right Side Power Button */}
+                <div className="absolute -right-[3px] top-36 w-[3px] h-16 rounded-r-xs bg-[#939298] border-r border-white/60 z-0" />
 
-                  {/* Mobile Screen Body: Real Life Dashboard Widgets */}
-                  <div className="p-3 space-y-2.5 bg-[#f5f6f8] text-left">
-                    {/* 1. Today's AI Morning Briefing Card */}
-                    <div className="bg-zinc-950 text-white rounded-xl p-3 border border-zinc-800 shadow-xs">
-                      <div className="flex items-center justify-between pb-1.5 border-b border-zinc-800/80 mb-1.5">
-                        <div className="flex items-center gap-1.5">
-                          <Sparkles className="w-3 h-3 text-cyan-300" />
-                          <span className="text-[10px] font-bold tracking-tight">
-                            AI Executive Briefing
-                          </span>
+                {/* 2. Outer Metallic Chamfered Shell */}
+                <div className="p-[3.5px] rounded-[52px] bg-gradient-to-b from-[#f2f1f6] via-[#d7d6db] to-[#9d9ca1] shadow-[inset_0_1px_2px_rgba(255,255,255,0.9),inset_0_-1px_2px_rgba(0,0,0,0.3),-24px_38px_65px_-8px_rgba(0,0,0,0.35),-8px_16px_28px_-4px_rgba(0,0,0,0.2)] relative z-10">
+                  {/* 3. Deep Obsidian Black Front Glass Bezel */}
+                  <div className="p-[7px] sm:p-[8px] bg-[#09090b] rounded-[49px] ring-1 ring-white/20 relative">
+                    {/* 4. Display Screen Frame */}
+                    <div className="w-full bg-[#f8f9fa] rounded-[42px] overflow-hidden flex flex-col relative text-zinc-900 shadow-inner">
+                      {/* Authentic Apple iPhone Notch */}
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 sm:w-36 h-6 bg-[#09090b] rounded-b-[20px] z-30 flex items-center justify-center gap-3 px-3 shadow-sm">
+                        {/* Speaker Ear Slit */}
+                        <div className="w-11 h-1 bg-[#222225] rounded-full" />
+                        {/* Front Camera Lens with Blue Reflection */}
+                        <div className="w-2.5 h-2.5 rounded-full bg-[#111114] ring-1 ring-[#252530] flex items-center justify-center">
+                          <div className="w-1 h-1 rounded-full bg-[#1e2a52]" />
                         </div>
-                        <span className="text-[8px] uppercase tracking-wider font-bold text-emerald-400 bg-emerald-500/20 px-1.5 py-0.2 rounded">
-                          Synthesized
+                      </div>
+
+                      {/* Status Bar */}
+                      <div className="pt-2 px-6 pb-1.5 flex items-center justify-between text-[11px] font-semibold text-zinc-950 bg-white border-b border-zinc-100/80">
+                        <span className="font-bold tracking-tight">9:41</span>
+                        <div className="flex items-center gap-1.5 text-[10px] font-semibold text-zinc-900">
+                          {/* Cellular Signal Bars */}
+                          <div className="flex items-end gap-[1.5px] h-2.5">
+                            <span className="w-[2px] h-1 bg-zinc-900 rounded-2xs" />
+                            <span className="w-[2px] h-1.5 bg-zinc-900 rounded-2xs" />
+                            <span className="w-[2px] h-2 bg-zinc-900 rounded-2xs" />
+                            <span className="w-[2px] h-2.5 bg-zinc-900 rounded-2xs" />
+                          </div>
+                          <span className="text-[9px] font-bold">5G</span>
+                          {/* Battery Outline & Fill */}
+                          <div className="w-5 h-2.5 rounded-[3px] border border-zinc-900 p-[1.5px] flex items-center">
+                            <div className="w-full h-full bg-zinc-900 rounded-[1px]" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Mobile Screen Header */}
+                      <div className="px-4 py-2.5 bg-white border-b border-zinc-100 flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-5 h-5 rounded-[4px] bg-black text-white flex items-center justify-center font-black text-[9px]">
+                            E
+                          </div>
+                          <span className="font-extrabold text-xs tracking-tight">Ebolt</span>
+                        </div>
+                        <span className="text-[9px] font-bold px-2 py-0.5 rounded-[3px] bg-zinc-100 text-zinc-600 border border-zinc-200">
+                          Today • Sep 19
                         </span>
                       </div>
-                      <p className="text-[9.5px] text-zinc-300 leading-relaxed">
-                        Good morning! 2 priority tasks need action today. Monthly spending is well within your budget limit.
-                      </p>
+
+                      {/* Mobile Screen Body: Real Life Dashboard Widgets */}
+                      <div className="p-3 space-y-2.5 bg-[#f5f6f8] text-left">
+                        {/* 1. Today's AI Morning Briefing Card */}
+                        <div className="bg-zinc-950 text-white rounded-xl p-3 border border-zinc-800 shadow-xs">
+                          <div className="flex items-center justify-between pb-1.5 border-b border-zinc-800/80 mb-1.5">
+                            <div className="flex items-center gap-1.5">
+                              <Sparkles className="w-3 h-3 text-cyan-300" />
+                              <span className="text-[10px] font-bold tracking-tight">
+                                AI Executive Briefing
+                              </span>
+                            </div>
+                            <span className="text-[8px] uppercase tracking-wider font-bold text-emerald-400 bg-emerald-500/20 px-1.5 py-0.2 rounded">
+                              Synthesized
+                            </span>
+                          </div>
+                          <p className="text-[9.5px] text-zinc-300 leading-relaxed">
+                            Good morning! 2 priority tasks need action today. Monthly spending is well within your budget limit.
+                          </p>
+                        </div>
+
+                        {/* 2. Tasks Widget */}
+                        <div className="bg-white rounded-xl p-2.5 border border-zinc-200/90 shadow-2xs">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-1.5">
+                              <CheckSquare className="w-3 h-3 text-cyan-500" />
+                              <span className="text-[10px] font-bold text-zinc-900">Today's Tasks</span>
+                            </div>
+                            <span className="text-[9px] font-semibold text-zinc-400">2 pending</span>
+                          </div>
+                          <div className="space-y-1.5">
+                            <div className="flex items-center gap-2 p-1.5 rounded-lg bg-zinc-50 border border-zinc-100 text-[9px] text-zinc-800">
+                              <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
+                              <span className="font-medium truncate">Review AWS Bedrock architecture</span>
+                            </div>
+                            <div className="flex items-center gap-2 p-1.5 rounded-lg bg-zinc-50 border border-zinc-100 text-[9px] text-zinc-800">
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
+                              <span className="font-medium truncate">Pay electricity & utilities</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* 3. Bills & Spending Mini Grid */}
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="bg-white rounded-xl p-2 border border-zinc-200/90">
+                            <div className="flex items-center gap-1 text-[9px] font-bold text-zinc-500">
+                              <CreditCard className="w-2.5 h-2.5 text-cyan-600" />
+                              <span>Bills</span>
+                            </div>
+                            <p className="text-xs font-black text-zinc-900 mt-1">₹2,450</p>
+                            <p className="text-[8px] text-zinc-400 mt-0.5">Due in 3 days</p>
+                          </div>
+
+                          <div className="bg-white rounded-xl p-2 border border-zinc-200/90">
+                            <div className="flex items-center gap-1 text-[9px] font-bold text-zinc-500">
+                              <PieChartIcon className="w-2.5 h-2.5 text-indigo-600" />
+                              <span>Spending</span>
+                            </div>
+                            <p className="text-xs font-black text-zinc-900 mt-1">₹14,200</p>
+                            <p className="text-[8px] text-emerald-600 font-semibold mt-0.5">28% of budget</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Bottom App Navigation Bar inside phone */}
+                      <div className="bg-white border-t border-zinc-100 py-2 px-5 flex items-center justify-between text-[9px] font-bold text-zinc-400">
+                        <span className="text-zinc-950 font-extrabold">Dashboard</span>
+                        <span>Tasks</span>
+                        <span>Finance</span>
+                        <span>Archive</span>
+                      </div>
+
+                      {/* iOS Bottom Home Indicator Bar */}
+                      <div className="w-full bg-white pb-2 flex justify-center">
+                        <div className="w-28 h-1 bg-zinc-900/80 rounded-full" />
+                      </div>
+
+                      {/* Diagonal Tempered Glass Reflection */}
+                      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.08] to-transparent pointer-events-none z-25 rounded-[42px]" />
                     </div>
-
-                    {/* 2. Tasks Widget */}
-                    <div className="bg-white rounded-xl p-2.5 border border-zinc-200/90 shadow-2xs">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-1.5">
-                          <CheckSquare className="w-3 h-3 text-cyan-500" />
-                          <span className="text-[10px] font-bold text-zinc-900">Today's Tasks</span>
-                        </div>
-                        <span className="text-[9px] font-semibold text-zinc-400">2 pending</span>
-                      </div>
-                      <div className="space-y-1.5">
-                        <div className="flex items-center gap-2 p-1.5 rounded-lg bg-zinc-50 border border-zinc-100 text-[9px] text-zinc-800">
-                          <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shrink-0" />
-                          <span className="font-medium truncate">Review AWS Bedrock architecture</span>
-                        </div>
-                        <div className="flex items-center gap-2 p-1.5 rounded-lg bg-zinc-50 border border-zinc-100 text-[9px] text-zinc-800">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
-                          <span className="font-medium truncate">Pay electricity & utilities</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 3. Bills & Spending Mini Grid */}
-                    <div className="grid grid-cols-2 gap-2">
-                      <div className="bg-white rounded-xl p-2 border border-zinc-200/90">
-                        <div className="flex items-center gap-1 text-[9px] font-bold text-zinc-500">
-                          <CreditCard className="w-2.5 h-2.5 text-cyan-600" />
-                          <span>Bills</span>
-                        </div>
-                        <p className="text-xs font-black text-zinc-900 mt-1">₹2,450</p>
-                        <p className="text-[8px] text-zinc-400 mt-0.5">Due in 3 days</p>
-                      </div>
-
-                      <div className="bg-white rounded-xl p-2 border border-zinc-200/90">
-                        <div className="flex items-center gap-1 text-[9px] font-bold text-zinc-500">
-                          <PieChartIcon className="w-2.5 h-2.5 text-indigo-600" />
-                          <span>Spending</span>
-                        </div>
-                        <p className="text-xs font-black text-zinc-900 mt-1">₹14,200</p>
-                        <p className="text-[8px] text-emerald-600 font-semibold mt-0.5">28% of budget</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Bottom App Navigation Bar inside phone */}
-                  <div className="bg-white border-t border-zinc-100 py-2 px-5 flex items-center justify-between text-[9px] font-bold text-zinc-400">
-                    <span className="text-zinc-950">Dashboard</span>
-                    <span>Tasks</span>
-                    <span>Finance</span>
-                    <span>Archive</span>
                   </div>
                 </div>
               </div>
