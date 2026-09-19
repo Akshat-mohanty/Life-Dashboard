@@ -189,12 +189,22 @@ export default function App() {
     }
   };
 
-  // =========================================================================
-  // UNAUTHENTICATED: CINEMATIC AESTHETIC SPLIT AUTH SCREEN
+  // 1. Loading state while checking authentication credentials
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#fafbfc] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs font-medium text-zinc-400">Verifying session...</p>
+        </div>
+      </div>
+    );
+  }
+
   // =========================================================================
   // UNAUTHENTICATED: PIXEL-PERFECT REPLICA OF REFERENCE DESIGN
   // =========================================================================
-  if (!isAuthenticated && !authLoading) {
+  if (!isAuthenticated) {
     return (
       <div className="min-h-screen text-black flex items-center justify-center relative overflow-hidden selection:bg-accent-100 selection:text-accent-900 p-4">
         {/* Background Animated Video for Home Page */}
@@ -382,9 +392,14 @@ export default function App() {
             {/* Google */}
             <button
               type="button"
-              onClick={() => {
+              onClick={async () => {
                 setLocalError('');
-                loginWithGoogle();
+                setInfoMessage('');
+                try {
+                  await loginWithGoogle();
+                } catch (err) {
+                  setLocalError(err.message || 'Google sign-in is not configured yet.');
+                }
               }}
               className="h-9 sm:h-10 bg-white hover:bg-zinc-50 border border-zinc-200/90 rounded-xl flex items-center justify-center shadow-2xs hover:border-zinc-300 transition-all active:scale-95 cursor-pointer"
               title="Sign in with Google"

@@ -234,7 +234,7 @@ export default function UserProfileMenu() {
             {user?.name || 'User'}
           </p>
           <p className="text-[10px] text-zinc-500 mt-0.5 truncate max-w-[130px]">
-            {user?.email || 'authenticated'}
+            {user?.email || user?.userId || 'Active User'}
           </p>
         </div>
 

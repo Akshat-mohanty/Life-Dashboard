@@ -194,6 +194,40 @@ export const AuthProvider = ({ children }) => {
     };
 
     initializeAuth();
+
+    // Handle BFCache (browser Back/Forward navigation)
+    const handlePageShow = (event) => {
+      if (event.persisted) {
+        setLoading(false);
+        const wasOAuth = sessionStorage.getItem(STORAGE_KEYS.OAUTH_IN_PROGRESS);
+        if (wasOAuth) {
+          sessionStorage.removeItem(STORAGE_KEYS.OAUTH_IN_PROGRESS);
+          clearSession();
+          setError('Google sign-in was not completed.');
+          return;
+        }
+
+        const cachedUserStr = localStorage.getItem(STORAGE_KEYS.USER);
+        const cachedToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
+        if (cachedUserStr && cachedToken) {
+          try {
+            const parsed = JSON.parse(cachedUserStr);
+            if (parsed?.userId) {
+              setUser({ ...parsed, token: cachedToken });
+            } else {
+              clearSession();
+            }
+          } catch {
+            clearSession();
+          }
+        } else {
+          clearSession();
+        }
+      }
+    };
+
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
   }, []);
 
   // Fetch isolated profile record from database for this user
@@ -586,11 +620,7 @@ export const AuthProvider = ({ children }) => {
    */
   const loginWithGoogle = () => {
     setError(null);
-    // Clear any previous session so failed/cancelled OAuth cannot resurrect stale credentials
     clearSession();
-    // Record that an OAuth flow was initiated
-    sessionStorage.setItem(STORAGE_KEYS.OAUTH_IN_PROGRESS, 'google');
-    setLoading(true);
 
     const COGNITO_DOMAIN = import.meta.env.VITE_COGNITO_DOMAIN || '';
     const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
@@ -598,16 +628,33 @@ export const AuthProvider = ({ children }) => {
 
     // 1. If Cognito Hosted UI domain is configured, redirect via Cognito Google IdP
     if (COGNITO_DOMAIN && CLIENT_ID && !CLIENT_ID.includes('example')) {
+      sessionStorage.setItem(STORAGE_KEYS.OAUTH_IN_PROGRESS, 'google');
+      setLoading(true);
       const googleAuthUrl = `https://${COGNITO_DOMAIN}/oauth2/authorize?identity_provider=Google&client_id=${CLIENT_ID}&response_type=token&scope=email+openid+profile&redirect_uri=${encodeURIComponent(REDIRECT_URI)}`;
       window.location.href = googleAuthUrl;
       return;
     }
 
-    // 2. Direct Google OAuth 2.0 endpoint (takes user directly to Google's sign-in site)
-    const clientIdToUse = GOOGLE_CLIENT_ID || '1082531343729-demo.apps.googleusercontent.com';
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(clientIdToUse)}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token%20id_token&scope=openid%20email%20profile&nonce=${Date.now()}&prompt=select_account`;
+    // 2. Direct Google OAuth 2.0 endpoint (only if valid GOOGLE_CLIENT_ID is provided)
+    if (
+      GOOGLE_CLIENT_ID &&
+      !GOOGLE_CLIENT_ID.includes('demo') &&
+      !GOOGLE_CLIENT_ID.includes('example')
+    ) {
+      sessionStorage.setItem(STORAGE_KEYS.OAUTH_IN_PROGRESS, 'google');
+      setLoading(true);
+      const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(GOOGLE_CLIENT_ID)}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token%20id_token&scope=openid%20email%20profile&nonce=${Date.now()}&prompt=select_account`;
+      window.location.href = googleAuthUrl;
+      return;
+    }
 
-    window.location.href = googleAuthUrl;
+    // If neither Cognito nor Google Client ID is configured, do not redirect to broken dummy Google endpoint
+    setLoading(false);
+    const err = new Error(
+      'Sign in with Google is not configured yet. Please sign in or sign up with email, or use Instant Demo Access.'
+    );
+    setError(err.message);
+    throw err;
   };
 
   return React.createElement(
