@@ -73,16 +73,6 @@
   box-shadow: none !important;
 }
 
-.dashboard-window-controls span {
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  display: block;
-}
-.dashboard-window-controls span:nth-child(1) { background: #ec5465; }
-.dashboard-window-controls span:nth-child(2) { background: #efab3e; }
-.dashboard-window-controls span:nth-child(3) { background: #47c99b; }
-
 .dashboard-theme main { max-width: 1320px !important; }
 .dashboard-theme footer { border-color: var(--dash-border) !important; }
 
