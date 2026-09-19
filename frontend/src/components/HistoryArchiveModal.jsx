@@ -115,6 +115,12 @@ export default function HistoryArchiveModal({
     setViewDate(dateStr);
   };
 
+  const isJumpSelected = (days) => {
+    const target = new Date();
+    target.setDate(target.getDate() - days);
+    return viewDate === target.toISOString().split('T')[0];
+  };
+
   const handlePrevDay = () => {
     const curr = new Date(viewDate + 'T00:00:00');
     curr.setDate(curr.getDate() - 1);
@@ -242,16 +248,23 @@ export default function HistoryArchiveModal({
 
             {/* Quick offset buttons */}
             <div className="flex items-center gap-1.5 overflow-x-auto py-0.5">
-              {quickJumps.map((q) => (
-                <button
-                  key={q.label}
-                  type="button"
-                  onClick={() => handleJumpDays(q.days)}
-                  className="px-2.5 py-1 text-xs font-medium rounded-lg bg-white hover:bg-zinc-100 border border-zinc-200 text-zinc-700 transition cursor-pointer whitespace-nowrap"
-                >
-                  {q.label}
-                </button>
-              ))}
+              {quickJumps.map((q) => {
+                const isSelected = isJumpSelected(q.days);
+                return (
+                  <button
+                    key={q.label}
+                    type="button"
+                    onClick={() => handleJumpDays(q.days)}
+                    className={`px-2.5 py-1 text-xs rounded-lg border transition-all cursor-pointer whitespace-nowrap ${
+                      isSelected
+                        ? 'bg-zinc-900 text-white border-zinc-900 shadow-xs font-semibold ring-2 ring-zinc-900/15'
+                        : 'bg-white hover:bg-zinc-100 border-zinc-200 text-zinc-700 font-medium'
+                    }`}
+                  >
+                    {q.label}
+                  </button>
+                );
+              })}
 
               {/* Time-travel: apply to entire dashboard */}
               <button
