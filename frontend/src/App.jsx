@@ -585,12 +585,6 @@ export default function App() {
               transition={{ duration: 0.25 }}
               className="space-y-5"
             >
-              {/* Sleek Intelligence Banner */}
-              <Briefing
-                selectedDate={selectedDate}
-                onOpenArchive={() => setIsArchiveModalOpen(true)}
-              />
-
               {/* Status Header: Automatically states if tasks/obligations are pending */}
               <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-2xs">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -906,6 +900,12 @@ export default function App() {
                   </div>
                 </div>
               </div>
+
+              {/* Sleek Intelligence Banner (Daily Briefing) */}
+              <Briefing
+                selectedDate={selectedDate}
+                onOpenArchive={() => setIsArchiveModalOpen(true)}
+              />
 
               {/* Bento Grid Architecture: only visible if user explicitly chooses to expand all tiles */}
               <AnimatePresence>
