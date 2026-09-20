@@ -668,56 +668,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Past Data Historical Tiles */}
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
-                {/* Past Tasks */}
-                <div className="p-3 rounded-2xl border text-left bg-white border-zinc-200/80 text-zinc-900 shadow-2xs flex flex-col justify-between">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Past 7 Days</span>
-                    <CheckSquare className="w-3.5 h-3.5 text-zinc-400" />
-                  </div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-lg font-extrabold tracking-tight">{tasksSummary.completedCount || 12}</span>
-                    <span className="text-[10px] text-zinc-500">tasks done</span>
-                  </div>
-                </div>
 
-                {/* Past Spend */}
-                <div className="p-3 rounded-2xl border text-left bg-white border-zinc-200/80 text-zinc-900 shadow-2xs flex flex-col justify-between">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Past Month</span>
-                    <PieChart className="w-3.5 h-3.5 text-zinc-400" />
-                  </div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-lg font-extrabold tracking-tight">{formatAmount((spendingSummary.currentMonthTotal || 45000) * 0.85)}</span>
-                    <span className="text-[10px] text-zinc-500">spent</span>
-                  </div>
-                </div>
-
-                {/* Habit Streak */}
-                <div className="p-3 rounded-2xl border text-left bg-white border-zinc-200/80 text-zinc-900 shadow-2xs flex flex-col justify-between">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Habit Streak</span>
-                    <HeartPulse className="w-3.5 h-3.5 text-zinc-400" />
-                  </div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-lg font-extrabold tracking-tight">14</span>
-                    <span className="text-[10px] text-zinc-500">days active</span>
-                  </div>
-                </div>
-
-                {/* Historical Vault */}
-                <div className="p-3 rounded-2xl border text-left bg-white border-zinc-200/80 text-zinc-900 shadow-2xs flex flex-col justify-between">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Archived</span>
-                    <History className="w-3.5 h-3.5 text-zinc-400" />
-                  </div>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-lg font-extrabold tracking-tight">{docsSummary.totalCount || 0}</span>
-                    <span className="text-[10px] text-zinc-500">documents</span>
-                  </div>
-                </div>
-              </div>
 
               {/* Sleek Intelligence Banner (Daily Briefing) */}
               <div className="mt-auto pt-5">
