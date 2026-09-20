@@ -263,35 +263,35 @@ export default function LandingPage({
 
           </div>
 
-          {/* Right: Dark App Preview Card — Schedule / Docs view */}
+          {/* Right: Light App Preview Card — Schedule / Docs view (matching dashboard) */}
           <div className="relative w-full">
             {/* Glow */}
             <div className="absolute -inset-6 bg-gradient-to-tr from-indigo-500/20 via-violet-500/10 to-cyan-500/20 rounded-3xl blur-2xl pointer-events-none" />
 
             {/* App Window */}
-            <div className="relative bg-zinc-900 rounded-2xl border border-white/10 shadow-[0_32px_80px_-20px_rgba(0,0,0,0.6)] overflow-hidden select-none">
+            <div className="relative bg-white rounded-2xl border border-zinc-200/90 shadow-[0_32px_80px_-20px_rgba(0,0,0,0.4)] overflow-hidden select-none">
               {/* Window chrome */}
-              <div className="px-4 py-3 bg-zinc-800/80 border-b border-white/5 flex items-center justify-between">
+              <div className="px-4 py-3 bg-zinc-50 border-b border-zinc-200/90 flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-rose-500/70" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500/70" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/70" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-rose-500/90 shadow-sm" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500/90 shadow-sm" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/90 shadow-sm" />
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-700/60 border border-white/5 text-[10px] font-semibold text-zinc-400">
-                  <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-zinc-200/90 text-[10px] font-semibold text-zinc-600 shadow-2xs">
+                  <div className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
                   <span>meridian.app/schedule</span>
                 </div>
                 <span className="text-[10px] font-semibold text-zinc-500">Week • Sep 19</span>
               </div>
 
               {/* Body */}
-              <div className="p-4 sm:p-5 space-y-3.5 bg-zinc-900">
+              <div className="p-4 sm:p-5 space-y-3.5 bg-zinc-50/50">
 
                 {/* Weekly Schedule Strip */}
-                <div className="bg-zinc-800 rounded-xl p-3.5 border border-white/5">
+                <div className="bg-white rounded-xl p-3.5 border border-zinc-200/90 shadow-2xs">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">This Week</span>
-                    <span className="ml-auto text-[10px] font-semibold text-indigo-400">Sep 19–25</span>
+                    <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">This Week</span>
+                    <span className="ml-auto text-[10px] font-semibold text-zinc-900">Sep 19–25</span>
                   </div>
                   <div className="grid grid-cols-7 gap-1 text-center">
                     {[
@@ -303,34 +303,34 @@ export default function LandingPage({
                       { d: 'S', n: '24' },
                       { d: 'S', n: '25' },
                     ].map((item) => (
-                      <div key={item.n} className={`flex flex-col items-center gap-1 py-1.5 rounded-lg ${item.active ? 'bg-indigo-500' : ''}`}>
-                        <span className={`text-[9px] font-bold ${item.active ? 'text-indigo-100' : 'text-zinc-500'}`}>{item.d}</span>
-                        <span className={`text-xs font-black ${item.active ? 'text-white' : 'text-zinc-300'}`}>{item.n}</span>
-                        {item.dot && !item.active && <span className="w-1 h-1 rounded-full bg-indigo-400" />}
+                      <div key={item.n} className={`flex flex-col items-center gap-1 py-1.5 rounded-lg ${item.active ? 'bg-zinc-900' : ''}`}>
+                        <span className={`text-[9px] font-bold ${item.active ? 'text-zinc-400' : 'text-zinc-500'}`}>{item.d}</span>
+                        <span className={`text-xs font-black ${item.active ? 'text-white' : 'text-zinc-800'}`}>{item.n}</span>
+                        {item.dot && !item.active && <span className="w-1 h-1 rounded-full bg-zinc-300" />}
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* Upcoming Events */}
-                <div className="bg-zinc-800 rounded-xl p-3.5 border border-white/5">
+                <div className="bg-white rounded-xl p-3.5 border border-zinc-200/90 shadow-2xs">
                   <div className="flex items-center gap-2 mb-2.5">
-                    <span className="text-xs font-bold text-white">Upcoming</span>
+                    <span className="text-xs font-bold text-zinc-900">Upcoming</span>
                     <span className="ml-auto text-[10px] font-semibold text-zinc-500">3 events</span>
                   </div>
                   <div className="space-y-2">
-                    <div className="flex items-center gap-2.5 p-2 rounded-lg bg-indigo-500/15 border border-indigo-500/20 text-xs">
-                      <div className="w-1 h-7 rounded-full bg-indigo-400 shrink-0" />
+                    <div className="flex items-center gap-2.5 p-2 rounded-lg bg-zinc-50 border border-zinc-100 text-xs">
+                      <div className="w-1 h-7 rounded-full bg-zinc-900 shrink-0" />
                       <div>
-                        <p className="font-semibold text-white text-[11px]">Doctor Appointment</p>
-                        <p className="text-zinc-400 text-[10px]">Tue, Sep 20 · 10:00 AM</p>
+                        <p className="font-semibold text-zinc-900 text-[11px]">Doctor Appointment</p>
+                        <p className="text-zinc-500 text-[10px]">Tue, Sep 20 · 10:00 AM</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2.5 p-2 rounded-lg bg-violet-500/10 border border-violet-500/15 text-xs">
-                      <div className="w-1 h-7 rounded-full bg-violet-400 shrink-0" />
+                    <div className="flex items-center gap-2.5 p-2 rounded-lg bg-zinc-50 border border-zinc-100 text-xs">
+                      <div className="w-1 h-7 rounded-full bg-zinc-900 shrink-0" />
                       <div>
-                        <p className="font-semibold text-white text-[11px]">Rent Due</p>
-                        <p className="text-zinc-400 text-[10px]">Fri, Sep 23 · Auto-pay on</p>
+                        <p className="font-semibold text-zinc-900 text-[11px]">Rent Due</p>
+                        <p className="text-zinc-500 text-[10px]">Fri, Sep 23 · Auto-pay on</p>
                       </div>
                     </div>
                   </div>
@@ -338,15 +338,15 @@ export default function LandingPage({
 
                 {/* Documents quick row */}
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-zinc-800 rounded-xl p-3 border border-white/5">
+                  <div className="bg-white rounded-xl p-3 border border-zinc-200/90 shadow-2xs">
                     <p className="text-[10px] font-bold text-zinc-500 mb-1.5">📄 Documents</p>
-                    <p className="text-sm font-black text-white">12</p>
+                    <p className="text-sm font-black text-zinc-900">12</p>
                     <p className="text-[10px] text-zinc-500 mt-0.5">3 expiring soon</p>
                   </div>
-                  <div className="bg-zinc-800 rounded-xl p-3 border border-white/5">
+                  <div className="bg-white rounded-xl p-3 border border-zinc-200/90 shadow-2xs">
                     <p className="text-[10px] font-bold text-zinc-500 mb-1.5">🔔 Alerts</p>
-                    <p className="text-sm font-black text-white">2</p>
-                    <p className="text-[10px] text-amber-400 font-semibold mt-0.5">Need attention</p>
+                    <p className="text-sm font-black text-zinc-900">2</p>
+                    <p className="text-[10px] text-amber-600 font-semibold mt-0.5">Need attention</p>
                   </div>
                 </div>
               </div>
