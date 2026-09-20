@@ -922,13 +922,22 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
-              className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start"
+              className="space-y-5"
             >
-              <div>
-                <Bills />
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('overview')}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-zinc-500 hover:text-zinc-800 transition cursor-pointer"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Back to Overview
+                </button>
+                <span className="text-xs font-bold text-zinc-900">Finances & Bills</span>
               </div>
-              <div>
-                <Spending />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+                <div><Bills /></div>
+                <div><Spending /></div>
               </div>
             </motion.div>
           )}
@@ -940,13 +949,22 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
-              className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start"
+              className="space-y-5"
             >
-              <div>
-                <Health />
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('overview')}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-zinc-500 hover:text-zinc-800 transition cursor-pointer"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Back to Overview
+                </button>
+                <span className="text-xs font-bold text-zinc-900">Health & Documents</span>
               </div>
-              <div>
-                <Documents />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+                <div><Health /></div>
+                <div><Documents /></div>
               </div>
             </motion.div>
           )}
