@@ -670,7 +670,16 @@ export default function App() {
               </div>
 
               {/* Minimalist Abstract Heatmap */}
-              <ActivityHeatmap />
+              <ActivityHeatmap 
+                isDemo={user?.isDemo}
+                activityItems={[
+                  ...(tasksData?.items || []),
+                  ...(billsData?.items || []),
+                  ...(calendarData?.items || []),
+                  ...(healthData?.items || []),
+                  ...(docsData?.items || [])
+                ]}
+              />
 
 
 
