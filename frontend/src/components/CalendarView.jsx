@@ -159,7 +159,6 @@ export default function CalendarView() {
               <div className="flex items-center justify-between pb-4 border-b border-zinc-100 mb-4">
                 <div>
                   <h3 className="text-base font-bold text-black tracking-tight">Add Calendar Event</h3>
-                  <p className="text-xs text-zinc-500">Schedule meetings, deadlines, or appointments</p>
                 </div>
                 <button
                   type="button"
