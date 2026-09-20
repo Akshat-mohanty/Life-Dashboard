@@ -800,7 +800,7 @@ export default function App() {
       {/* Architectural Footer */}
       <footer className="relative z-10 py-5 mt-8 border-t border-zinc-200/60">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between text-xs text-zinc-400 font-medium">
-          <span>© 2026 Akshat Mohanty</span>
+          <span>Made by Akshat Mohanty</span>
           <a
             href="https://github.com/Akshat-mohanty/Life-Dashboard/issues"
             target="_blank"
