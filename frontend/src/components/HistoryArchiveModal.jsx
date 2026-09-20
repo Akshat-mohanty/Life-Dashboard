@@ -303,11 +303,7 @@ export default function HistoryArchiveModal({
               </div>
             ) : totalEntries === 0 ? (
               <div className="py-12 flex items-center justify-center">
-                <div className="w-full max-w-lg bg-zinc-50 border border-zinc-200/80 rounded-2xl p-8 text-center">
-                  <p className="text-sm font-medium text-zinc-500">
-                    No value is entered.
-                  </p>
-                </div>
+                <p className="text-sm font-medium text-zinc-400">No value is entered.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
