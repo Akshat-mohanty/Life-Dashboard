@@ -618,7 +618,7 @@ export default function App() {
                             </span>
                           </>
                         ) : (
-                          <span>All caught up! No pending obligations</span>
+                          <span>All caught up!</span>
                         )}
                       </h2>
                       {totalPendingObligations > 0 && (
