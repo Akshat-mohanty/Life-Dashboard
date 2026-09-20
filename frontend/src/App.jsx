@@ -48,6 +48,7 @@ import Spending from './components/Spending';
 import UserProfileMenu from './components/UserProfileMenu';
 import HistoryArchiveModal from './components/HistoryArchiveModal';
 import LandingPage from './components/LandingPage';
+import ActivityHeatmap from './components/ActivityHeatmap';
 import {
   tasksApi,
   billsApi,
@@ -667,6 +668,9 @@ export default function App() {
                   </div>
                 </div>
               </div>
+
+              {/* Minimalist Abstract Heatmap */}
+              <ActivityHeatmap />
 
 
 
