@@ -222,7 +222,7 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
               className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold text-zinc-700 bg-zinc-50 hover:bg-zinc-100 border border-zinc-200 shadow-2xs transition cursor-pointer"
               title="Open Historical Life Archive"
             >
-              <FolderArchive className="w-3.5 h-3.5 text-indigo-600" />
+              <FolderArchive className="w-3.5 h-3.5 text-zinc-900" />
               <span className="hidden sm:inline">Archive</span>
             </button>
           )}
