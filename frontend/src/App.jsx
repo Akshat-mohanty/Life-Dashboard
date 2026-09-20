@@ -497,28 +497,6 @@ export default function App() {
           </button>
         </motion.div>
 
-        {/* 2. Header Action Bar: Historical Life Archive Launcher */}
-        <div className="flex items-center justify-end flex-wrap gap-3 mb-5">
-          <button
-            type="button"
-            onClick={() => setIsArchiveModalOpen(true)}
-            className={`group flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer shadow-2xs ${
-              isTimeTravelActive
-                ? 'bg-amber-50 text-amber-900 border-amber-300 ring-2 ring-amber-400/20'
-                : 'bg-white hover:bg-zinc-50 text-zinc-700 hover:text-zinc-900 border-zinc-200/90'
-            }`}
-            title="Click to browse your past saved data & historical life archive"
-          >
-            <Calendar className="w-3.5 h-3.5 text-indigo-600 group-hover:scale-110 transition-transform" />
-            <span>{activeDateFormattedHeader}</span>
-            {isTimeTravelActive && (
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-200 text-amber-800">
-                Historical
-              </span>
-            )}
-          </button>
-        </div>
-
         {/* 3. Main Dynamic Content by Workspace View */}
         <AnimatePresence mode="wait">
           {activeTab === 'overview' && (
@@ -530,6 +508,28 @@ export default function App() {
               transition={{ duration: 0.25 }}
               className="space-y-5"
             >
+              {/* Date Button above status card */}
+              <div className="flex justify-end mb-2">
+                <button
+                  type="button"
+                  onClick={() => setIsArchiveModalOpen(true)}
+                  className={`group flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer shadow-2xs ${
+                    isTimeTravelActive
+                      ? 'bg-amber-50 text-amber-900 border-amber-300 ring-2 ring-amber-400/20'
+                      : 'bg-white hover:bg-zinc-50 text-zinc-700 hover:text-zinc-900 border-zinc-200/90'
+                  }`}
+                  title="Click to browse your past saved data & historical life archive"
+                >
+                  <Calendar className="w-3.5 h-3.5 text-indigo-600 group-hover:scale-110 transition-transform" />
+                  <span>{activeDateFormattedHeader}</span>
+                  {isTimeTravelActive && (
+                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-200 text-amber-800">
+                      Historical
+                    </span>
+                  )}
+                </button>
+              </div>
+
               {/* Status Header: Automatically states if tasks/obligations are pending */}
               <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-2xs">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
