@@ -233,7 +233,7 @@ export default function App() {
   });
 
   return (
-    <div className="dashboard-theme min-h-screen bg-[#0c0d14] text-zinc-900 flex flex-col relative overflow-x-hidden selection:bg-accent-100 selection:text-accent-900 w-full">
+    <div className="min-h-screen bg-[#fafbfc] text-zinc-900 flex flex-col relative overflow-x-hidden selection:bg-accent-100 selection:text-accent-900">
       {/* ====================================================================
        * SLEEK EXECUTIVE TOP BAR
        * ==================================================================== */}
