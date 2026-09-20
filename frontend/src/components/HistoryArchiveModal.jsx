@@ -282,18 +282,6 @@ export default function HistoryArchiveModal({
                 );
               })}
 
-              {/* Time-travel: apply to entire dashboard */}
-              <button
-                type="button"
-                onClick={() => {
-                  onSelectDate(viewDate);
-                  onClose();
-                }}
-                className="ml-2 inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-2xs transition cursor-pointer"
-              >
-                <Compass className="w-3.5 h-3.5" />
-                <span>Filter Dashboard</span>
-              </button>
             </div>
           </div>
 
