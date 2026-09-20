@@ -162,6 +162,20 @@ export default function App() {
     softMonthlyBudget: 50000,
   };
 
+  const todayStr = new Date().toISOString().split('T')[0];
+  const sevenDaysLater = new Date();
+  sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
+  const maxDateStr = sevenDaysLater.toISOString().split('T')[0];
+
+  const unpaidBillsNext7Days = (billsData?.items || []).filter(
+    (b) => !b.isPaid && (!b.dueDate || b.dueDate <= maxDateStr)
+  );
+  const unpaidBillsNext7DaysCount = unpaidBillsNext7Days.length;
+  const pendingHealthCount = healthSummary.totalCount || 0;
+  const calendarEvents7DaysCount = calendarSummary.next7DaysCount || 0;
+  const next7DaysTotalCount =
+    calendarEvents7DaysCount + unpaidBillsNext7DaysCount + pendingHealthCount;
+
   const handleAuthSubmit = async (e) => {
     e.preventDefault();
     setLocalError('');
@@ -420,7 +434,7 @@ export default function App() {
             </div>
           </button>
 
-          {/* Calendar Pulse */}
+          {/* Next 7 Days Pulse (Considers Events, Unpaid Bills & Health Checkups) */}
           <button
             type="button"
             onClick={() => setActiveTab('focus')}
@@ -446,15 +460,22 @@ export default function App() {
             </div>
             <div className="flex items-baseline gap-1.5">
               <span className="text-lg font-extrabold tracking-tight">
-                {calendarSummary.next7DaysCount || 0}
+                {next7DaysTotalCount}
               </span>
               <span
                 className={`text-[10px] ${
                   activeTab === 'focus' ? 'text-zinc-400' : 'text-zinc-500'
                 }`}
               >
-                Events
+                Upcoming
               </span>
+            </div>
+            <div
+              className={`text-[10px] mt-0.5 truncate ${
+                activeTab === 'focus' ? 'text-zinc-400' : 'text-zinc-500'
+              }`}
+            >
+              {calendarEvents7DaysCount} evt • {unpaidBillsNext7DaysCount} bills • {pendingHealthCount} health
             </div>
           </button>
 
@@ -622,17 +643,20 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
+              className="space-y-5"
             >
               <Briefing
                 selectedDate={selectedDate}
                 onOpenArchive={() => setIsArchiveModalOpen(true)}
               />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
-                <div>
+                <div className="space-y-5">
                   <Tasks />
+                  <Bills />
                 </div>
-                <div>
+                <div className="space-y-5">
                   <CalendarView />
+                  <Health />
                 </div>
               </div>
             </motion.div>

@@ -15,12 +15,19 @@ import {
   MapPin,
   FileText,
   CalendarCheck,
+  CreditCard,
+  HeartPulse,
+  AlertCircle,
+  Check,
 } from 'lucide-react';
-import { calendarApi } from '../api/client';
+import { calendarApi, billsApi, healthApi } from '../api/client';
+import { useCurrency } from '../hooks/useCurrency';
 
 export default function CalendarView() {
   const queryClient = useQueryClient();
+  const { formatAmount } = useCurrency();
   const [isAdding, setIsAdding] = useState(false);
+  const [filter, setFilter] = useState('all'); // 'all' | 'events' | 'bills' | 'health'
 
   // Form State
   const [formData, setFormData] = useState({
@@ -40,6 +47,18 @@ export default function CalendarView() {
     },
   });
 
+  // Query bills to integrate unpaid bills due in next 7 days
+  const { data: billsData } = useQuery({
+    queryKey: ['bills'],
+    queryFn: billsApi.list,
+  });
+
+  // Query health reminders to integrate upcoming health checkups & habits
+  const { data: healthData } = useQuery({
+    queryKey: ['health'],
+    queryFn: healthApi.list,
+  });
+
   const events = data?.items || [];
   const summary = data?.summary || {
     todayCount: 0,
@@ -47,6 +66,67 @@ export default function CalendarView() {
     totalCount: 0,
     todayStr: new Date().toISOString().split('T')[0],
   };
+
+  const todayStr =
+    summary.todayStr || new Date().toISOString().split('T')[0];
+  const sevenDaysLater = new Date();
+  sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
+  const maxDateStr = sevenDaysLater.toISOString().split('T')[0];
+
+  // Unpaid bills due in 7 days or overdue
+  const unpaidBills = (billsData?.items || [])
+    .filter((b) => !b.isPaid)
+    .filter((b) => !b.dueDate || b.dueDate <= maxDateStr)
+    .map((b) => ({
+      id: `bill-${b.id}`,
+      originalId: b.id,
+      type: 'bill',
+      title: b.name,
+      amount: b.amount,
+      date: b.dueDate || todayStr,
+      isOverdue: b.dueDate && b.dueDate < todayStr,
+      raw: b,
+    }));
+
+  // Pending health reminders / checkups
+  const pendingHealth = (healthData?.items || []).map((h) => ({
+    id: `health-${h.id}`,
+    originalId: h.id,
+    type: 'health',
+    title: h.name,
+    frequency: h.frequency,
+    time: h.time,
+    date: todayStr,
+    raw: h,
+  }));
+
+  // Calendar events
+  const calendarItems = events.map((e) => ({
+    id: `event-${e.id}`,
+    originalId: e.id,
+    type: 'event',
+    title: e.title,
+    date: e.date,
+    time: e.time,
+    location: e.location,
+    notes: e.notes,
+    raw: e,
+  }));
+
+  // Combined unified items
+  const allItems = [...calendarItems, ...unpaidBills, ...pendingHealth].sort((a, b) => {
+    if (a.date !== b.date) return a.date.localeCompare(b.date);
+    const timeA = a.time || '23:59';
+    const timeB = b.time || '23:59';
+    return timeA.localeCompare(timeB);
+  });
+
+  const displayedItems = allItems.filter((item) => {
+    if (filter === 'events') return item.type === 'event';
+    if (filter === 'bills') return item.type === 'bill';
+    if (filter === 'health') return item.type === 'health';
+    return true;
+  });
 
   // Create Mutation
   const createMutation = useMutation({
@@ -62,6 +142,14 @@ export default function CalendarView() {
     mutationFn: (id) => calendarApi.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['calendar'] });
+    },
+  });
+
+  // Quick Pay Bill Mutation
+  const payBillMutation = useMutation({
+    mutationFn: (billId) => billsApi.update(billId, { isPaid: true }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bills'] });
     },
   });
 
@@ -91,14 +179,13 @@ export default function CalendarView() {
 
   const getDayLabel = (dateStr) => {
     const now = new Date();
-    const todayStr =
-      summary.todayStr ||
-      `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     if (dateStr === todayStr) return 'Today';
 
     const tm = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
     const tomorrowStr = `${tm.getFullYear()}-${String(tm.getMonth() + 1).padStart(2, '0')}-${String(tm.getDate()).padStart(2, '0')}`;
     if (dateStr === tomorrowStr) return 'Tomorrow';
+
+    if (dateStr < todayStr) return 'Overdue';
 
     const eventDate = new Date(dateStr + 'T12:00:00');
     return eventDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
@@ -114,15 +201,17 @@ export default function CalendarView() {
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <h3 className="font-bold text-zinc-900 text-sm tracking-tight whitespace-nowrap">Calendar</h3>
+              <h3 className="font-bold text-zinc-900 text-sm tracking-tight whitespace-nowrap">Calendar & Schedule</h3>
               <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200 whitespace-nowrap">
-                {summary.todayCount} today
+                {allItems.length} in 7d
               </span>
-              <span className="text-[10px] text-zinc-400 hidden sm:inline whitespace-nowrap">
-                • {summary.next7DaysCount} in 7d
-              </span>
+              {unpaidBills.filter((b) => b.isOverdue).length > 0 && (
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap">
+                  {unpaidBills.filter((b) => b.isOverdue).length} overdue
+                </span>
+              )}
             </div>
-            <p className="text-[11px] text-zinc-400 whitespace-nowrap">Upcoming Schedule & Reminders</p>
+            <p className="text-[11px] text-zinc-400 whitespace-nowrap">Upcoming Events, Bills & Health Reminders</p>
           </div>
         </div>
 
@@ -135,6 +224,54 @@ export default function CalendarView() {
             <span>Add</span>
           </button>
         )}
+      </div>
+
+      {/* Category Filter Chips */}
+      <div className="flex items-center gap-1.5 pt-2.5 pb-2 overflow-x-auto text-[11px] border-b border-zinc-100">
+        <button
+          type="button"
+          onClick={() => setFilter('all')}
+          className={`px-2.5 py-1 rounded-lg font-semibold transition cursor-pointer whitespace-nowrap ${
+            filter === 'all'
+              ? 'bg-zinc-900 text-white shadow-xs'
+              : 'bg-zinc-100 hover:bg-zinc-200/80 text-zinc-600'
+          }`}
+        >
+          All ({allItems.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setFilter('events')}
+          className={`px-2.5 py-1 rounded-lg font-semibold transition cursor-pointer whitespace-nowrap ${
+            filter === 'events'
+              ? 'bg-zinc-900 text-white shadow-xs'
+              : 'bg-zinc-100 hover:bg-zinc-200/80 text-zinc-600'
+          }`}
+        >
+          Events ({calendarItems.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setFilter('bills')}
+          className={`px-2.5 py-1 rounded-lg font-semibold transition cursor-pointer whitespace-nowrap ${
+            filter === 'bills'
+              ? 'bg-zinc-900 text-white shadow-xs'
+              : 'bg-zinc-100 hover:bg-zinc-200/80 text-zinc-600'
+          }`}
+        >
+          Bills Due ({unpaidBills.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setFilter('health')}
+          className={`px-2.5 py-1 rounded-lg font-semibold transition cursor-pointer whitespace-nowrap ${
+            filter === 'health'
+              ? 'bg-zinc-900 text-white shadow-xs'
+              : 'bg-zinc-100 hover:bg-zinc-200/80 text-zinc-600'
+          }`}
+        >
+          Health ({pendingHealth.length})
+        </button>
       </div>
 
       {/* Add Calendar Event Modal Popup */}
@@ -268,71 +405,137 @@ export default function CalendarView() {
           </div>
         ) : isError ? (
           <p className="text-xs text-rose-600 p-2">Error loading calendar: {error.message}</p>
-        ) : events.length === 0 ? (
+        ) : displayedItems.length === 0 ? (
           <div className="text-center py-6 px-4 bg-zinc-50/50 rounded-xl border border-dashed border-zinc-200">
             <CalendarCheck className="w-5 h-5 mx-auto mb-1.5 text-zinc-300" />
-            <p className="text-xs font-semibold text-zinc-700">Clear calendar</p>
-            <p className="text-[11px] text-zinc-400 mt-0.5">No events scheduled for the next 7 days</p>
+            <p className="text-xs font-semibold text-zinc-700">Clear schedule</p>
+            <p className="text-[11px] text-zinc-400 mt-0.5">
+              No {filter === 'all' ? 'events, unpaid bills, or health checkups' : filter} scheduled for the next 7 days
+            </p>
           </div>
         ) : (
           <AnimatePresence initial={false}>
-            {events.map((event) => {
-              const isToday = event.date === summary.todayStr;
+            {displayedItems.map((item) => {
+              const isToday = item.date === todayStr;
+              const isBill = item.type === 'bill';
+              const isHealth = item.type === 'health';
+              const isEvent = item.type === 'event';
+
               return (
                 <motion.div
-                  key={event.id}
+                  key={item.id}
                   layout
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.2 }}
                   className={`p-3.5 rounded-xl border transition-all ${
-                    isToday
-                      ? 'bg-accent-50/50 border-accent-200 shadow-xs'
+                    item.isOverdue
+                      ? 'bg-rose-50/50 border-rose-200 shadow-2xs'
+                      : isToday
+                      ? 'bg-accent-50/40 border-accent-200 shadow-2xs'
                       : 'bg-white border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50/50'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5 flex-wrap">
                         <span
                           className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                            isToday
+                            item.isOverdue
+                              ? 'bg-rose-600 text-white shadow-xs'
+                              : isToday
                               ? 'bg-black text-white shadow-xs'
                               : 'bg-zinc-100 text-zinc-700 border border-zinc-200'
                           }`}
                         >
-                          {getDayLabel(event.date)}
+                          {getDayLabel(item.date)}
                         </span>
-                        {event.time && (
-                          <span className="text-xs font-semibold text-zinc-600 flex items-center gap-1.5">
+
+                        {isBill && (
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 ${
+                            item.isOverdue
+                              ? 'bg-rose-100 text-rose-700 border border-rose-200'
+                              : 'bg-amber-100 text-amber-800 border border-amber-200'
+                          }`}>
+                            <CreditCard className="w-2.5 h-2.5" />
+                            {item.isOverdue ? 'Bill Overdue' : 'Bill Due'}
+                          </span>
+                        )}
+
+                        {isHealth && (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                            <HeartPulse className="w-2.5 h-2.5" />
+                            Health Checkup
+                          </span>
+                        )}
+
+                        {isEvent && (
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 border border-zinc-200 flex items-center gap-1">
+                            <CalendarIcon className="w-2.5 h-2.5" />
+                            Event
+                          </span>
+                        )}
+
+                        {item.time && (
+                          <span className="text-xs font-semibold text-zinc-600 flex items-center gap-1">
                             <Clock className="w-3 h-3 text-zinc-400" />
-                            {event.time}
+                            {item.time}
+                          </span>
+                        )}
+
+                        {isHealth && item.frequency && (
+                          <span className="text-[10px] font-medium text-zinc-500 uppercase tracking-wider">
+                            • {item.frequency}
                           </span>
                         )}
                       </div>
-                      <h4 className="text-xs font-bold text-black mt-1.5 truncate">{event.title}</h4>
-                      {event.location && (
+
+                      <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                        <h4 className="text-xs font-bold text-black truncate">{item.title}</h4>
+                        {isBill && (
+                          <span className="text-xs font-extrabold text-black bg-zinc-100 px-1.5 py-0.5 rounded border border-zinc-200">
+                            {formatAmount(item.amount)}
+                          </span>
+                        )}
+                      </div>
+
+                      {item.location && (
                         <p className="text-[11px] text-zinc-500 mt-1 flex items-center gap-1.5 truncate">
                           <MapPin className="w-3 h-3 text-zinc-400 flex-shrink-0" />
-                          {event.location}
+                          {item.location}
                         </p>
                       )}
-                      {event.notes && (
+                      {item.notes && (
                         <p className="text-[11px] text-zinc-500 mt-1 flex items-center gap-1.5 line-clamp-1">
                           <FileText className="w-3 h-3 text-zinc-400 flex-shrink-0" />
-                          {event.notes}
+                          {item.notes}
                         </p>
                       )}
                     </div>
 
-                    <button
-                      onClick={() => deleteMutation.mutate(event.id)}
-                      className="p-1 text-zinc-400 hover:text-rose-600 rounded transition flex-shrink-0"
-                      title="Delete Event"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                    {isEvent && (
+                      <button
+                        onClick={() => deleteMutation.mutate(item.originalId)}
+                        className="p-1 text-zinc-400 hover:text-rose-600 rounded transition flex-shrink-0 cursor-pointer"
+                        title="Delete Event"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+
+                    {isBill && (
+                      <button
+                        type="button"
+                        onClick={() => payBillMutation.mutate(item.originalId)}
+                        disabled={payBillMutation.isPending}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition cursor-pointer flex-shrink-0"
+                        title="Mark Bill as Paid"
+                      >
+                        <Check className="w-3 h-3" />
+                        <span>Pay</span>
+                      </button>
+                    )}
                   </div>
                 </motion.div>
               );
