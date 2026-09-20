@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import MeridianLogo from './components/MeridianLogo';
 import { useAuth } from './hooks/useAuth';
+import { useCurrency } from './hooks/useCurrency';
 import Briefing from './components/Briefing';
 import Bills from './components/Bills';
 import Tasks from './components/Tasks';
@@ -100,6 +101,7 @@ export default function App() {
   };
 
   const queryClient = useQueryClient();
+  const { formatAmount } = useCurrency();
 
   // Historical Archive / Time Machine state (defaults to today YYYY-MM-DD)
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
@@ -377,7 +379,7 @@ export default function App() {
             </div>
             <div className="flex items-baseline gap-1.5">
               <span className="text-lg font-extrabold tracking-tight">
-                ₹{(billsSummary.totalUnpaidAmount || 0).toLocaleString('en-IN')}
+                {formatAmount(billsSummary.totalUnpaidAmount || 0)}
               </span>
               {billsSummary.overdueCount > 0 && (
                 <span className="text-[10px] font-bold text-rose-500">
@@ -413,7 +415,7 @@ export default function App() {
             </div>
             <div className="flex items-baseline gap-1.5">
               <span className="text-lg font-extrabold tracking-tight">
-                ₹{(spendingSummary.currentMonthTotal || 0).toLocaleString('en-IN')}
+                {formatAmount(spendingSummary.currentMonthTotal || 0)}
               </span>
             </div>
           </button>

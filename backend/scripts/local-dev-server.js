@@ -621,6 +621,7 @@ const server = http.createServer(async (req, res) => {
           name: userId === 'demo-user-1' ? 'Akshat Mohanty' : (userId ? userId.split('@')[0] : 'User'),
           email: `${userId}@example.com`,
           avatarUrl: '',
+          defaultCurrency: 'INR',
         };
         lambdaResponse = {
           statusCode: 200,
@@ -636,11 +637,13 @@ const server = http.createServer(async (req, res) => {
           name: userId === 'demo-user-1' ? 'Akshat Mohanty' : (userId ? userId.split('@')[0] : 'User'),
           email: `${userId}@example.com`,
           avatarUrl: '',
+          defaultCurrency: 'INR',
         };
         const updated = {
           ...existing,
           ...(body.name !== undefined && { name: body.name.trim() }),
           ...(body.avatarUrl !== undefined && { avatarUrl: body.avatarUrl }),
+          ...(body.defaultCurrency !== undefined && { defaultCurrency: body.defaultCurrency }),
           updatedAt: new Date().toISOString(),
         };
         memoryDB.profiles.set(userId, updated);

@@ -204,7 +204,7 @@ export default function Documents() {
                     <span className="text-xs font-bold text-black text-center truncate max-w-[280px]">
                       {selectedFile ? selectedFile.name : 'Click to select PDF or image'}
                     </span>
-                    <span className="text-[10px] text-zinc-500 mt-1">PDF, PNG, JPG up to 15MB • Presigned S3</span>
+                    <span className="text-[10px] text-zinc-500 mt-1">PDF, PNG, JPG up to 15MB</span>
                     <input
                       type="file"
                       onChange={handleFileChange}

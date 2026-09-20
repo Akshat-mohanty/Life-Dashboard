@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { spendingApi } from '../api/client';
+import { useCurrency } from '../hooks/useCurrency';
 
 const CATEGORY_COLORS = {
   food: '#237d8d', // accent-600
@@ -36,6 +37,7 @@ const CATEGORY_COLORS = {
 
 export default function Spending() {
   const queryClient = useQueryClient();
+  const { formatAmount, currencySymbol } = useCurrency();
   const [isAdding, setIsAdding] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(() => {
     const today = new Date();
@@ -158,7 +160,7 @@ export default function Spending() {
             <div className="flex items-center gap-1.5">
               <h3 className="font-bold text-zinc-900 text-sm tracking-tight whitespace-nowrap">Spending</h3>
               <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200 whitespace-nowrap">
-                ₹{summary.currentMonthTotal?.toLocaleString('en-IN') || 0}
+                {formatAmount(summary.currentMonthTotal || 0)}
               </span>
             </div>
             <p className="text-[11px] text-zinc-400 whitespace-nowrap truncate max-w-[150px] sm:max-w-[200px]">
@@ -199,12 +201,12 @@ export default function Spending() {
 
           <div className="flex items-center gap-1.5 text-[11px] text-zinc-500">
             <span className="font-semibold text-zinc-800">
-              ₹{summary.currentMonthTotal?.toLocaleString('en-IN') || 0}
+              {formatAmount(summary.currentMonthTotal || 0)}
             </span>
             <span>•</span>
             <span>
-              {summary.budgetConsumedPercentage || 0}% of ₹
-              {summary.softMonthlyBudget?.toLocaleString('en-IN') || '50,000'}
+              {summary.budgetConsumedPercentage || 0}% of{' '}
+              {formatAmount(summary.softMonthlyBudget || 50000)}
             </span>
           </div>
         </div>
@@ -243,7 +245,7 @@ export default function Spending() {
                   ))}
                 </Pie>
                 <Tooltip
-                  formatter={(value) => [`₹${value.toLocaleString('en-IN')}`, 'Spent']}
+                  formatter={(value) => [formatAmount(value), 'Spent']}
                   contentStyle={{
                     backgroundColor: '#ffffff',
                     borderRadius: '10px',
@@ -267,7 +269,7 @@ export default function Spending() {
                   style={{ backgroundColor: CATEGORY_COLORS[cat.categoryKey] || '#71717a' }}
                 />
                 <span className="text-zinc-500 font-medium truncate">{cat.name}:</span>
-                <span className="text-black font-bold">₹{cat.value.toLocaleString('en-IN')}</span>
+                <span className="text-black font-bold">{formatAmount(cat.value)}</span>
               </div>
             ))}
           </div>
@@ -311,7 +313,7 @@ export default function Spending() {
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
-                      Amount (₹)
+                      Amount ({currencySymbol})
                     </label>
                     <input
                       type="number"
@@ -433,7 +435,7 @@ export default function Spending() {
                 </div>
 
                 <div className="text-right flex-shrink-0">
-                  <span className="text-xs font-bold text-black">₹{item.amount?.toLocaleString('en-IN')}</span>
+                  <span className="text-xs font-bold text-black">{formatAmount(item.amount)}</span>
                 </div>
               </motion.div>
             ))}

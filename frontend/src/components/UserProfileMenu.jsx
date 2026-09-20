@@ -12,8 +12,10 @@ import {
   Upload,
   Link as LinkIcon,
   Loader2,
+  Coins,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { useCurrency } from '../hooks/useCurrency';
 
 /**
  * Client-side Canvas Image Processor:
@@ -55,12 +57,14 @@ function processImageFile(file) {
 
 export default function UserProfileMenu() {
   const { user, logout, updateProfile } = useAuth();
+  const { currencyCode, currencySymbol, setCurrency, availableCurrencies } = useCurrency();
   const [isOpen, setIsOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // Edit Profile Form State
   const [nameInput, setNameInput] = useState(user?.name || '');
   const [previewAvatar, setPreviewAvatar] = useState(user?.avatarUrl || null);
+  const [currencyInput, setCurrencyInput] = useState(currencyCode || 'INR');
   const [urlInput, setUrlInput] = useState('');
   const [showUrlInput, setShowUrlInput] = useState(false);
 
@@ -80,7 +84,8 @@ export default function UserProfileMenu() {
       setNameInput(user.name || '');
       setPreviewAvatar(user.avatarUrl || null);
     }
-  }, [user, isEditModalOpen]);
+    setCurrencyInput(currencyCode || 'INR');
+  }, [user, isEditModalOpen, currencyCode]);
 
   // Click outside & Escape key listeners to close dropdown
   useEffect(() => {
@@ -179,7 +184,9 @@ export default function UserProfileMenu() {
       await updateProfile({
         name: nameInput.trim() || user?.email?.split('@')[0] || 'User',
         avatarUrl: previewAvatar || '',
+        defaultCurrency: currencyInput,
       });
+      setCurrency(currencyInput);
       setSaveSuccess(true);
       setTimeout(() => {
         setSaveSuccess(false);
@@ -303,6 +310,36 @@ export default function UserProfileMenu() {
                 </span>
               </button>
 
+              {/* Default Currency Quick Setting */}
+              <div className="p-2.5 bg-zinc-50 rounded-xl border border-zinc-100 my-1">
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-zinc-700">
+                    <Coins className="w-3.5 h-3.5 text-amber-500" />
+                    <span>Default Currency</span>
+                  </div>
+                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-white border border-zinc-200 text-zinc-800 shadow-2xs">
+                    {currencySymbol} {currencyCode}
+                  </span>
+                </div>
+                <select
+                  value={currencyCode}
+                  onChange={async (e) => {
+                    const newCode = e.target.value;
+                    setCurrency(newCode);
+                    try {
+                      await updateProfile({ defaultCurrency: newCode });
+                    } catch {}
+                  }}
+                  className="w-full text-xs py-1.5 px-2 bg-white border border-zinc-200 rounded-lg text-zinc-800 font-medium focus:outline-none focus:ring-1 focus:ring-black cursor-pointer shadow-2xs"
+                >
+                  {availableCurrencies.map((c) => (
+                    <option key={c.code} value={c.code}>
+                      {c.symbol} — {c.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               {/* Edit Full Profile (Name & PFP Modal) */}
               <button
                 onClick={() => {
@@ -312,7 +349,7 @@ export default function UserProfileMenu() {
                 className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-zinc-700 hover:text-black hover:bg-zinc-100 transition text-left cursor-pointer group"
               >
                 <UserIcon className="w-4 h-4 text-zinc-400 group-hover:text-black" />
-                <span>Edit Profile & Name</span>
+                <span>Edit Profile & Settings</span>
               </button>
 
               <div className="h-px bg-zinc-100 my-1" />
@@ -503,6 +540,32 @@ export default function UserProfileMenu() {
                         value={user?.email || 'N/A'}
                         className="w-full px-4 py-2.5 bg-zinc-100 border border-zinc-200 rounded-2xl text-xs sm:text-sm text-zinc-500 cursor-not-allowed font-medium"
                       />
+                    </div>
+
+                    {/* Default Currency Setting */}
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider">
+                          Default Currency
+                        </label>
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-700 border border-zinc-200">
+                          {currencySymbol} {currencyCode}
+                        </span>
+                      </div>
+                      <select
+                        value={currencyInput}
+                        onChange={(e) => setCurrencyInput(e.target.value)}
+                        className="w-full px-4 py-2.5 bg-zinc-50 border border-zinc-300 rounded-2xl text-xs sm:text-sm text-black focus:outline-none focus:ring-2 focus:ring-black/10 focus:border-zinc-500 transition font-medium cursor-pointer"
+                      >
+                        {availableCurrencies.map((c) => (
+                          <option key={c.code} value={c.code}>
+                            {c.symbol} — {c.name}
+                          </option>
+                        ))}
+                      </select>
+                      <p className="text-[11px] text-zinc-400 mt-1">
+                        Select default currency symbol for your bills, spending, and financial summaries. If not selected, it defaults to INR (₹).
+                      </p>
                     </div>
 
                     {/* Modal Footer Buttons */}

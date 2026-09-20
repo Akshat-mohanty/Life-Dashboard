@@ -31,6 +31,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { archiveApi, briefingApi } from '../api/client';
+import { useCurrency } from '../hooks/useCurrency';
 
 export default function HistoryArchiveModal({
   isOpen,
@@ -39,6 +40,7 @@ export default function HistoryArchiveModal({
   selectedDate,
   onSelectDate,
 }) {
+  const { formatAmount } = useCurrency();
   const getTodayStr = () => {
     const now = new Date();
     const y = now.getFullYear();
@@ -307,7 +309,7 @@ export default function HistoryArchiveModal({
               </span>
               <span className="flex items-center gap-1">
                 <Receipt className="w-3.5 h-3.5 text-amber-500" />
-                ${spendingTotal.toFixed(2)} spent ({spending.length} transactions)
+                {formatAmount(spendingTotal, { decimals: 2 })} spent ({spending.length} transactions)
               </span>
               <span className="flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5 text-sky-500" />
@@ -499,7 +501,7 @@ export default function HistoryArchiveModal({
                         </h4>
                       </div>
                       <span className="text-xs font-bold text-zinc-900">
-                        ${spendingTotal.toFixed(2)}
+                        {formatAmount(spendingTotal, { decimals: 2 })}
                       </span>
                     </div>
 
@@ -520,7 +522,7 @@ export default function HistoryArchiveModal({
                                 {s.category || 'Other'}
                               </span>
                               <span className="font-bold text-zinc-900">
-                                -${Number(s.amount || 0).toFixed(2)}
+                                -{formatAmount(Number(s.amount || 0), { decimals: 2 })}
                               </span>
                             </div>
                           </div>

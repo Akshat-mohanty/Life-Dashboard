@@ -34,6 +34,7 @@ export const handler = async (event) => {
           name: result.Item.name,
           email: result.Item.email,
           avatarUrl: result.Item.avatarUrl || '',
+          defaultCurrency: result.Item.defaultCurrency || 'INR',
           updatedAt: result.Item.updatedAt,
         },
       });
@@ -50,6 +51,7 @@ export const handler = async (event) => {
         name: defaultName,
         email: defaultEmail,
         avatarUrl: '',
+        defaultCurrency: 'INR',
         isDefault: true,
       },
     });

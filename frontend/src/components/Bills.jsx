@@ -19,9 +19,11 @@ import {
   Repeat,
 } from 'lucide-react';
 import { billsApi } from '../api/client';
+import { useCurrency } from '../hooks/useCurrency';
 
 export default function Bills() {
   const queryClient = useQueryClient();
+  const { formatAmount, currencySymbol } = useCurrency();
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
@@ -184,7 +186,7 @@ export default function Bills() {
             <div className="flex items-center gap-1.5">
               <h3 className="font-bold text-zinc-900 text-sm tracking-tight whitespace-nowrap">Bills & Payments</h3>
               <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200 whitespace-nowrap">
-                ₹{summary.totalUnpaidAmount.toLocaleString('en-IN')} due
+                {formatAmount(summary.totalUnpaidAmount)} due
               </span>
               {summary.overdueCount > 0 && (
                 <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 whitespace-nowrap">
@@ -198,9 +200,19 @@ export default function Bills() {
           </div>
         </div>
 
-        {!isAdding && !editingId && (
+        {!isAdding && (
           <button
-            onClick={() => setIsAdding(true)}
+            onClick={() => {
+              setEditingId(null);
+              setFormData({
+                name: '',
+                amount: '',
+                dueDate: '',
+                isRecurring: false,
+                frequency: 'monthly',
+              });
+              setIsAdding(true);
+            }}
             className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-zinc-900 bg-white hover:bg-zinc-50 border border-zinc-200 shadow-2xs hover:border-zinc-300 transition active:scale-95 cursor-pointer flex-shrink-0"
           >
             <Plus className="w-3.5 h-3.5 text-zinc-700" />
@@ -209,40 +221,28 @@ export default function Bills() {
         )}
       </div>
 
-      {/* Add Bill Modal Popup */}
+      {/* Inline Create/Edit Form (Collapsible) */}
       <AnimatePresence>
         {isAdding && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4"
-            onClick={resetForm}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden border-b border-zinc-100 mb-3"
           >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.93, y: 14 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.93, y: 14 }}
-              transition={{ type: 'spring', stiffness: 420, damping: 32 }}
-              className="bg-white rounded-3xl border border-zinc-200 shadow-2xl p-6 max-w-md w-full relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-            <div className="flex items-center justify-between pb-4 border-b border-zinc-100 mb-4">
-              <div>
-                <h3 className="text-base font-bold text-black tracking-tight">Add New Bill</h3>
-                <p className="text-xs text-zinc-500">Record a recurring or one-time payment</p>
-              </div>
+            <div className="flex items-center justify-between py-2.5">
+              <span className="text-xs font-bold text-zinc-900">
+                {editingId ? 'Edit Bill' : 'New Bill Entry'}
+              </span>
               <button
-                type="button"
                 onClick={resetForm}
-                className="p-1.5 text-zinc-400 hover:text-black hover:bg-zinc-100 rounded-xl transition cursor-pointer"
+                className="text-zinc-400 hover:text-black transition"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleCreateSubmit} className="space-y-4">
+            <form onSubmit={handleCreateSubmit} className="space-y-3 pb-3">
               <div>
                 <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
                   Bill Name
@@ -260,7 +260,7 @@ export default function Bills() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-1.5">
-                    Amount (₹)
+                    Amount ({currencySymbol})
                   </label>
                   <input
                     type="number"
@@ -328,9 +328,8 @@ export default function Bills() {
               </div>
             </form>
           </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        )}
+      </AnimatePresence>
 
       {/* Bill List */}
       <div className="mt-4 flex-1 overflow-y-auto space-y-2.5 max-h-[420px] pr-0.5">
@@ -425,7 +424,7 @@ export default function Bills() {
                         )}
                       </div>
                       <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">
-                        <span className="font-extrabold text-black">₹{bill.amount?.toLocaleString('en-IN')}</span>
+                        <span className="font-extrabold text-black">{formatAmount(bill.amount)}</span>
                         <span>•</span>
                         <span className="flex items-center gap-1">
                           <Calendar className="w-3 h-3 text-zinc-400" />

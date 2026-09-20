@@ -25,7 +25,7 @@ export const handler = async (event) => {
       return errorResponse(400, 'Invalid JSON payload in request body.');
     }
 
-    const { name, avatarUrl } = body;
+    const { name, avatarUrl, defaultCurrency } = body;
 
     // Validation
     if (name !== undefined) {
@@ -39,6 +39,10 @@ export const handler = async (event) => {
 
     if (avatarUrl !== undefined && avatarUrl !== null && typeof avatarUrl !== 'string') {
       return errorResponse(400, 'Validation Error: "avatarUrl" must be a string.');
+    }
+
+    if (defaultCurrency !== undefined && (typeof defaultCurrency !== 'string' || defaultCurrency.length > 5)) {
+      return errorResponse(400, 'Validation Error: "defaultCurrency" must be a valid currency code string.');
     }
 
     const claims = event?.requestContext?.authorizer?.claims;
@@ -69,6 +73,12 @@ export const handler = async (event) => {
       expressionNames['#avatarUrl'] = 'avatarUrl';
     }
 
+    if (defaultCurrency !== undefined) {
+      updates.push('#defaultCurrency = :defaultCurrency');
+      expressionValues[':defaultCurrency'] = defaultCurrency || 'INR';
+      expressionNames['#defaultCurrency'] = 'defaultCurrency';
+    }
+
     const command = new UpdateCommand({
       TableName: TABLE_NAME,
       Key: {
@@ -90,6 +100,7 @@ export const handler = async (event) => {
         name: result.Attributes.name,
         email: result.Attributes.email,
         avatarUrl: result.Attributes.avatarUrl || '',
+        defaultCurrency: result.Attributes.defaultCurrency || 'INR',
         updatedAt: result.Attributes.updatedAt,
       },
     });

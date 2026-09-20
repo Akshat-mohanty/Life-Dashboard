@@ -241,6 +241,7 @@ export const AuthProvider = ({ children }) => {
             ...prev,
             name: res.profile.name || prev.name,
             avatarUrl: res.profile.avatarUrl !== undefined ? res.profile.avatarUrl : prev.avatarUrl,
+            defaultCurrency: res.profile.defaultCurrency || prev.defaultCurrency || 'INR',
           };
           localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(merged));
           return merged;
@@ -544,12 +545,12 @@ export const AuthProvider = ({ children }) => {
    * Update Profile (Name, Avatar URL / PFP)
    * Strictly isolated per user: updates DynamoDB single-table record PK: USER#{userId}, SK: PROFILE
    */
-  const updateProfile = async ({ name, avatarUrl }) => {
+  const updateProfile = async ({ name, avatarUrl, defaultCurrency }) => {
     if (!user) return null;
 
     // 1. Send update to database API (scoped strictly to this user's PK)
     try {
-      await userApi.updateProfile({ name, avatarUrl });
+      await userApi.updateProfile({ name, avatarUrl, defaultCurrency });
     } catch (dbErr) {
       console.warn('Backend database profile update warning:', dbErr);
     }
@@ -561,6 +562,7 @@ export const AuthProvider = ({ children }) => {
       if (idx !== -1) {
         if (name !== undefined) accounts[idx].name = name;
         if (avatarUrl !== undefined) accounts[idx].avatarUrl = avatarUrl;
+        if (defaultCurrency !== undefined) accounts[idx].defaultCurrency = defaultCurrency;
         saveStoredAccounts(accounts);
       }
     } catch {
@@ -593,6 +595,7 @@ export const AuthProvider = ({ children }) => {
       ...user,
       ...(name !== undefined && { name }),
       ...(avatarUrl !== undefined && { avatarUrl }),
+      ...(defaultCurrency !== undefined && { defaultCurrency }),
     };
     saveSession(updatedUser, updatedUser.token || localStorage.getItem(STORAGE_KEYS.TOKEN));
     return updatedUser;
