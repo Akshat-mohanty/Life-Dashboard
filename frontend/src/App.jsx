@@ -29,6 +29,7 @@ import {
   ShieldCheck,
   History,
   ChevronDown,
+  ChevronLeft,
   ChevronUp,
   CheckCircle,
   Clock,
@@ -886,7 +887,21 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
+              className="space-y-5"
             >
+              {/* Back to Overview button */}
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('overview')}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-zinc-500 hover:text-zinc-800 transition cursor-pointer"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  Back to Overview
+                </button>
+                <span className="text-xs font-bold text-zinc-900">Tasks Workspace</span>
+              </div>
+
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
                 <div className="space-y-5">
                   <Tasks />
