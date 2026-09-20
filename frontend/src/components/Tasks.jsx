@@ -295,7 +295,6 @@ export default function Tasks() {
             <div className="flex items-center justify-between pb-4 border-b border-zinc-100 mb-4">
               <div>
                 <h3 className="text-base font-bold text-black tracking-tight">Add New Task</h3>
-                <p className="text-xs text-zinc-500">Organize and let AI rank by urgency</p>
               </div>
               <button
                 type="button"
