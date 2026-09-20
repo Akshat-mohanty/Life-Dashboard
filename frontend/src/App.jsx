@@ -628,17 +628,6 @@ export default function App() {
                       )}
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-2 self-start sm:self-auto">
-                    <button
-                      type="button"
-                      onClick={() => setShowAllWorkspaceTiles((prev) => !prev)}
-                      className="px-3 py-1.5 rounded-xl border border-zinc-200 text-xs font-semibold text-zinc-700 hover:text-zinc-900 hover:bg-zinc-50 transition cursor-pointer flex items-center gap-1.5"
-                    >
-                      <LayoutGrid className="w-3.5 h-3.5 text-zinc-500" />
-                      <span>{showAllWorkspaceTiles ? 'Hide All Tiles' : 'Show All Tiles'}</span>
-                    </button>
-                  </div>
                 </div>
 
                 {/* Categories Breakdown Dropdowns */}
