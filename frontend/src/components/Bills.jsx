@@ -194,9 +194,6 @@ export default function Bills() {
                 </span>
               )}
             </div>
-            <p className="text-[11px] text-zinc-400 whitespace-nowrap truncate max-w-[150px] sm:max-w-[200px]">
-              Track due dates & expenses
-            </p>
           </div>
         </div>
 
