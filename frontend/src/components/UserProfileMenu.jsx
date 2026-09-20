@@ -223,7 +223,7 @@ export default function UserProfileMenu() {
         title="Account Settings & Profile"
       >
         {/* Avatar Circle */}
-        <div className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 bg-accent-50 border border-accent-200 text-accent-800 flex items-center justify-center font-bold text-xs shadow-xs group-hover:scale-105 transition-transform relative">
+        <div className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 bg-black border border-black text-white flex items-center justify-center font-bold text-xs shadow-xs group-hover:scale-105 transition-transform relative">
           {user?.avatarUrl ? (
             <img
               src={user.avatarUrl}
@@ -267,7 +267,7 @@ export default function UserProfileMenu() {
           >
             {/* Header Summary */}
             <div className="p-3 bg-zinc-50 rounded-xl mb-1.5 flex items-center gap-3 border border-zinc-100">
-              <div className="w-11 h-11 rounded-full overflow-hidden flex-shrink-0 bg-accent-50 border border-accent-200 text-accent-800 flex items-center justify-center font-bold text-sm shadow-xs">
+              <div className="w-11 h-11 rounded-full overflow-hidden flex-shrink-0 bg-black border border-black text-white flex items-center justify-center font-bold text-sm shadow-xs">
                 {user?.avatarUrl ? (
                   <img
                     src={user.avatarUrl}
@@ -372,7 +372,7 @@ export default function UserProfileMenu() {
                           className="relative group cursor-pointer"
                           title="Click to choose an image from your computer"
                         >
-                          <div className="w-20 h-20 rounded-full overflow-hidden bg-accent-50 border-2 border-accent-200 text-accent-800 flex items-center justify-center font-bold text-2xl shadow-sm transition group-hover:border-accent-400">
+                          <div className="w-20 h-20 rounded-full overflow-hidden bg-black border-2 border-black text-white flex items-center justify-center font-bold text-2xl shadow-sm transition group-hover:border-zinc-800">
                             {isProcessingFile ? (
                               <Loader2 className="w-7 h-7 text-accent-600 animate-spin" />
                             ) : previewAvatar ? (
