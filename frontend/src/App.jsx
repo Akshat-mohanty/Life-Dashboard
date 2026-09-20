@@ -323,9 +323,6 @@ export default function App() {
                   <span>Historical Life Archive Active:</span>
                   <span className="underline decoration-amber-400 font-extrabold">{activeDateFormattedHeader}</span>
                 </div>
-                <p className="text-[11px] text-amber-800 mt-0.5">
-                  Browsing saved past records strictly isolated to your account ({user?.name || user?.email} • <code className="font-mono font-semibold">{user?.userId}</code>).
-                </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
