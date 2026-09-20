@@ -618,7 +618,7 @@ export default function App() {
                           <button
                             type="button"
                             onClick={() => setActiveTab('focus')}
-                            className="w-full text-center text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 pt-1 cursor-pointer"
+                            className="w-full text-center text-[11px] font-semibold text-zinc-900 hover:text-black pt-1 cursor-pointer"
                           >
                             Open Tasks Workspace →
                           </button>
@@ -681,7 +681,7 @@ export default function App() {
                           <button
                             type="button"
                             onClick={() => setIsArchiveModalOpen(true)}
-                            className="w-full text-center text-[11px] font-semibold text-emerald-600 hover:text-emerald-800 pt-1 cursor-pointer"
+                            className="w-full text-center text-[11px] font-semibold text-zinc-900 hover:text-black pt-1 cursor-pointer"
                           >
                             Open Full Calendar →
                           </button>
@@ -747,7 +747,7 @@ export default function App() {
                           <button
                             type="button"
                             onClick={() => setActiveTab('finances')}
-                            className="w-full text-center text-[11px] font-semibold text-violet-600 hover:text-violet-800 pt-1 cursor-pointer"
+                            className="w-full text-center text-[11px] font-semibold text-zinc-900 hover:text-black pt-1 cursor-pointer"
                           >
                             Open Finances & Bills →
                           </button>
@@ -808,7 +808,7 @@ export default function App() {
                           <button
                             type="button"
                             onClick={() => setActiveTab('life')}
-                            className="w-full text-center text-[11px] font-semibold text-rose-600 hover:text-rose-800 pt-1 cursor-pointer"
+                            className="w-full text-center text-[11px] font-semibold text-zinc-900 hover:text-black pt-1 cursor-pointer"
                           >
                             Open Health & Documents →
                           </button>
@@ -825,33 +825,24 @@ export default function App() {
                 onOpenArchive={() => setIsArchiveModalOpen(true)}
               />
 
-              {/* Bento Grid Architecture: only visible if user explicitly chooses to expand all tiles */}
-              <AnimatePresence>
-                {showAllWorkspaceTiles && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start pt-2"
-                  >
-                    {/* Left Column (7 cols / ~58%) */}
-                    <div className="lg:col-span-7 space-y-5">
-                      <Tasks />
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Bills />
-                        <Spending />
-                      </div>
-                    </div>
+              {/* Workspace Tiles Grid to fill layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start pt-2">
+                {/* Left Column (7 cols) */}
+                <div className="lg:col-span-7 space-y-5">
+                  <Tasks />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Bills />
+                    <Spending />
+                  </div>
+                </div>
 
-                    {/* Right Column (5 cols / ~42%) */}
-                    <div className="lg:col-span-5 space-y-5">
-                      <CalendarView />
-                      <Health />
-                      <Documents />
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                {/* Right Column (5 cols) */}
+                <div className="lg:col-span-5 space-y-5">
+                  <CalendarView />
+                  <Health />
+                  <Documents />
+                </div>
+              </div>
             </motion.div>
           )}
 
