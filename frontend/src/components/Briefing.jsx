@@ -171,25 +171,25 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
     );
   }
 
-  // 3. Empty State (Ready to generate) — Compact Sleek Executive Banner
+  // 3. Empty State (Ready to generate) — Sleek Compact Card matching dashboard theme
   if (!exists && !isStreaming && !displayContent) {
     return (
-      <div className="w-full bg-zinc-950 bg-gradient-to-r from-zinc-950 via-[#16181f] to-zinc-900 border border-zinc-800/90 rounded-2xl p-4 sm:px-5 sm:py-3.5 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 transition-all">
+      <div className="w-full bg-white border border-zinc-200/90 rounded-2xl p-3 sm:px-4 sm:py-3 shadow-2xs hover:border-zinc-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-cyan-300 shadow-inner flex-shrink-0">
-            <Sparkles className="w-4 h-4 animate-pulse" />
+          <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs flex-shrink-0">
+            <Sparkles className="w-4 h-4 text-cyan-300" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="text-xs sm:text-sm font-bold text-white tracking-tight">
-                {isToday ? 'Generate Briefing' : 'Historical AI Briefing'}
+              <h2 className="text-xs sm:text-sm font-bold text-zinc-900 tracking-tight">
+                {isToday ? 'Daily Briefing' : 'Historical Reflection'}
               </h2>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
                 {isToday ? 'Ready' : 'Archive'}
               </span>
               <span className="text-zinc-400 text-xs hidden sm:inline">• {dateFormatted}</span>
             </div>
-            <p className="text-[11px] text-zinc-300 mt-0.5">
+            <p className="text-[11px] text-zinc-500 mt-0.5">
               {isToday
                 ? 'Synthesize unpaid bills, priority tasks, and 7-day calendar into actionable clarity.'
                 : `Synthesize or generate reflection for historical date ${effectiveDate}.`}
@@ -202,9 +202,9 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
             <button
               type="button"
               onClick={onOpenArchive}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 transition cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-zinc-600 hover:text-black hover:bg-zinc-50 border border-zinc-200 shadow-2xs transition cursor-pointer"
             >
-              <FolderArchive className="w-3.5 h-3.5" />
+              <FolderArchive className="w-3.5 h-3.5 text-zinc-500" />
               <span className="hidden sm:inline">Past Archive</span>
             </button>
           )}
@@ -212,18 +212,17 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
           <button
             onClick={handleGenerate}
             disabled={generateMutation.isPending}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-zinc-900 bg-white hover:bg-zinc-100 shadow-xs transition-all active:scale-95 disabled:opacity-60 cursor-pointer flex-shrink-0"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-zinc-900 hover:bg-black shadow-xs transition-all active:scale-95 disabled:opacity-60 cursor-pointer flex-shrink-0"
           >
             {generateMutation.isPending ? (
               <>
-                <RefreshCw className="w-3.5 h-3.5 animate-spin text-zinc-900" />
+                <RefreshCw className="w-3.5 h-3.5 animate-spin text-white" />
                 <span>Synthesizing...</span>
               </>
             ) : (
               <>
-                <Sparkles className="w-3.5 h-3.5 text-zinc-900" />
+                <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
                 <span>{isToday ? 'Generate Briefing' : 'Generate Reflection'}</span>
-                <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
               </>
             )}
           </button>
