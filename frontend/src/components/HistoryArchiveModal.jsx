@@ -201,9 +201,6 @@ export default function HistoryArchiveModal({
                   </h3>
                 </div>
               </div>
-              <p className="text-xs text-zinc-500">
-                Access your past AI briefings, completed tasks, financial outflows, and schedule.
-              </p>
             </div>
 
             <div className="flex items-center gap-2">
