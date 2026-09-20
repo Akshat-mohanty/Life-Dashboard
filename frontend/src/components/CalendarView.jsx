@@ -408,9 +408,6 @@ export default function CalendarView() {
           <div className="text-center py-6 px-4 bg-zinc-50/50 rounded-xl border border-dashed border-zinc-200">
             <CalendarCheck className="w-5 h-5 mx-auto mb-1.5 text-zinc-300" />
             <p className="text-xs font-semibold text-zinc-700">Clear schedule</p>
-            <p className="text-[11px] text-zinc-400 mt-0.5">
-              No {filter === 'all' ? 'events, unpaid bills, or health checkups' : filter} scheduled for the next 7 days
-            </p>
           </div>
         ) : (
           <AnimatePresence initial={false}>
