@@ -825,24 +825,33 @@ export default function App() {
                 onOpenArchive={() => setIsArchiveModalOpen(true)}
               />
 
-              {/* Workspace Tiles Grid to fill layout */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start pt-2">
-                {/* Left Column (7 cols) */}
-                <div className="lg:col-span-7 space-y-5">
-                  <Tasks />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Bills />
-                    <Spending />
-                  </div>
-                </div>
+              {/* Bento Grid Architecture: only visible if user explicitly chooses to expand all tiles */}
+              <AnimatePresence>
+                {showAllWorkspaceTiles && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start pt-2"
+                  >
+                    {/* Left Column (7 cols / ~58%) */}
+                    <div className="lg:col-span-7 space-y-5">
+                      <Tasks />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Bills />
+                        <Spending />
+                      </div>
+                    </div>
 
-                {/* Right Column (5 cols) */}
-                <div className="lg:col-span-5 space-y-5">
-                  <CalendarView />
-                  <Health />
-                  <Documents />
-                </div>
-              </div>
+                    {/* Right Column (5 cols / ~42%) */}
+                    <div className="lg:col-span-5 space-y-5">
+                      <CalendarView />
+                      <Health />
+                      <Documents />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           )}
 
