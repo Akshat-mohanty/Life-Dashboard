@@ -182,7 +182,7 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-xs sm:text-sm font-bold text-white tracking-tight">
-                {isToday ? 'AI Morning Briefing' : 'Historical AI Briefing'}
+                {isToday ? 'Generate Briefing' : 'Historical AI Briefing'}
               </h2>
               <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                 {isToday ? 'Ready' : 'Archive'}
