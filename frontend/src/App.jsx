@@ -175,10 +175,10 @@ export default function App() {
   const maxDateStr = sevenDaysLater.toISOString().split('T')[0];
 
   const pendingTasksList = (tasksData?.items || []).filter((t) => !t.isCompleted);
-  const pendingTasksCount = pendingTasksList.length;
+  const pendingTasksCount = tasksSummary.pendingCount > 0 ? tasksSummary.pendingCount : pendingTasksList.length;
 
   const unpaidBillsList = (billsData?.items || []).filter((b) => !b.isPaid);
-  const unpaidBillsCount = unpaidBillsList.length;
+  const unpaidBillsCount = billsSummary.overdueCount > 0 ? billsSummary.overdueCount : unpaidBillsList.length;
   const unpaidBillsNext7Days = unpaidBillsList.filter(
     (b) => !b.dueDate || b.dueDate <= maxDateStr
   );
@@ -365,7 +365,13 @@ export default function App() {
                       <h2 className="text-base sm:text-lg font-bold text-zinc-900 tracking-tight flex items-center gap-2">
                         {totalPendingObligations > 0 ? (
                           <>
-                            <span>You have {totalPendingObligations} pending items</span>
+                            <span>
+                              You have{' '}
+                              {pendingTasksCount > 0 && `${pendingTasksCount} task${pendingTasksCount > 1 ? 's' : ''}`}
+                              {pendingTasksCount > 0 && (totalPendingObligations - pendingTasksCount) > 0 && ' and '}
+                              {(totalPendingObligations - pendingTasksCount) > 0 && `${totalPendingObligations - pendingTasksCount} other item${(totalPendingObligations - pendingTasksCount) > 1 ? 's' : ''}`}
+                              {' '}pending
+                            </span>
                             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-800">
                               Action Required
                             </span>
