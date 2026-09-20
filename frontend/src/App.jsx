@@ -618,12 +618,7 @@ export default function App() {
                             </span>
                           </>
                         ) : (
-                          <>
-                            <span>All caught up! No pending obligations</span>
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800">
-                              Clear Horizon
-                            </span>
-                          </>
+                          <span>All caught up! No pending obligations</span>
                         )}
                       </h2>
                       <p className="text-xs text-zinc-500 mt-0.5">
