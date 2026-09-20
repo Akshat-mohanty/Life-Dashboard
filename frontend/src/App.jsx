@@ -508,32 +508,10 @@ export default function App() {
               transition={{ duration: 0.25 }}
               className="space-y-5"
             >
-              {/* Date Button above status card */}
-              <div className="flex justify-end mb-2">
-                <button
-                  type="button"
-                  onClick={() => setIsArchiveModalOpen(true)}
-                  className={`group flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer shadow-2xs ${
-                    isTimeTravelActive
-                      ? 'bg-amber-50 text-amber-900 border-amber-300 ring-2 ring-amber-400/20'
-                      : 'bg-white hover:bg-zinc-50 text-zinc-700 hover:text-zinc-900 border-zinc-200/90'
-                  }`}
-                  title="Click to browse your past saved data & historical life archive"
-                >
-                  <Calendar className="w-3.5 h-3.5 text-indigo-600 group-hover:scale-110 transition-transform" />
-                  <span>{activeDateFormattedHeader}</span>
-                  {isTimeTravelActive && (
-                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-200 text-amber-800">
-                      Historical
-                    </span>
-                  )}
-                </button>
-              </div>
-
               {/* Status Header: Automatically states if tasks/obligations are pending */}
               <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-2xs">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div className="flex items-start sm:items-center gap-3.5">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3.5">
                     <div
                       className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
                         totalPendingObligations > 0
@@ -567,6 +545,25 @@ export default function App() {
                       )}
                     </div>
                   </div>
+                  {/* Date Button inline */}
+                  <button
+                    type="button"
+                    onClick={() => setIsArchiveModalOpen(true)}
+                    className={`group flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer shadow-2xs shrink-0 ${
+                      isTimeTravelActive
+                        ? 'bg-amber-50 text-amber-900 border-amber-300 ring-2 ring-amber-400/20'
+                        : 'bg-zinc-50 hover:bg-zinc-100 text-zinc-700 hover:text-zinc-900 border-zinc-200/90'
+                    }`}
+                    title="Click to browse your past saved data & historical life archive"
+                  >
+                    <Calendar className="w-3.5 h-3.5 text-indigo-600 group-hover:scale-110 transition-transform" />
+                    <span>{activeDateFormattedHeader}</span>
+                    {isTimeTravelActive && (
+                      <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-200 text-amber-800">
+                        Historical
+                      </span>
+                    )}
+                  </button>
                 </div>
 
                 {/* Categories Breakdown Dropdowns */}
