@@ -199,13 +199,10 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
       {/* Header */}
       <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs">
-            <Sparkles className="w-4 h-4 text-cyan-300" />
-          </div>
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-sm font-bold text-zinc-900 tracking-tight">
-                {isToday ? "Today's AI Intelligence Briefing" : 'Historical AI Reflection'}
+                {isToday ? "Today's Briefing" : 'Historical Reflection'}
               </h2>
               <span className="text-[11px] text-zinc-400 font-medium">{dateFormatted}</span>
               {!isToday && (
