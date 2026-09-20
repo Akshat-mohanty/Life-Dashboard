@@ -146,7 +146,6 @@ export default function Documents() {
                 </span>
               )}
             </div>
-            <p className="text-[11px] text-zinc-400 whitespace-nowrap">Encrypted Cloud Vault & Expiry Warnings</p>
           </div>
         </div>
 
