@@ -582,9 +582,6 @@ export default function App() {
                         <CheckSquare className="w-4 h-4 text-indigo-600" />
                         <div>
                           <p className="text-xs font-bold text-zinc-900">Tasks</p>
-                          <p className="text-[11px] text-zinc-500 font-medium">
-                            {pendingTasksCount} pending
-                          </p>
                         </div>
                       </div>
                       {expandedCategory === 'tasks' ? (
@@ -656,9 +653,6 @@ export default function App() {
                         <Calendar className="w-4 h-4 text-emerald-600" />
                         <div>
                           <p className="text-xs font-bold text-zinc-900">Calendar & Schedule</p>
-                          <p className="text-[11px] text-zinc-500 font-medium">
-                            {calendarEvents7DaysCount} in next 7d
-                          </p>
                         </div>
                       </div>
                       {expandedCategory === 'calendar' ? (
@@ -722,9 +716,6 @@ export default function App() {
                         <CreditCard className="w-4 h-4 text-violet-600" />
                         <div>
                           <p className="text-xs font-bold text-zinc-900">Bills & Payments</p>
-                          <p className="text-[11px] text-zinc-500 font-medium">
-                            {unpaidBillsCount} unpaid ({formatAmount(billsSummary.totalUnpaidAmount || 0)})
-                          </p>
                         </div>
                       </div>
                       {expandedCategory === 'bills' ? (
@@ -791,9 +782,6 @@ export default function App() {
                         <HeartPulse className="w-4 h-4 text-rose-600" />
                         <div>
                           <p className="text-xs font-bold text-zinc-900">Health & Habits</p>
-                          <p className="text-[11px] text-zinc-500 font-medium">
-                            {pendingHealthCount} active
-                          </p>
                         </div>
                       </div>
                       {expandedCategory === 'health' ? (
