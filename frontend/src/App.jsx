@@ -621,11 +621,11 @@ export default function App() {
                           <span>All caught up! No pending obligations</span>
                         )}
                       </h2>
-                      <p className="text-xs text-zinc-500 mt-0.5">
-                        {totalPendingObligations > 0
-                          ? 'Click on any category below to inspect specific pending items or view schedule.'
-                          : 'Everything is in order. You can open any category or expand all tiles whenever needed.'}
-                      </p>
+                      {totalPendingObligations > 0 && (
+                        <p className="text-xs text-zinc-500 mt-0.5">
+                          Click on any category below to inspect specific pending items or view schedule.
+                        </p>
+                      )}
                     </div>
                   </div>
 
