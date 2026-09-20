@@ -224,7 +224,6 @@ export default function Tasks() {
                 </span>
               )}
             </div>
-            <p className="text-[11px] text-zinc-400 whitespace-nowrap">AI re-ranked daily by urgency</p>
           </div>
         </div>
 
