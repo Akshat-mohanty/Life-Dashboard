@@ -120,7 +120,6 @@ export default function Health() {
                 </span>
               )}
             </div>
-            <p className="text-[11px] text-zinc-400 whitespace-nowrap">Medicines, daily habits & SMS alerts</p>
           </div>
         </div>
 
