@@ -197,7 +197,7 @@ export default function HistoryArchiveModal({
                 </div>
                 <div>
                   <h3 className="text-base sm:text-lg font-bold text-zinc-900 tracking-tight">
-                    Historical Life Archive & Telemetry
+                    Archive
                   </h3>
                 </div>
               </div>
