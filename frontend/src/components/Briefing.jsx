@@ -198,17 +198,6 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
         </div>
 
         <div className="flex items-center gap-2">
-          {onOpenArchive && (
-            <button
-              type="button"
-              onClick={onOpenArchive}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-zinc-600 hover:text-black hover:bg-zinc-50 border border-zinc-200 shadow-2xs transition cursor-pointer"
-            >
-              <FolderArchive className="w-3.5 h-3.5 text-zinc-500" />
-              <span className="hidden sm:inline">Past Archive</span>
-            </button>
-          )}
-
           <button
             onClick={handleGenerate}
             disabled={generateMutation.isPending}
