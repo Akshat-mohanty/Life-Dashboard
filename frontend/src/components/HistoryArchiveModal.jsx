@@ -156,7 +156,8 @@ export default function HistoryArchiveModal({
   const briefing =
     briefingRaw &&
     !briefingRaw.content?.includes('Completed task reviews and scheduled agenda items') &&
-    !briefingRaw.content?.includes('Personal workspace and health goals logged')
+    !briefingRaw.content?.includes('Personal workspace and health goals logged') &&
+    !briefingRaw.content?.includes('No value is entered')
       ? briefingRaw
       : null;
   const tasks = archiveData?.tasks || [];
@@ -167,8 +168,14 @@ export default function HistoryArchiveModal({
 
   const completedTasks = tasks.filter((t) => t.completed);
 
-  const totalEntries =
-    (briefing ? 1 : 0) + tasks.length + spending.length + calendar.length + bills.length;
+  const hasData =
+    Boolean(briefing) ||
+    tasks.length > 0 ||
+    spending.length > 0 ||
+    calendar.length > 0 ||
+    bills.length > 0;
+
+  const totalEntries = hasData ? 1 : 0;
 
   return createPortal(
     <AnimatePresence>
@@ -252,30 +259,38 @@ export default function HistoryArchiveModal({
 
           </div>
 
-          {/* Metric Pills Bar */}
-          <div className="px-6 py-2 bg-white border-b border-zinc-100 flex items-center justify-between text-xs text-zinc-600 overflow-x-auto">
-            <div className="flex items-center gap-4">
-              <span className="font-semibold text-zinc-800">
-                Summary for {formattedDateTitle}:
-              </span>
-              <span className="flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                {completedTasks.length} completed / {tasks.length} tasks
-              </span>
-              <span className="flex items-center gap-1">
-                <Receipt className="w-3.5 h-3.5 text-amber-500" />
-                {formatAmount(spendingTotal, { decimals: 2 })} spent ({spending.length} transactions)
-              </span>
-              <span className="flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-sky-500" />
-                {calendar.length} events
-              </span>
-            </div>
+          {/* Metric Pills Bar: Only show if data is provided and not empty */}
+          {hasData && (
+            <div className="px-6 py-2 bg-white border-b border-zinc-100 flex items-center justify-between text-xs text-zinc-600 overflow-x-auto">
+              <div className="flex items-center gap-4">
+                <span className="font-semibold text-zinc-800">
+                  Summary for {formattedDateTitle}:
+                </span>
+                {tasks.length > 0 && (
+                  <span className="flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                    {completedTasks.length} completed / {tasks.length} tasks
+                  </span>
+                )}
+                {spending.length > 0 && (
+                  <span className="flex items-center gap-1">
+                    <Receipt className="w-3.5 h-3.5 text-amber-500" />
+                    {formatAmount(spendingTotal, { decimals: 2 })} spent ({spending.length} transactions)
+                  </span>
+                )}
+                {calendar.length > 0 && (
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5 text-sky-500" />
+                    {calendar.length} events
+                  </span>
+                )}
+              </div>
 
-            {isFetching && (
-              <span className="text-[11px] text-zinc-400 animate-pulse">Syncing partition...</span>
-            )}
-          </div>
+              {isFetching && (
+                <span className="text-[11px] text-zinc-400 animate-pulse">Syncing partition...</span>
+              )}
+            </div>
+          )}
 
           {/* Main Scrollable Content */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
@@ -287,34 +302,12 @@ export default function HistoryArchiveModal({
                 </p>
               </div>
             ) : totalEntries === 0 ? (
-              <div className="py-12 text-center max-w-md mx-auto space-y-4">
-                <div className="w-14 h-14 rounded-3xl bg-zinc-100 text-zinc-400 flex items-center justify-center mx-auto">
-                  <CalendarDays className="w-7 h-7" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-zinc-900">
-                    No historical logs on {viewDate}
-                  </h4>
-                  <p className="text-xs text-zinc-500 mt-1 leading-relaxed">
-                    There are no tasks, expenses, or calendar entries recorded for your account on this date.
+              <div className="py-12 flex items-center justify-center">
+                <div className="w-full max-w-lg bg-zinc-50 border border-zinc-200/80 rounded-2xl p-8 text-center">
+                  <p className="text-sm font-medium text-zinc-500">
+                    No value is entered.
                   </p>
                 </div>
-
-                {!briefing && (
-                  <button
-                    type="button"
-                    onClick={() => generateBriefingMutation.mutate()}
-                    disabled={generateBriefingMutation.isPending}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition cursor-pointer"
-                  >
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>
-                      {generateBriefingMutation.isPending
-                        ? 'Synthesizing with Bedrock...'
-                        : 'Generate AI Briefing for this Date'}
-                    </span>
-                  </button>
-                )}
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
@@ -411,7 +404,7 @@ export default function HistoryArchiveModal({
 
                     {tasks.length === 0 ? (
                       <p className="text-xs text-zinc-400 italic py-2">
-                        No tasks scheduled or logged for this date.
+                        No value is entered.
                       </p>
                     ) : (
                       <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
@@ -460,7 +453,7 @@ export default function HistoryArchiveModal({
 
                     {spending.length === 0 ? (
                       <p className="text-xs text-zinc-400 italic py-2">
-                        No transactions recorded on this date.
+                        No value is entered.
                       </p>
                     ) : (
                       <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
@@ -497,7 +490,7 @@ export default function HistoryArchiveModal({
 
                     {calendar.length === 0 ? (
                       <p className="text-xs text-zinc-400 italic py-2">
-                        No events logged on this date.
+                        No value is entered.
                       </p>
                     ) : (
                       <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
