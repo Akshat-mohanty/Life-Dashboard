@@ -603,18 +603,22 @@ export const AuthProvider = ({ children }) => {
 
   /**
    * Quick Demo Login (ONLY accessible via explicit Instant Demo Access button)
+   * Automatically signs into the real AWS backend using a pre-provisioned demo user.
    */
-  const loginAsDemo = () => {
-    setError(null);
-    const demoUser = {
-      userId: 'demo-user-1',
-      email: 'akshat@example.com',
-      name: 'Akshat Mohanty',
-      token: 'demo-jwt-token-life-dashboard',
-      isDemo: true,
-      authProvider: 'Demo',
-    };
-    saveSession(demoUser, demoUser.token);
+  const loginAsDemo = async () => {
+    try {
+      await login('demo@meridian.com', 'MeridianDemo123!');
+      
+      // Update session with demo flag so heatmap/UI knows we are in demo mode
+      setUser(prev => {
+        const updated = { ...prev, isDemo: true, authProvider: 'Demo' };
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(updated));
+        return updated;
+      });
+    } catch (err) {
+      console.error('Demo login failed:', err);
+      setError('Could not connect to the live AWS Demo environment.');
+    }
   };
 
   /**
