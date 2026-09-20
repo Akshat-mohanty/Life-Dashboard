@@ -305,13 +305,13 @@ export default function App() {
       {/* ====================================================================
        * MAIN EXECUTIVE WORKSPACE CANVAS
        * ==================================================================== */}
-      <main className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-5 sm:py-6 flex-1">
+      <main className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-5 sm:py-6 flex-1 flex flex-col">
         {/* Time-Travel Historical Banner */}
         {isTimeTravelActive && (
           <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-5 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50/80 border border-amber-200/90 flex flex-wrap items-center justify-between gap-3 text-amber-900 text-xs shadow-2xs"
+            className="mb-5 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50/80 border border-amber-200/90 flex flex-wrap items-center justify-between gap-3 text-amber-900 text-xs shadow-2xs shrink-0"
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-xl bg-amber-200 text-amber-900 flex items-center justify-center font-bold shadow-2xs">
@@ -350,7 +350,7 @@ export default function App() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.05 }}
-          className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5"
+          className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5 shrink-0"
         >
           {/* Tasks Pulse */}
           <button
@@ -507,7 +507,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
-              className="space-y-5"
+              className="space-y-5 flex-1 flex flex-col justify-end pb-2"
             >
               {/* Status Header: Automatically states if tasks/obligations are pending */}
               <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-2xs">
