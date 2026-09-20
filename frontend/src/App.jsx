@@ -264,7 +264,7 @@ export default function App() {
           <div className="flex items-center gap-3">
             <MeridianLogo className="w-8 h-8" />
             <div className="flex items-center gap-2.5">
-              <span className="text-xl font-bold tracking-tight text-zinc-900 font-serif">Ebolt</span>
+              <span className="text-xl font-bold tracking-tight text-zinc-900 font-serif">Meridian</span>
               <span className="hidden sm:inline text-zinc-300">/</span>
               <span className="hidden sm:inline text-xs font-medium text-zinc-500">
                 Welcome, <span className="font-semibold text-zinc-800">{displayName}</span>

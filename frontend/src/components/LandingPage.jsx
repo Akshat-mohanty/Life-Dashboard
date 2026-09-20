@@ -131,7 +131,7 @@ export default function LandingPage({
           {/* Center: Brand Logo */}
           <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1">
             <span className="text-xl sm:text-2xl font-black tracking-tight uppercase text-white font-serif">
-              EBOLT
+              MERIDIAN
             </span>
             <span className="text-[10px] font-bold text-zinc-500 align-super">®</span>
           </div>
@@ -279,7 +279,7 @@ export default function LandingPage({
                 </div>
                 <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-700/60 border border-white/5 text-[10px] font-semibold text-zinc-400">
                   <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-                  <span>ebolt.app/schedule</span>
+                  <span>meridian.app/schedule</span>
                 </div>
                 <span className="text-[10px] font-semibold text-zinc-500">Week • Sep 19</span>
               </div>
@@ -385,7 +385,7 @@ export default function LandingPage({
                   {/* Window Title & URL Badge */}
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-zinc-200/70 text-[10px] font-semibold text-zinc-700 shadow-2xs">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span>ebolt.app/dashboard</span>
+                    <span>meridian.app/dashboard</span>
                   </div>
 
                   {/* Date Badge */}
@@ -465,7 +465,7 @@ export default function LandingPage({
             </h2>
 
             <p className="text-sm text-zinc-700 leading-relaxed font-normal">
-              Ebolt forms seamless autonomous partnerships with your daily schedule, tasks, bills, and documents—synthesizing them into clear morning intelligence briefings.
+              Meridian forms seamless autonomous partnerships with your daily schedule, tasks, bills, and documents—synthesizing them into clear morning intelligence briefings.
             </p>
 
             <p className="text-sm text-zinc-700 leading-relaxed font-normal">
@@ -491,9 +491,9 @@ export default function LandingPage({
       <footer className="border-t border-zinc-300/80 py-8 px-6 text-center text-xs text-zinc-500 bg-[#f5f3ef]">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 font-serif font-black text-sm text-zinc-900">
-            <span>EBOLT</span>
+            <span>MERIDIAN</span>
           </div>
-          <p>© 2026 Ebolt; Built with ❤️ by Akshat Mohanty</p>
+          <p>© 2026 Meridian; Built with ❤️ by Akshat Mohanty</p>
         </div>
       </footer>
 
