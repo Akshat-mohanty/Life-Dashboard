@@ -163,9 +163,6 @@ export default function Spending() {
                 {formatAmount(summary.currentMonthTotal || 0)}
               </span>
             </div>
-            <p className="text-[11px] text-zinc-400 whitespace-nowrap truncate max-w-[150px] sm:max-w-[200px]">
-              Expenses & Budget
-            </p>
           </div>
         </div>
 
