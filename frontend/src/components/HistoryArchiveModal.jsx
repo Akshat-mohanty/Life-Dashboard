@@ -578,14 +578,7 @@ export default function HistoryArchiveModal({
             )}
           </div>
 
-          {/* Modal Footer */}
-          <div className="px-6 py-4 bg-zinc-50 border-t border-zinc-100 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-1.5 text-xs text-zinc-500">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>
-                Personal data strictly isolated to partition: <code className="font-mono text-zinc-700 font-semibold">{user?.userId}</code>
-              </span>
-            </div>
+          <div className="px-6 py-4 bg-zinc-50 border-t border-zinc-100 flex flex-wrap items-center justify-end gap-3">
 
             <div className="flex items-center gap-2">
               <button
