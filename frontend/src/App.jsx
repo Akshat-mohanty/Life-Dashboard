@@ -497,63 +497,8 @@ export default function App() {
           </button>
         </motion.div>
 
-        {/* 2. Workspace Segmented Navigation */}
-        <div className="flex items-center justify-between flex-wrap gap-3 mb-5">
-          <div className="flex items-center gap-1 p-1 bg-zinc-200/70 rounded-xl">
-            <button
-              type="button"
-              onClick={() => setActiveTab('overview')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
-                activeTab === 'overview'
-                  ? 'bg-white text-zinc-900 shadow-2xs font-bold'
-                  : 'text-zinc-600 hover:text-zinc-900'
-              }`}
-            >
-              <LayoutGrid className="w-3.5 h-3.5" />
-              <span>Overview</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('focus')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
-                activeTab === 'focus'
-                  ? 'bg-white text-zinc-900 shadow-2xs font-bold'
-                  : 'text-zinc-600 hover:text-zinc-900'
-              }`}
-            >
-              <CheckSquare className="w-3.5 h-3.5" />
-              <span>Tasks & Schedule</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('finances')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
-                activeTab === 'finances'
-                  ? 'bg-white text-zinc-900 shadow-2xs font-bold'
-                  : 'text-zinc-600 hover:text-zinc-900'
-              }`}
-            >
-              <CreditCard className="w-3.5 h-3.5" />
-              <span>Finances & Spending</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveTab('life')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
-                activeTab === 'life'
-                  ? 'bg-white text-zinc-900 shadow-2xs font-bold'
-                  : 'text-zinc-600 hover:text-zinc-900'
-              }`}
-            >
-              <HeartPulse className="w-3.5 h-3.5" />
-              <span>Health & Documents</span>
-            </button>
-          </div>
-
-          {/* Interactive Date & Historical Life Archive Launcher */}
+        {/* 2. Header Action Bar: Historical Life Archive Launcher */}
+        <div className="flex items-center justify-end flex-wrap gap-3 mb-5">
           <button
             type="button"
             onClick={() => setIsArchiveModalOpen(true)}
@@ -756,7 +701,7 @@ export default function App() {
                           )}
                           <button
                             type="button"
-                            onClick={() => setActiveTab('focus')}
+                            onClick={() => setIsArchiveModalOpen(true)}
                             className="w-full text-center text-[11px] font-semibold text-emerald-600 hover:text-emerald-800 pt-1 cursor-pointer"
                           >
                             Open Full Calendar →
