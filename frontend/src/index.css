@@ -49,32 +49,37 @@
   --dash-faint: #767682;
   --dash-violet: #7c7cff;
   --dash-violet-soft: #32324b;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
   background:
     radial-gradient(circle at 50% -15%, rgba(124, 124, 255, 0.12), transparent 38rem),
     var(--dash-canvas) !important;
   color: var(--dash-text) !important;
 }
 
-@media (min-width: 1024px) {
-  .dashboard-theme {
-    margin: 28px auto;
-    min-height: calc(100vh - 56px);
-    width: min(1420px, calc(100% - 56px));
-    border: 1px solid var(--dash-border);
-    border-radius: 30px;
-    overflow: hidden;
-    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.48);
-  }
+body:has(.dashboard-theme) {
+  background-color: #0c0d14 !important;
 }
 
 .dashboard-theme header {
+  width: 100%;
   background: rgba(35, 36, 42, 0.94) !important;
   border-color: var(--dash-border) !important;
   box-shadow: none !important;
 }
 
-.dashboard-theme main { max-width: 1320px !important; }
-.dashboard-theme footer { border-color: var(--dash-border) !important; }
+.dashboard-theme main {
+  max-width: 1440px !important;
+  width: 100% !important;
+}
+.dashboard-theme footer {
+  width: 100%;
+  border-color: var(--dash-border) !important;
+}
 
 /* Neutral utility palette overrides. They deliberately sit after Tailwind. */
 .dashboard-theme .bg-white,
