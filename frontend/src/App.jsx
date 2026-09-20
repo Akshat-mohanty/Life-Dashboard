@@ -513,19 +513,7 @@ export default function App() {
               <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-2xs">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3.5">
-                    <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                        totalPendingObligations > 0
-                          ? 'bg-amber-500/10 text-amber-600 border border-amber-500/20'
-                          : 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'
-                      }`}
-                    >
-                      {totalPendingObligations > 0 ? (
-                        <AlertCircle className="w-5 h-5" />
-                      ) : (
-                        <CheckCircle className="w-5 h-5" />
-                      )}
-                    </div>
+                    
                     <div>
                       <h2 className="text-base sm:text-lg font-bold text-zinc-900 tracking-tight flex items-center gap-2">
                         {totalPendingObligations > 0 ? (
@@ -557,7 +545,7 @@ export default function App() {
                     }`}
                     title="Click to browse your past saved data & historical life archive"
                   >
-                    <Calendar className="w-3.5 h-3.5 text-indigo-600 group-hover:scale-110 transition-transform" />
+                    <Calendar className="w-3.5 h-3.5 text-zinc-900 group-hover:scale-110 transition-transform" />
                     <span>{activeDateFormattedHeader}</span>
                     {isTimeTravelActive && (
                       <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-200 text-amber-800">
@@ -579,7 +567,6 @@ export default function App() {
                       className="w-full px-3.5 py-3 flex items-center justify-between text-left hover:bg-zinc-100/60 transition cursor-pointer"
                     >
                       <div className="flex items-center gap-2.5">
-                        <CheckSquare className="w-4 h-4 text-indigo-600" />
                         <div>
                           <p className="text-xs font-bold text-zinc-900">Tasks</p>
                         </div>
@@ -650,7 +637,7 @@ export default function App() {
                       className="w-full px-3.5 py-3 flex items-center justify-between text-left hover:bg-zinc-100/60 transition cursor-pointer"
                     >
                       <div className="flex items-center gap-2.5">
-                        <Calendar className="w-4 h-4 text-emerald-600" />
+                        
                         <div>
                           <p className="text-xs font-bold text-zinc-900">Calendar & Schedule</p>
                         </div>
@@ -713,7 +700,7 @@ export default function App() {
                       className="w-full px-3.5 py-3 flex items-center justify-between text-left hover:bg-zinc-100/60 transition cursor-pointer"
                     >
                       <div className="flex items-center gap-2.5">
-                        <CreditCard className="w-4 h-4 text-violet-600" />
+                        
                         <div>
                           <p className="text-xs font-bold text-zinc-900">Bills & Payments</p>
                         </div>
@@ -779,7 +766,7 @@ export default function App() {
                       className="w-full px-3.5 py-3 flex items-center justify-between text-left hover:bg-zinc-100/60 transition cursor-pointer"
                     >
                       <div className="flex items-center gap-2.5">
-                        <HeartPulse className="w-4 h-4 text-rose-600" />
+                        
                         <div>
                           <p className="text-xs font-bold text-zinc-900">Health & Habits</p>
                         </div>
