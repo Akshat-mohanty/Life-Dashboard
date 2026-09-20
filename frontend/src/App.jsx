@@ -177,6 +177,10 @@ export default function App() {
 
   const unpaidBillsList = (billsData?.items || []).filter((b) => !b.isPaid);
   const unpaidBillsCount = unpaidBillsList.length;
+  const unpaidBillsNext7Days = unpaidBillsList.filter(
+    (b) => !b.dueDate || b.dueDate <= maxDateStr
+  );
+  const unpaidBillsNext7DaysCount = unpaidBillsNext7Days.length;
 
   const calendarEventsList = calendarData?.items || [];
   const calendarEvents7Days = calendarEventsList.filter((e) => !e.date || e.date <= maxDateStr);
