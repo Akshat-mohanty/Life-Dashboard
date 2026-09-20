@@ -349,7 +349,7 @@ export default function App() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.05 }}
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-5"
+          className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-5"
         >
           {/* Tasks Pulse */}
           <button
@@ -456,56 +456,13 @@ export default function App() {
             </div>
           </button>
 
-          {/* Next 7 Days Pulse (Considers Events, Unpaid Bills & Health Checkups) */}
-          <button
-            type="button"
-            onClick={() => setActiveTab('focus')}
-            className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
-              activeTab === 'focus'
-                ? 'bg-zinc-900 text-white border-zinc-900 shadow-sm'
-                : 'bg-white hover:bg-zinc-50 border-zinc-200/80 text-zinc-900 shadow-2xs'
-            }`}
-          >
-            <div className="flex items-center justify-between mb-1">
-              <span
-                className={`text-[10px] font-bold uppercase tracking-wider ${
-                  activeTab === 'focus' ? 'text-zinc-400' : 'text-zinc-400'
-                }`}
-              >
-                Next 7 Days
-              </span>
-              <Calendar
-                className={`w-3.5 h-3.5 ${
-                  activeTab === 'focus' ? 'text-cyan-300' : 'text-zinc-500'
-                }`}
-              />
-            </div>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-lg font-extrabold tracking-tight">
-                {next7DaysTotalCount}
-              </span>
-              <span
-                className={`text-[10px] ${
-                  activeTab === 'focus' ? 'text-zinc-400' : 'text-zinc-500'
-                }`}
-              >
-                Upcoming
-              </span>
-            </div>
-            <div
-              className={`text-[10px] mt-0.5 truncate ${
-                activeTab === 'focus' ? 'text-zinc-400' : 'text-zinc-500'
-              }`}
-            >
-              {calendarEvents7DaysCount} evt • {unpaidBillsNext7DaysCount} bills • {pendingHealthCount} health
-            </div>
-          </button>
+
 
           {/* Habits & Vault Pulse */}
           <button
             type="button"
             onClick={() => setActiveTab('life')}
-            className={`p-3 rounded-2xl border text-left transition-all cursor-pointer col-span-2 sm:col-span-1 ${
+            className={`p-3 rounded-2xl border text-left transition-all cursor-pointer ${
               activeTab === 'life'
                 ? 'bg-zinc-900 text-white border-zinc-900 shadow-sm'
                 : 'bg-white hover:bg-zinc-50 border-zinc-200/80 text-zinc-900 shadow-2xs'
