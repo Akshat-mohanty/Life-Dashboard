@@ -28,6 +28,11 @@ import {
   Compass,
   ShieldCheck,
   History,
+  ChevronDown,
+  ChevronUp,
+  CheckCircle,
+  Clock,
+  AlertCircle,
 } from 'lucide-react';
 import MeridianLogo from './components/MeridianLogo';
 import { useAuth } from './hooks/useAuth';
@@ -167,14 +172,28 @@ export default function App() {
   sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
   const maxDateStr = sevenDaysLater.toISOString().split('T')[0];
 
-  const unpaidBillsNext7Days = (billsData?.items || []).filter(
-    (b) => !b.isPaid && (!b.dueDate || b.dueDate <= maxDateStr)
-  );
-  const unpaidBillsNext7DaysCount = unpaidBillsNext7Days.length;
-  const pendingHealthCount = healthSummary.totalCount || 0;
-  const calendarEvents7DaysCount = calendarSummary.next7DaysCount || 0;
+  const pendingTasksList = (tasksData?.items || []).filter((t) => !t.isCompleted);
+  const pendingTasksCount = pendingTasksList.length;
+
+  const unpaidBillsList = (billsData?.items || []).filter((b) => !b.isPaid);
+  const unpaidBillsCount = unpaidBillsList.length;
+
+  const calendarEventsList = calendarData?.items || [];
+  const calendarEvents7Days = calendarEventsList.filter((e) => !e.date || e.date <= maxDateStr);
+  const calendarEvents7DaysCount = calendarEvents7Days.length;
+
+  const activeHealthList = (healthData?.items || []).filter((h) => h.status !== 'completed');
+  const pendingHealthCount = activeHealthList.length;
+
   const next7DaysTotalCount =
     calendarEvents7DaysCount + unpaidBillsNext7DaysCount + pendingHealthCount;
+
+  const totalPendingObligations =
+    pendingTasksCount + unpaidBillsCount + calendarEvents7DaysCount + pendingHealthCount;
+
+  // Track user-expanded accordion categories in Overview
+  const [expandedCategory, setExpandedCategory] = useState(null); // 'tasks' | 'calendar' | 'bills' | 'health' | null
+  const [showAllWorkspaceTiles, setShowAllWorkspaceTiles] = useState(false);
 
   const handleAuthSubmit = async (e) => {
     e.preventDefault();
@@ -603,6 +622,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
+              className="space-y-5"
             >
               {/* Sleek Intelligence Banner */}
               <Briefing
@@ -610,24 +630,365 @@ export default function App() {
                 onOpenArchive={() => setIsArchiveModalOpen(true)}
               />
 
-              {/* Bento Grid Architecture */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-                {/* Left Column (7 cols / ~58%) */}
-                <div className="lg:col-span-7 space-y-5">
-                  <Tasks />
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Bills />
-                    <Spending />
+              {/* Status Header: Automatically states if tasks/obligations are pending */}
+              <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-2xs">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-start sm:items-center gap-3.5">
+                    <div
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                        totalPendingObligations > 0
+                          ? 'bg-amber-500/10 text-amber-600 border border-amber-500/20'
+                          : 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'
+                      }`}
+                    >
+                      {totalPendingObligations > 0 ? (
+                        <AlertCircle className="w-5 h-5" />
+                      ) : (
+                        <CheckCircle className="w-5 h-5" />
+                      )}
+                    </div>
+                    <div>
+                      <h2 className="text-base sm:text-lg font-bold text-zinc-900 tracking-tight flex items-center gap-2">
+                        {totalPendingObligations > 0 ? (
+                          <>
+                            <span>You have {totalPendingObligations} pending items</span>
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-100 text-amber-800">
+                              Action Required
+                            </span>
+                          </>
+                        ) : (
+                          <>
+                            <span>All caught up! No pending obligations</span>
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-800">
+                              Clear Horizon
+                            </span>
+                          </>
+                        )}
+                      </h2>
+                      <p className="text-xs text-zinc-500 mt-0.5">
+                        {totalPendingObligations > 0
+                          ? 'Click on any category below to inspect specific pending items or view schedule.'
+                          : 'Everything is in order. You can open any category or expand all tiles whenever needed.'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 self-start sm:self-auto">
+                    <button
+                      type="button"
+                      onClick={() => setShowAllWorkspaceTiles((prev) => !prev)}
+                      className="px-3 py-1.5 rounded-xl border border-zinc-200 text-xs font-semibold text-zinc-700 hover:text-zinc-900 hover:bg-zinc-50 transition cursor-pointer flex items-center gap-1.5"
+                    >
+                      <LayoutGrid className="w-3.5 h-3.5 text-zinc-500" />
+                      <span>{showAllWorkspaceTiles ? 'Hide All Tiles' : 'Show All Tiles'}</span>
+                    </button>
                   </div>
                 </div>
 
-                {/* Right Column (5 cols / ~42%) */}
-                <div className="lg:col-span-5 space-y-5">
-                  <CalendarView />
-                  <Health />
-                  <Documents />
+                {/* Categories Breakdown Dropdowns */}
+                <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {/* Category 1: Tasks */}
+                  <div className="border border-zinc-200/80 rounded-xl overflow-hidden bg-zinc-50/50">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setExpandedCategory(expandedCategory === 'tasks' ? null : 'tasks')
+                      }
+                      className="w-full px-3.5 py-3 flex items-center justify-between text-left hover:bg-zinc-100/60 transition cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <CheckSquare className="w-4 h-4 text-indigo-600" />
+                        <div>
+                          <p className="text-xs font-bold text-zinc-900">Tasks</p>
+                          <p className="text-[11px] text-zinc-500 font-medium">
+                            {pendingTasksCount} pending
+                          </p>
+                        </div>
+                      </div>
+                      {expandedCategory === 'tasks' ? (
+                        <ChevronUp className="w-4 h-4 text-zinc-400" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 text-zinc-400" />
+                      )}
+                    </button>
+
+                    <AnimatePresence>
+                      {expandedCategory === 'tasks' && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="border-t border-zinc-200 bg-white p-3 space-y-2 text-xs"
+                        >
+                          {pendingTasksList.length === 0 ? (
+                            <p className="text-zinc-400 text-center py-2 text-[11px]">
+                              No pending tasks.
+                            </p>
+                          ) : (
+                            pendingTasksList.slice(0, 5).map((task) => (
+                              <div
+                                key={task.taskId || task.id}
+                                className="flex items-center justify-between gap-2 p-2 rounded-lg bg-zinc-50 border border-zinc-200/60"
+                              >
+                                <span className="font-medium text-zinc-800 truncate">
+                                  {task.title}
+                                </span>
+                                {task.priority && (
+                                  <span
+                                    className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded ${
+                                      task.priority === 'high'
+                                        ? 'bg-rose-100 text-rose-700'
+                                        : task.priority === 'urgent'
+                                        ? 'bg-amber-100 text-amber-700'
+                                        : 'bg-zinc-200 text-zinc-700'
+                                    }`}
+                                  >
+                                    {task.priority}
+                                  </span>
+                                )}
+                              </div>
+                            ))
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => setActiveTab('focus')}
+                            className="w-full text-center text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 pt-1 cursor-pointer"
+                          >
+                            Open Tasks Workspace →
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Category 2: Calendar & Schedule */}
+                  <div className="border border-zinc-200/80 rounded-xl overflow-hidden bg-zinc-50/50">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setExpandedCategory(expandedCategory === 'calendar' ? null : 'calendar')
+                      }
+                      className="w-full px-3.5 py-3 flex items-center justify-between text-left hover:bg-zinc-100/60 transition cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Calendar className="w-4 h-4 text-emerald-600" />
+                        <div>
+                          <p className="text-xs font-bold text-zinc-900">Calendar & Schedule</p>
+                          <p className="text-[11px] text-zinc-500 font-medium">
+                            {calendarEvents7DaysCount} in next 7d
+                          </p>
+                        </div>
+                      </div>
+                      {expandedCategory === 'calendar' ? (
+                        <ChevronUp className="w-4 h-4 text-zinc-400" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 text-zinc-400" />
+                      )}
+                    </button>
+
+                    <AnimatePresence>
+                      {expandedCategory === 'calendar' && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="border-t border-zinc-200 bg-white p-3 space-y-2 text-xs"
+                        >
+                          {calendarEvents7Days.length === 0 ? (
+                            <p className="text-zinc-400 text-center py-2 text-[11px]">
+                              No events scheduled in the next 7 days.
+                            </p>
+                          ) : (
+                            calendarEvents7Days.slice(0, 5).map((evt) => (
+                              <div
+                                key={evt.eventId || evt.id}
+                                className="flex items-center justify-between gap-2 p-2 rounded-lg bg-zinc-50 border border-zinc-200/60"
+                              >
+                                <div>
+                                  <p className="font-semibold text-zinc-800 text-[11px] truncate">
+                                    {evt.title}
+                                  </p>
+                                  <p className="text-[10px] text-zinc-500">
+                                    {evt.date} {evt.time ? `• ${evt.time}` : ''}
+                                  </p>
+                                </div>
+                              </div>
+                            ))
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => setActiveTab('focus')}
+                            className="w-full text-center text-[11px] font-semibold text-emerald-600 hover:text-emerald-800 pt-1 cursor-pointer"
+                          >
+                            Open Full Calendar →
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Category 3: Bills & Payments */}
+                  <div className="border border-zinc-200/80 rounded-xl overflow-hidden bg-zinc-50/50">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setExpandedCategory(expandedCategory === 'bills' ? null : 'bills')
+                      }
+                      className="w-full px-3.5 py-3 flex items-center justify-between text-left hover:bg-zinc-100/60 transition cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <CreditCard className="w-4 h-4 text-violet-600" />
+                        <div>
+                          <p className="text-xs font-bold text-zinc-900">Bills & Payments</p>
+                          <p className="text-[11px] text-zinc-500 font-medium">
+                            {unpaidBillsCount} unpaid ({formatAmount(billsSummary.totalUnpaidAmount || 0)})
+                          </p>
+                        </div>
+                      </div>
+                      {expandedCategory === 'bills' ? (
+                        <ChevronUp className="w-4 h-4 text-zinc-400" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 text-zinc-400" />
+                      )}
+                    </button>
+
+                    <AnimatePresence>
+                      {expandedCategory === 'bills' && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="border-t border-zinc-200 bg-white p-3 space-y-2 text-xs"
+                        >
+                          {unpaidBillsList.length === 0 ? (
+                            <p className="text-zinc-400 text-center py-2 text-[11px]">
+                              No unpaid bills.
+                            </p>
+                          ) : (
+                            unpaidBillsList.slice(0, 5).map((bill) => (
+                              <div
+                                key={bill.billId || bill.id}
+                                className="flex items-center justify-between gap-2 p-2 rounded-lg bg-zinc-50 border border-zinc-200/60"
+                              >
+                                <div>
+                                  <p className="font-semibold text-zinc-800 text-[11px] truncate">
+                                    {bill.title || bill.name}
+                                  </p>
+                                  <p className="text-[10px] text-zinc-500">
+                                    Due: {bill.dueDate || 'Flexible'}
+                                  </p>
+                                </div>
+                                <span className="font-bold text-zinc-900 text-xs">
+                                  {formatAmount(bill.amount || 0)}
+                                </span>
+                              </div>
+                            ))
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => setActiveTab('finances')}
+                            className="w-full text-center text-[11px] font-semibold text-violet-600 hover:text-violet-800 pt-1 cursor-pointer"
+                          >
+                            Open Finances & Bills →
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Category 4: Health & Habits */}
+                  <div className="border border-zinc-200/80 rounded-xl overflow-hidden bg-zinc-50/50">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setExpandedCategory(expandedCategory === 'health' ? null : 'health')
+                      }
+                      className="w-full px-3.5 py-3 flex items-center justify-between text-left hover:bg-zinc-100/60 transition cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <HeartPulse className="w-4 h-4 text-rose-600" />
+                        <div>
+                          <p className="text-xs font-bold text-zinc-900">Health & Habits</p>
+                          <p className="text-[11px] text-zinc-500 font-medium">
+                            {pendingHealthCount} active
+                          </p>
+                        </div>
+                      </div>
+                      {expandedCategory === 'health' ? (
+                        <ChevronUp className="w-4 h-4 text-zinc-400" />
+                      ) : (
+                        <ChevronDown className="w-4 h-4 text-zinc-400" />
+                      )}
+                    </button>
+
+                    <AnimatePresence>
+                      {expandedCategory === 'health' && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="border-t border-zinc-200 bg-white p-3 space-y-2 text-xs"
+                        >
+                          {activeHealthList.length === 0 ? (
+                            <p className="text-zinc-400 text-center py-2 text-[11px]">
+                              No active health reminders or habits.
+                            </p>
+                          ) : (
+                            activeHealthList.slice(0, 5).map((item) => (
+                              <div
+                                key={item.habitId || item.id}
+                                className="flex items-center justify-between gap-2 p-2 rounded-lg bg-zinc-50 border border-zinc-200/60"
+                              >
+                                <span className="font-medium text-zinc-800 truncate">
+                                  {item.title || item.name}
+                                </span>
+                                <span className="text-[10px] text-zinc-500">
+                                  {item.frequency || item.category || 'Daily'}
+                                </span>
+                              </div>
+                            ))
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => setActiveTab('life')}
+                            className="w-full text-center text-[11px] font-semibold text-rose-600 hover:text-rose-800 pt-1 cursor-pointer"
+                          >
+                            Open Health & Documents →
+                          </button>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </div>
               </div>
+
+              {/* Bento Grid Architecture: only visible if user explicitly chooses to expand all tiles */}
+              <AnimatePresence>
+                {showAllWorkspaceTiles && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start pt-2"
+                  >
+                    {/* Left Column (7 cols / ~58%) */}
+                    <div className="lg:col-span-7 space-y-5">
+                      <Tasks />
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Bills />
+                        <Spending />
+                      </div>
+                    </div>
+
+                    {/* Right Column (5 cols / ~42%) */}
+                    <div className="lg:col-span-5 space-y-5">
+                      <CalendarView />
+                      <Health />
+                      <Documents />
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           )}
 
