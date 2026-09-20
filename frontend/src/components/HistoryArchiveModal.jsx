@@ -248,15 +248,6 @@ export default function HistoryArchiveModal({
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
-
-              <span className="text-xs font-bold text-zinc-700 ml-1 hidden md:inline">
-                {formattedDateTitle}
-              </span>
-              {isToday && (
-                <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-100">
-                  Today
-                </span>
-              )}
             </div>
 
           </div>
