@@ -493,7 +493,17 @@ export default function LandingPage({
           <div className="flex items-center gap-2 font-serif font-black text-sm text-zinc-900">
             <span>MERIDIAN</span>
           </div>
-          <p>© 2026 Meridian; Built with ❤️ by Akshat Mohanty</p>
+          <p>
+            Made by{' '}
+            <a
+              href="https://github.com/Akshat-mohanty"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-zinc-600 transition underline decoration-zinc-300 underline-offset-2 font-semibold text-zinc-500"
+            >
+              Akshat Mohanty
+            </a>
+          </p>
         </div>
       </footer>
 
