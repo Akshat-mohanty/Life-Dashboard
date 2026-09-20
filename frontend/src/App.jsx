@@ -587,13 +587,9 @@ export default function App() {
           >
             <Calendar className="w-3.5 h-3.5 text-indigo-600 group-hover:scale-110 transition-transform" />
             <span>{activeDateFormattedHeader}</span>
-            {isTimeTravelActive ? (
+            {isTimeTravelActive && (
               <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-200 text-amber-800">
                 Historical
-              </span>
-            ) : (
-              <span className="text-[10px] font-medium text-zinc-400 group-hover:text-indigo-600 transition-colors">
-                Archive ↗
               </span>
             )}
           </button>
