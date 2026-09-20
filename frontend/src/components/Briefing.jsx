@@ -171,51 +171,27 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
     );
   }
 
-  // 3. Empty State (Ready to generate) — Sleek Compact Card matching dashboard theme
+  // 3. Empty State (Ready to generate) — Single clean compact button
   if (!exists && !isStreaming && !displayContent) {
     return (
-      <div className="w-full bg-white border border-zinc-200/90 rounded-2xl p-3 sm:px-4 sm:py-3 shadow-2xs hover:border-zinc-300 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs flex-shrink-0">
-            <Sparkles className="w-4 h-4 text-cyan-300" />
-          </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="text-xs sm:text-sm font-bold text-zinc-900 tracking-tight">
-                {isToday ? 'Daily Briefing' : 'Historical Reflection'}
-              </h2>
-              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-200">
-                {isToday ? 'Ready' : 'Archive'}
-              </span>
-              <span className="text-zinc-400 text-xs hidden sm:inline">• {dateFormatted}</span>
-            </div>
-            <p className="text-[11px] text-zinc-500 mt-0.5">
-              {isToday
-                ? 'Synthesize unpaid bills, priority tasks, and 7-day calendar into actionable clarity.'
-                : `Synthesize or generate reflection for historical date ${effectiveDate}.`}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleGenerate}
-            disabled={generateMutation.isPending}
-            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold text-white bg-zinc-900 hover:bg-black shadow-xs transition-all active:scale-95 disabled:opacity-60 cursor-pointer flex-shrink-0"
-          >
-            {generateMutation.isPending ? (
-              <>
-                <RefreshCw className="w-3.5 h-3.5 animate-spin text-white" />
-                <span>Synthesizing...</span>
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
-                <span>{isToday ? 'Generate Briefing' : 'Generate Reflection'}</span>
-              </>
-            )}
-          </button>
-        </div>
+      <div className="flex items-center justify-start mb-5">
+        <button
+          onClick={handleGenerate}
+          disabled={generateMutation.isPending}
+          className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white bg-zinc-900 hover:bg-black shadow-2xs hover:shadow-xs transition-all active:scale-95 disabled:opacity-60 cursor-pointer"
+        >
+          {generateMutation.isPending ? (
+            <>
+              <RefreshCw className="w-3.5 h-3.5 animate-spin text-white" />
+              <span>Synthesizing briefing...</span>
+            </>
+          ) : (
+            <>
+              <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+              <span>Generate Briefing</span>
+            </>
+          )}
+        </button>
       </div>
     );
   }
