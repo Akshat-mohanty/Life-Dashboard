@@ -171,25 +171,22 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
     );
   }
 
-  // 3. Empty State (Ready to generate) — Single clean compact button
+  // 3. Empty State (Ready to generate) — Centered clean button without emoji
   if (!exists && !isStreaming && !displayContent) {
     return (
-      <div className="flex items-center justify-start mb-5">
+      <div className="flex items-center justify-center py-6 mb-5">
         <button
           onClick={handleGenerate}
           disabled={generateMutation.isPending}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white bg-zinc-900 hover:bg-black shadow-2xs hover:shadow-xs transition-all active:scale-95 disabled:opacity-60 cursor-pointer"
+          className="inline-flex items-center justify-center px-6 py-3 rounded-xl text-sm font-semibold text-white bg-zinc-900 hover:bg-black shadow-sm hover:shadow-md transition-all active:scale-95 disabled:opacity-60 cursor-pointer"
         >
           {generateMutation.isPending ? (
-            <>
-              <RefreshCw className="w-3.5 h-3.5 animate-spin text-white" />
+            <span className="flex items-center gap-2">
+              <RefreshCw className="w-4 h-4 animate-spin text-white" />
               <span>Synthesizing briefing...</span>
-            </>
+            </span>
           ) : (
-            <>
-              <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
-              <span>Generate Briefing</span>
-            </>
+            <span>Generate Briefing</span>
           )}
         </button>
       </div>
