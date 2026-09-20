@@ -199,7 +199,7 @@ export default function HistoryArchiveModal({
           <div className="px-6 py-5 border-b border-zinc-100 flex items-start justify-between bg-gradient-to-r from-zinc-50 via-white to-indigo-50/20">
             <div className="space-y-1">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-xs">
+                <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs">
                   <FolderArchive className="w-4 h-4" />
                 </div>
                 <div>
@@ -236,7 +236,7 @@ export default function HistoryArchiveModal({
               </button>
 
               <div className="flex items-center gap-2 px-3 py-1.5 bg-white border border-zinc-200 rounded-xl shadow-2xs">
-                <CalendarIcon className="w-4 h-4 text-indigo-600" />
+                <CalendarIcon className="w-4 h-4 text-zinc-900" />
                 <input
                   type="date"
                   value={viewDate}
@@ -543,7 +543,7 @@ export default function HistoryArchiveModal({
                 }}
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white bg-zinc-900 hover:bg-black shadow-xs transition cursor-pointer"
               >
-                <Compass className="w-3.5 h-3.5 text-indigo-400" />
+                <Compass className="w-3.5 h-3.5 text-white" />
                 <span>Travel to this Date</span>
               </button>
               <button
