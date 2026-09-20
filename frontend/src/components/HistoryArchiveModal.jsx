@@ -259,27 +259,6 @@ export default function HistoryArchiveModal({
               )}
             </div>
 
-            {/* Quick offset buttons */}
-            <div className="flex items-center gap-1.5 overflow-x-auto py-0.5">
-              {quickJumps.map((q) => {
-                const isSelected = isJumpSelected(q.days);
-                return (
-                  <button
-                    key={q.label}
-                    type="button"
-                    onClick={() => handleJumpDays(q.days)}
-                    className={`px-2.5 py-1 text-xs rounded-lg border transition-all cursor-pointer whitespace-nowrap ${
-                      isSelected
-                        ? 'bg-zinc-900 text-white border-zinc-900 shadow-xs font-semibold ring-2 ring-zinc-900/15'
-                        : 'bg-white hover:bg-zinc-100 border-zinc-200 text-zinc-700 font-medium'
-                    }`}
-                  >
-                    {q.label}
-                  </button>
-                );
-              })}
-
-            </div>
           </div>
 
           {/* Metric Pills Bar */}
