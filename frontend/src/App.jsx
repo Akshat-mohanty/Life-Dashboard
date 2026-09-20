@@ -947,8 +947,18 @@ export default function App() {
       </main>
 
       {/* Architectural Footer */}
-      <footer className="relative z-10 py-5 mt-8 text-center text-xs text-zinc-400 font-medium border-t border-zinc-200/60">
-        © 2026 Akshat Mohanty. Built with ❤️
+      <footer className="relative z-10 py-5 mt-8 border-t border-zinc-200/60">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between text-xs text-zinc-400 font-medium">
+          <span>Made by Akshat Mohanty</span>
+          <a
+            href="https://github.com/Akshat-mohanty/Life-Dashboard/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-zinc-600 transition underline decoration-zinc-300 underline-offset-2"
+          >
+            Found a Bug?
+          </a>
+        </div>
       </footer>
 
       {/* Historical Life Archive & Time Machine Modal */}
