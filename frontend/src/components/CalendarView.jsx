@@ -211,7 +211,6 @@ export default function CalendarView() {
                 </span>
               )}
             </div>
-            <p className="text-[11px] text-zinc-400 whitespace-nowrap">Upcoming Events, Bills & Health Reminders</p>
           </div>
         </div>
 
