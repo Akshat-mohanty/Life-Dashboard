@@ -305,9 +305,7 @@ export default function HistoryArchiveModal({
                     No historical logs on {viewDate}
                   </h4>
                   <p className="text-xs text-zinc-500 mt-1 leading-relaxed">
-                    There are no tasks, expenses, or calendar entries recorded for your account on
-                    this date. All logs saved while you use Meridian will be securely preserved
-                    here under your user ID.
+                    There are no tasks, expenses, or calendar entries recorded for your account on this date.
                   </p>
                 </div>
 
