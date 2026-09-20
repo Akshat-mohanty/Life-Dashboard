@@ -1,7 +1,4 @@
-/**
- * Bills - Update Lambda Function
- * PUT /bills/{id}
- */
+
 
 import { GetCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, TABLE_NAME } from '../utils/db.js';
@@ -29,7 +26,7 @@ export const handler = async (event) => {
       return errorResponse(400, 'Invalid JSON payload in request body.');
     }
 
-    // 1. Validate inputs BEFORE touching database
+    
     const updates = [];
     const expressionValues = {};
     const expressionNames = {};
@@ -89,7 +86,7 @@ export const handler = async (event) => {
       expressionNames['#frequency'] = 'frequency';
     }
 
-    // 2. Verify existence in DynamoDB
+    
     const existing = await docClient.send(
       new GetCommand({
         TableName: TABLE_NAME,

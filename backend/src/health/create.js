@@ -1,7 +1,4 @@
-/**
- * Health - Create Lambda Function
- * POST /health
- */
+
 
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { SNSClient, PublishCommand } from '@aws-sdk/client-sns';
@@ -43,7 +40,7 @@ export const handler = async (event) => {
 
     const { name, frequency = 'daily', time, phoneNumber = null } = body;
 
-    // Validation
+    
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return errorResponse(400, 'Validation Error: "name" is required and must be a non-empty string.');
     }
@@ -53,7 +50,7 @@ export const handler = async (event) => {
       return errorResponse(400, 'Validation Error: "frequency" must be one of: "daily", "weekly", "custom".');
     }
 
-    // Time validation (HH:mm format, e.g. "08:00" or "18:30")
+    
     const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
     if (!time || typeof time !== 'string' || !timeRegex.test(time.trim())) {
       return errorResponse(400, 'Validation Error: "time" is required and must be in 24-hour HH:mm format (e.g. "08:00").');
@@ -88,7 +85,7 @@ export const handler = async (event) => {
     );
 
     let snsStatus = 'none';
-    // Optional SNS confirmation alert if phone number is configured
+    
     if (newReminder.phoneNumber) {
       try {
         const smsMessage = `[Meridian] Health reminder created: "${newReminder.name}" at ${newReminder.time} (${newReminder.frequency}).`;

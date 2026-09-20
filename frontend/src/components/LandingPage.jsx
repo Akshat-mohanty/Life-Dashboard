@@ -1,15 +1,4 @@
-/**
- * LandingPage.jsx
- * Pixel-perfect editorial landing page inspired by reference design.
- * Features:
- * - Editorial typography & soft linen off-white palette (#f5f3ef / #faf9f6)
- * - Hero headline ("Unwind. Kick Back. Recharge.") & email capture bar
- * - Serene nature landscape hero banner in its dedicated place
- * - 3D angled iPhone device mockup displaying the actual mobile Life Dashboard UI
- * - Floating black feature badge pills (Daily AI Briefing, Smart Bill Alerts, etc.)
- * - "Why join?" editorial value proposition section
- * - Interactive Auth Modal supporting Email, Google OAuth, and Instant Demo Access
- */
+
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -43,13 +32,13 @@ export default function LandingPage({
   authError,
   actionLoading,
 }) {
-  // Hero email input & terms checkbox state
+  
   const [heroEmail, setHeroEmail] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(true);
 
-  // Auth modal state
+  
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authMode, setAuthMode] = useState('signup'); // 'signup' | 'login' | 'confirm'
+  const [authMode, setAuthMode] = useState('signup'); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -58,10 +47,10 @@ export default function LandingPage({
   const [localError, setLocalError] = useState('');
   const [infoMessage, setInfoMessage] = useState('');
 
-  // Mobile navigation drawer state
+  
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Trigger auth modal with prefilled email
+  
   const openAuthWithEmail = (defaultMode = 'signup') => {
     setAuthMode(defaultMode);
     if (heroEmail.trim()) {
@@ -109,12 +98,10 @@ export default function LandingPage({
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 font-sans selection:bg-zinc-900 selection:text-white relative overflow-x-hidden">
-      {/* =====================================================================
-          TOP NAVIGATION BAR
-          ===================================================================== */}
+      {}
       <header className="w-full border-b border-white/5 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 h-16 flex items-center justify-between relative">
-          {/* Left: Menu Button */}
+          {}
           <button
             type="button"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -128,7 +115,7 @@ export default function LandingPage({
             <span>Menu</span>
           </button>
 
-          {/* Center: Brand Logo */}
+          {}
           <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1">
             <span className="text-xl sm:text-2xl font-black tracking-tight uppercase text-white font-serif">
               MERIDIAN
@@ -136,7 +123,7 @@ export default function LandingPage({
             <span className="text-[10px] font-bold text-zinc-500 align-super">®</span>
           </div>
 
-          {/* Right: Actions */}
+          {}
           <div className="flex items-center gap-2.5">
             <button
               type="button"
@@ -157,7 +144,7 @@ export default function LandingPage({
         </div>
       </header>
 
-      {/* Mobile Menu Dropdown */}
+      {}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -203,16 +190,14 @@ export default function LandingPage({
         )}
       </AnimatePresence>
 
-      {/* =====================================================================
-          HERO SECTION — Dark Split Layout
-          ===================================================================== */}
+      {}
       <section className="w-full bg-zinc-950 overflow-hidden">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-16 sm:pt-20 md:pt-24 pb-12 sm:pb-16 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
 
-          {/* Left: Headline + CTA */}
+          {}
           <div className="flex flex-col items-start">
 
-            {/* Main headline */}
+            {}
             <motion.h1
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -224,7 +209,7 @@ export default function LandingPage({
               Recharge.
             </motion.h1>
 
-            {/* Subtitle */}
+            {}
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -234,7 +219,7 @@ export default function LandingPage({
               We unify your daily tasks, bills, schedule &amp; documents — so you receive autonomous morning AI clarity, for free.
             </motion.p>
 
-            {/* CTA Buttons */}
+            {}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -259,18 +244,18 @@ export default function LandingPage({
               </button>
             </motion.div>
 
-            {/* Social proof */}
+            {}
 
           </div>
 
-          {/* Right: Light App Preview Card — Schedule / Docs view (matching dashboard) */}
+          {}
           <div className="relative w-full">
-            {/* Glow */}
+            {}
             <div className="absolute -inset-6 bg-gradient-to-tr from-indigo-500/20 via-violet-500/10 to-cyan-500/20 rounded-3xl blur-2xl pointer-events-none" />
 
-            {/* App Window */}
+            {}
             <div className="relative bg-white rounded-2xl border border-zinc-200/90 shadow-[0_32px_80px_-20px_rgba(0,0,0,0.4)] overflow-hidden select-none">
-              {/* Window chrome */}
+              {}
               <div className="px-4 py-3 bg-zinc-50 border-b border-zinc-200/90 flex items-center justify-between">
                 <div className="flex items-center gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-rose-500/90 shadow-sm" />
@@ -284,10 +269,10 @@ export default function LandingPage({
                 <span className="text-[10px] font-semibold text-zinc-500">Week • Sep 19</span>
               </div>
 
-              {/* Body */}
+              {}
               <div className="p-4 sm:p-5 space-y-3.5 bg-zinc-50/50">
 
-                {/* Weekly Schedule Strip */}
+                {}
                 <div className="bg-white rounded-xl p-3.5 border border-zinc-200/90 shadow-2xs">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">This Week</span>
@@ -312,7 +297,7 @@ export default function LandingPage({
                   </div>
                 </div>
 
-                {/* Upcoming Events */}
+                {}
                 <div className="bg-white rounded-xl p-3.5 border border-zinc-200/90 shadow-2xs">
                   <div className="flex items-center gap-2 mb-2.5">
                     <span className="text-xs font-bold text-zinc-900">Upcoming</span>
@@ -336,7 +321,7 @@ export default function LandingPage({
                   </div>
                 </div>
 
-                {/* Documents quick row */}
+                {}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-white rounded-xl p-3 border border-zinc-200/90 shadow-2xs">
                     <p className="text-[10px] font-bold text-zinc-500 mb-1.5">📄 Documents</p>
@@ -356,47 +341,45 @@ export default function LandingPage({
 
       </section>
 
-      {/* =====================================================================
-          "WHY JOIN?" SECTION WITH 3D TILTED IPHONE (MOBILE LIFE DASHBOARD)
-          ===================================================================== */}
+      {}
       <section className="w-full bg-white py-12 sm:py-20 border-t border-zinc-100">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          {/* Left: 3D Angled iPhone Device Mockup with Floating Feature Badges */}
+          {}
           <div className="lg:col-span-7 flex items-center justify-center relative py-6">
-            {/* Background ambient glow behind device */}
+            {}
             <div className="absolute w-72 h-72 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" />
 
-            {/* Sleek Floating App Window & Interactive Showcase */}
+            {}
             <div className="relative w-full max-w-[480px]">
-              {/* Background ambient lighting */}
+              {}
               <div className="absolute -inset-4 bg-gradient-to-tr from-cyan-500/10 via-indigo-500/10 to-emerald-500/10 rounded-3xl blur-2xl pointer-events-none" />
 
-              {/* Main Application Window */}
+              {}
               <div className="relative bg-white rounded-2xl border border-zinc-200/90 shadow-[0_24px_60px_-15px_rgba(0,0,0,0.12),0_4px_16px_-4px_rgba(0,0,0,0.06)] overflow-hidden select-none">
-                {/* Window Chrome / Title Bar */}
+                {}
                 <div className="px-4 py-3 bg-zinc-50/90 border-b border-zinc-100 flex items-center justify-between">
-                  {/* Traffic Light Dots */}
+                  {}
                   <div className="flex items-center gap-1.5">
                     <div className="w-2.5 h-2.5 rounded-full bg-rose-400/80" />
                     <div className="w-2.5 h-2.5 rounded-full bg-amber-400/80" />
                     <div className="w-2.5 h-2.5 rounded-full bg-emerald-400/80" />
                   </div>
 
-                  {/* Window Title & URL Badge */}
+                  {}
                   <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-zinc-200/70 text-[10px] font-semibold text-zinc-700 shadow-2xs">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     <span>meridian.app/dashboard</span>
                   </div>
 
-                  {/* Date Badge */}
+                  {}
                   <span className="text-[10px] font-semibold text-zinc-500">
                     Today • Sep 19
                   </span>
                 </div>
 
-                {/* Window Body: Real Life Dashboard Widgets */}
+                {}
                 <div className="p-4 sm:p-5 space-y-3.5 bg-[#f8f9fb]">
-                  {/* 1. Today's AI Morning Briefing Card */}
+                  {}
                   <div className="bg-zinc-950 text-white rounded-xl p-4 border border-zinc-800 shadow-md">
                     <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80 mb-2.5">
                       <div className="flex items-center gap-2">
@@ -411,7 +394,7 @@ export default function LandingPage({
                     </p>
                   </div>
 
-                  {/* 2. Tasks Widget */}
+                  {}
                   <div className="bg-white rounded-xl p-3.5 border border-zinc-200/90 shadow-2xs">
                     <div className="flex items-center justify-between mb-2.5">
                       <div className="flex items-center gap-2">

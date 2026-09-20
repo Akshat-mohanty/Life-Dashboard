@@ -1,9 +1,4 @@
-/**
- * HistoryArchiveModal.jsx
- * Historical Life Archive & Time Machine Modal
- * Allows users to inspect their past AI briefings, completed tasks,
- * spending records, and calendar events isolated strictly by their userId.
- */
+
 
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
@@ -59,14 +54,14 @@ export default function HistoryArchiveModal({
   const todayStr = getTodayStr();
   const [viewDate, setViewDate] = useState(selectedDate || todayStr);
 
-  // Keep viewDate synced with selectedDate when opened
+  
   useEffect(() => {
     if (isOpen) {
       setViewDate(selectedDate || todayStr);
     }
   }, [isOpen, selectedDate, todayStr]);
 
-  // Handle ESC key to close
+  
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape' && isOpen) {
@@ -77,7 +72,7 @@ export default function HistoryArchiveModal({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Fetch daily archive strictly for the authenticated user and viewDate
+  
   const {
     data: archiveData,
     isLoading,
@@ -92,7 +87,7 @@ export default function HistoryArchiveModal({
     enabled: Boolean(isOpen && user?.userId && viewDate),
   });
 
-  // Manual trigger to generate briefing for a past date if none exists
+  
   const generateBriefingMutation = useMutation({
     mutationFn: async () => {
       return await briefingApi.generateNow({ date: viewDate });
@@ -103,7 +98,7 @@ export default function HistoryArchiveModal({
     },
   });
 
-  // Trigger to delete briefing for viewDate
+  
   const deleteBriefingMutation = useMutation({
     mutationFn: async () => {
       return await briefingApi.delete({ date: viewDate });
@@ -126,7 +121,7 @@ export default function HistoryArchiveModal({
 
   const isToday = viewDate === todayStr;
 
-  // Quick date offsets (in days)
+  
   const quickJumps = [
     { label: 'Today', days: 0 },
     { label: 'Yesterday', days: 1 },
@@ -195,7 +190,7 @@ export default function HistoryArchiveModal({
           className="bg-white border border-zinc-200/90 rounded-3xl shadow-2xl max-w-4xl w-full max-h-[92vh] flex flex-col relative overflow-hidden my-auto"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Top Header */}
+          {}
           <div className="px-6 py-5 border-b border-zinc-100 flex items-start justify-between bg-gradient-to-r from-zinc-50 via-white to-indigo-50/20">
             <div className="space-y-1">
               <div className="flex items-center gap-2.5">
@@ -222,9 +217,9 @@ export default function HistoryArchiveModal({
             </div>
           </div>
 
-          {/* Date Navigator Bar */}
+          {}
           <div className="px-6 py-3.5 bg-zinc-50/80 border-b border-zinc-100 flex flex-wrap items-center justify-between gap-3">
-            {/* Prev / Current / Next Controls */}
+            {}
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -259,7 +254,7 @@ export default function HistoryArchiveModal({
 
           </div>
 
-          {/* Metric Pills Bar: Only show if data is provided and not empty */}
+          {}
           {hasData && (
             <div className="px-6 py-2 bg-white border-b border-zinc-100 flex items-center justify-between text-xs text-zinc-600 overflow-x-auto">
               <div className="flex items-center gap-4">
@@ -292,7 +287,7 @@ export default function HistoryArchiveModal({
             </div>
           )}
 
-          {/* Main Scrollable Content */}
+          {}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             {isLoading ? (
               <div className="py-16 text-center space-y-3">
@@ -307,9 +302,9 @@ export default function HistoryArchiveModal({
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-                {/* Left Column: AI Briefing */}
+                {}
                 <div className="md:col-span-7 space-y-6">
-                  {/* AI Morning Briefing Card */}
+                  {}
                   <div className="bg-zinc-900 text-white rounded-2xl p-5 border border-zinc-800 shadow-sm relative overflow-hidden">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
@@ -384,7 +379,7 @@ export default function HistoryArchiveModal({
                     )}
                   </div>
 
-                  {/* Tasks Section */}
+                  {}
                   <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-xs">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
@@ -431,9 +426,9 @@ export default function HistoryArchiveModal({
                   </div>
                 </div>
 
-                {/* Right Column: Spending & Schedule */}
+                {}
                 <div className="md:col-span-5 space-y-6">
-                  {/* Financial Outflows */}
+                  {}
                   <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-xs">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
@@ -473,7 +468,7 @@ export default function HistoryArchiveModal({
                     )}
                   </div>
 
-                  {/* Calendar Events */}
+                  {}
                   <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-xs">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
@@ -508,7 +503,7 @@ export default function HistoryArchiveModal({
                     )}
                   </div>
 
-                  {/* Bills Due or Paid */}
+                  {}
                   {bills.length > 0 && (
                     <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-xs">
                       <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-700 mb-3">

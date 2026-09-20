@@ -1,7 +1,4 @@
-/**
- * Calendar - Create Lambda Function
- * POST /calendar
- */
+
 
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { v4 as uuidv4 } from 'uuid';
@@ -27,7 +24,7 @@ export const handler = async (event) => {
 
     const { title, date, time = null, location = null, notes = null } = body;
 
-    // Validation
+    
     if (!title || typeof title !== 'string' || title.trim().length === 0) {
       return errorResponse(400, 'Validation Error: "title" is required and must be a non-empty string.');
     }

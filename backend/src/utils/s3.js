@@ -1,7 +1,4 @@
-/**
- * S3 Client Setup
- * Supports LocalStack or AWS Cloud
- */
+
 
 import { S3Client } from '@aws-sdk/client-s3';
 
@@ -11,7 +8,7 @@ const ENDPOINT = process.env.S3_ENDPOINT ||
 
 const s3ClientConfig = {
   region: REGION,
-  forcePathStyle: Boolean(ENDPOINT), // Path style is required for LocalStack S3
+  forcePathStyle: Boolean(ENDPOINT), 
 };
 
 if (ENDPOINT) {

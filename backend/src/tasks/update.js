@@ -1,7 +1,4 @@
-/**
- * Tasks - Update Lambda Function
- * PUT /tasks/{id}
- */
+
 
 import { GetCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, TABLE_NAME } from '../utils/db.js';
@@ -29,7 +26,7 @@ export const handler = async (event) => {
       return errorResponse(400, 'Invalid JSON payload in request body.');
     }
 
-    // 1. Validate inputs BEFORE touching the database
+    
     const updates = [];
     const expressionValues = {};
     const expressionNames = {};
@@ -89,7 +86,7 @@ export const handler = async (event) => {
       expressionNames['#aiRank'] = 'aiRank';
     }
 
-    // 2. Verify task exists in database
+    
     const existing = await docClient.send(
       new GetCommand({
         TableName: TABLE_NAME,

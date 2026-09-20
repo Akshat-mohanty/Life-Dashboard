@@ -17,11 +17,7 @@ import {
 import { useAuth } from '../hooks/useAuth';
 import { useCurrency } from '../hooks/useCurrency';
 
-/**
- * Client-side Canvas Image Processor:
- * Crops image into a center square and compresses it to an optimal 320x320 avatar
- * Works with images of ANY size (even 10MB+ camera shots) without lagging or hitting quota limits.
- */
+
 function processImageFile(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -32,12 +28,12 @@ function processImageFile(file) {
       img.onload = () => {
         try {
           const canvas = document.createElement('canvas');
-          const size = 320; // Crisp high-DPI avatar resolution
+          const size = 320; 
           canvas.width = size;
           canvas.height = size;
           const ctx = canvas.getContext('2d');
 
-          // Center-crop square logic
+          
           const minDim = Math.min(img.width, img.height);
           const sx = (img.width - minDim) / 2;
           const sy = (img.height - minDim) / 2;
@@ -61,14 +57,14 @@ export default function UserProfileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  // Edit Profile Form State
+  
   const [nameInput, setNameInput] = useState(user?.name || '');
   const [previewAvatar, setPreviewAvatar] = useState(user?.avatarUrl || null);
   const [currencyInput, setCurrencyInput] = useState(currencyCode || 'INR');
   const [urlInput, setUrlInput] = useState('');
   const [showUrlInput, setShowUrlInput] = useState(false);
 
-  // Loading & Feedback States
+  
   const [isProcessingFile, setIsProcessingFile] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -78,7 +74,7 @@ export default function UserProfileMenu() {
   const modalFileInputRef = useRef(null);
   const directFileInputRef = useRef(null);
 
-  // Synchronize state when modal opens or user updates
+  
   useEffect(() => {
     if (user) {
       setNameInput(user.name || '');
@@ -87,7 +83,7 @@ export default function UserProfileMenu() {
     setCurrencyInput(currencyCode || 'INR');
   }, [user, isEditModalOpen, currencyCode]);
 
-  // Click outside & Escape key listeners to close dropdown
+  
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -109,7 +105,7 @@ export default function UserProfileMenu() {
     };
   }, []);
 
-  // Handle direct file upload from Dropdown Quick Action
+  
   const handleDirectUpload = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -137,7 +133,7 @@ export default function UserProfileMenu() {
     }
   };
 
-  // Handle file selection inside Modal
+  
   const handleModalFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -158,7 +154,7 @@ export default function UserProfileMenu() {
     }
   };
 
-  // Apply URL image
+  
   const handleApplyUrl = () => {
     if (urlInput.trim()) {
       setPreviewAvatar(urlInput.trim());
@@ -167,7 +163,7 @@ export default function UserProfileMenu() {
     }
   };
 
-  // Remove custom profile picture
+  
   const handleRemoveAvatar = () => {
     setPreviewAvatar(null);
     setUrlInput('');
@@ -176,7 +172,7 @@ export default function UserProfileMenu() {
     }
   };
 
-  // Save changes from Modal
+  
   const handleSaveProfile = async (e) => {
     e.preventDefault();
     setIsSaving(true);
@@ -205,7 +201,7 @@ export default function UserProfileMenu() {
 
   return (
     <div className="relative" ref={menuRef}>
-      {/* Hidden File Input for Direct Dropdown Quick Upload */}
+      {}
       <input
         ref={directFileInputRef}
         type="file"
@@ -214,7 +210,7 @@ export default function UserProfileMenu() {
         className="hidden"
       />
 
-      {/* Account Name & Avatar Trigger Button */}
+      {}
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         className="flex items-center gap-2.5 p-1.5 pr-2.5 rounded-2xl hover:bg-zinc-100 border border-transparent hover:border-zinc-200 transition-all cursor-pointer group focus:outline-none focus:ring-2 focus:ring-accent-200"
@@ -222,7 +218,7 @@ export default function UserProfileMenu() {
         aria-haspopup="true"
         title="Account Settings & Profile"
       >
-        {/* Avatar Circle */}
+        {}
         <div className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 bg-black border border-black text-white flex items-center justify-center font-bold text-xs shadow-xs group-hover:scale-105 transition-transform relative">
           {user?.avatarUrl ? (
             <img
@@ -235,7 +231,7 @@ export default function UserProfileMenu() {
           )}
         </div>
 
-        {/* Text Info */}
+        {}
         <div className="hidden md:block text-left">
           <p className="text-xs font-bold text-black leading-none group-hover:text-accent-800 transition-colors">
             {user?.name || 'User'}
@@ -245,7 +241,7 @@ export default function UserProfileMenu() {
           </p>
         </div>
 
-        {/* Chevron */}
+        {}
         <ChevronDown
           className={`w-3.5 h-3.5 text-zinc-400 group-hover:text-black transition-transform duration-200 ${
             isOpen ? 'rotate-180 text-black' : ''
@@ -253,9 +249,7 @@ export default function UserProfileMenu() {
         />
       </button>
 
-      {/* ====================================================================
-       * DROPDOWN POPUP MENU
-       * ==================================================================== */}
+      {}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -265,7 +259,7 @@ export default function UserProfileMenu() {
             transition={{ type: 'spring', stiffness: 450, damping: 30 }}
             className="absolute right-0 mt-2 w-72 bg-white rounded-2xl border border-zinc-200 shadow-xl z-50 p-2 origin-top-right"
           >
-            {/* Header Summary */}
+            {}
             <div className="p-3 bg-zinc-50 rounded-xl mb-1.5 flex items-center gap-3 border border-zinc-100">
               <div className="w-11 h-11 rounded-full overflow-hidden flex-shrink-0 bg-black border border-black text-white flex items-center justify-center font-bold text-sm shadow-xs">
                 {user?.avatarUrl ? (
@@ -286,9 +280,9 @@ export default function UserProfileMenu() {
               </div>
             </div>
 
-            {/* Action List */}
+            {}
             <div className="space-y-0.5">
-              {/* Edit Full Profile (Name & PFP Modal) */}
+              {}
               <button
                 onClick={() => {
                   setIsOpen(false);
@@ -302,7 +296,7 @@ export default function UserProfileMenu() {
 
               <div className="h-px bg-zinc-100 my-1" />
 
-              {/* Logout Option */}
+              {}
               <button
                 onClick={() => {
                   setIsOpen(false);
@@ -318,9 +312,7 @@ export default function UserProfileMenu() {
         )}
       </AnimatePresence>
 
-      {/* ====================================================================
-       * EDIT PROFILE & PFP POPUP MODAL (PORTALED TO DOCUMENT.BODY)
-       * ==================================================================== */}
+      {}
       {typeof document !== 'undefined' &&
         createPortal(
           <AnimatePresence>
@@ -341,7 +333,7 @@ export default function UserProfileMenu() {
                   className="bg-white border border-zinc-200 rounded-3xl shadow-2xl max-w-md w-full p-6 sm:p-7 relative my-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {/* Close Button */}
+                  {}
                   <button
                     type="button"
                     onClick={() => setIsEditModalOpen(false)}
@@ -350,7 +342,7 @@ export default function UserProfileMenu() {
                     <X className="w-4 h-4" />
                   </button>
 
-                  {/* Modal Title */}
+                  {}
                   <div className="mb-6">
                     <h3 className="text-lg font-bold text-black tracking-tight">Edit Profile</h3>
                     <p className="text-xs text-zinc-500 mt-0.5">
@@ -359,14 +351,14 @@ export default function UserProfileMenu() {
                   </div>
 
                   <form onSubmit={handleSaveProfile} className="space-y-5">
-                    {/* Profile Picture (PFP) Upload Area */}
+                    {}
                     <div>
                       <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-2">
                         Profile Picture
                       </label>
 
                       <div className="flex items-center gap-4">
-                        {/* Avatar Preview with click-to-upload */}
+                        {}
                         <div
                           onClick={() => modalFileInputRef.current?.click()}
                           className="relative group cursor-pointer"
@@ -386,13 +378,13 @@ export default function UserProfileMenu() {
                             )}
                           </div>
 
-                          {/* Camera Hover Overlay */}
+                          {}
                           <div className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                             <Camera className="w-6 h-6 text-white drop-shadow" />
                           </div>
                         </div>
 
-                        {/* Upload Controls */}
+                        {}
                         <div className="flex flex-col gap-2 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
                             <button
@@ -427,7 +419,7 @@ export default function UserProfileMenu() {
                             )}
                           </div>
 
-                          {/* URL input drawer */}
+                          {}
                           {showUrlInput && (
                             <div className="flex items-center gap-2 mt-1">
                               <input
@@ -462,7 +454,7 @@ export default function UserProfileMenu() {
                       </div>
                     </div>
 
-                    {/* Name Input */}
+                    {}
                     <div>
                       <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-2">
                         Full Name
@@ -477,7 +469,7 @@ export default function UserProfileMenu() {
                       />
                     </div>
 
-                    {/* Email (Read-only) */}
+                    {}
                     <div>
                       <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider mb-2">
                         Email Address
@@ -490,7 +482,7 @@ export default function UserProfileMenu() {
                       />
                     </div>
 
-                    {/* Default Currency Setting */}
+                    {}
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <label className="block text-xs font-bold text-zinc-700 uppercase tracking-wider">
@@ -516,7 +508,7 @@ export default function UserProfileMenu() {
                       </p>
                     </div>
 
-                    {/* Modal Footer Buttons */}
+                    {}
                     <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-100">
                       <button
                         type="button"

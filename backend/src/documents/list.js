@@ -1,8 +1,4 @@
-/**
- * Documents - List Lambda Function
- * GET /documents
- * Lists user documents and attaches presigned download/view URLs
- */
+
 
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { GetObjectCommand } from '@aws-sdk/client-s3';
@@ -40,7 +36,7 @@ export const handler = async (event) => {
     let expiringSoonCount = 0;
     let expiredCount = 0;
 
-    // Attach presigned download/view URL and compute expiry calculations
+    
     const items = await Promise.all(
       rawItems.map(async (doc) => {
         let downloadUrl = null;
@@ -84,7 +80,7 @@ export const handler = async (event) => {
       })
     );
 
-    // Sort: Expired & expiring soonest first, then newest
+    
     items.sort((a, b) => {
       if (a.isExpired && !b.isExpired) return -1;
       if (!a.isExpired && b.isExpired) return 1;

@@ -20,7 +20,7 @@ const CurrencyContext = createContext(null);
 export const CurrencyProvider = ({ children }) => {
   const { user } = useAuth();
   
-  // Isolated key strictly per user
+  
   const storageKey = user?.userId ? `life_dashboard_currency_${user.userId}` : 'life_dashboard_currency_guest';
 
   const [currencyCode, setCurrencyCodeState] = useState(() => {
@@ -32,7 +32,7 @@ export const CurrencyProvider = ({ children }) => {
     return DEFAULT_CURRENCY;
   });
 
-  // Whenever user changes, switch immediately to that specific user's isolated currency
+  
   useEffect(() => {
     if (user?.userId) {
       const saved = localStorage.getItem(`life_dashboard_currency_${user.userId}`);
@@ -60,9 +60,7 @@ export const CurrencyProvider = ({ children }) => {
   const activeCurrency = CURRENCIES.find((c) => c.code === currencyCode) || CURRENCIES[0];
   const currencySymbol = activeCurrency.symbol;
 
-  /**
-   * Helper function to format amount with active user's currency symbol and proper locale formatting
-   */
+  
   const formatAmount = (amount, options = {}) => {
     const numeric = typeof amount === 'number' ? amount : parseFloat(amount) || 0;
     const locale = currencyCode === 'INR' ? 'en-IN' : 'en-US';
@@ -92,7 +90,7 @@ export const CurrencyProvider = ({ children }) => {
 export const useCurrency = () => {
   const ctx = useContext(CurrencyContext);
   if (!ctx) {
-    // Graceful fallback if used outside provider
+    
     return {
       currency: CURRENCIES[0],
       currencyCode: 'INR',

@@ -1,7 +1,4 @@
-/**
- * Health - List Lambda Function
- * GET /health
- */
+
 
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, TABLE_NAME } from '../utils/db.js';
@@ -42,7 +39,7 @@ export const handler = async (event) => {
       if (item.phoneNumber) smsAlertsEnabledCount += 1;
     }
 
-    // Sort by scheduled time ASC
+    
     const sortedItems = [...rawItems].sort((a, b) => {
       const timeA = a.time || '00:00';
       const timeB = b.time || '00:00';

@@ -1,8 +1,4 @@
-/**
- * Tasks Component
- * Features AI Rank badges (1 = most urgent), manual drag-and-drop reorder overrides,
- * strike-through completion animations, and inline creation/editing.
- */
+
 
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -28,7 +24,7 @@ export default function Tasks() {
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [localItems, setLocalItems] = useState([]);
 
-  // Form State
+  
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -36,7 +32,7 @@ export default function Tasks() {
     priority: 'medium',
   });
 
-  // Query tasks
+  
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['tasks'],
     queryFn: async () => {
@@ -53,12 +49,12 @@ export default function Tasks() {
     highPriorityCount: 0,
   };
 
-  // Sync remote items to local items for drag-and-drop
+  
   useEffect(() => {
     setLocalItems(remoteItems);
   }, [remoteItems]);
 
-  // Create Mutation
+  
   const createMutation = useMutation({
     mutationFn: (newTask) => tasksApi.create(newTask),
     onSuccess: () => {
@@ -67,7 +63,7 @@ export default function Tasks() {
     },
   });
 
-  // Update Mutation
+  
   const updateMutation = useMutation({
     mutationFn: ({ id, updates }) => tasksApi.update(id, updates),
     onSuccess: () => {
@@ -76,7 +72,7 @@ export default function Tasks() {
     },
   });
 
-  // Delete Mutation
+  
   const deleteMutation = useMutation({
     mutationFn: (id) => tasksApi.delete(id),
     onSuccess: () => {
@@ -140,7 +136,7 @@ export default function Tasks() {
     });
   };
 
-  // Drag and drop reordering
+  
   const handleDragStart = (e, index) => {
     setDraggedIndex(index);
     e.dataTransfer.effectAllowed = 'move';
@@ -156,11 +152,11 @@ export default function Tasks() {
     if (draggedIndex === null || draggedIndex === targetIndex) return;
 
     const reordered = [...localItems];
-    const [movedItem] = reordered.splice(draggedIndex, 0); // Re-slice correctly
+    const [movedItem] = reordered.splice(draggedIndex, 0); 
     const [draggedItem] = reordered.splice(draggedIndex, 1);
     reordered.splice(targetIndex, 0, draggedItem);
 
-    // Re-assign sequential aiRank to incomplete tasks
+    
     const updated = reordered.map((item, idx) => {
       if (!item.isCompleted) {
         return { ...item, aiRank: Math.min(10, idx + 1) };
@@ -171,7 +167,7 @@ export default function Tasks() {
     setLocalItems(updated);
     setDraggedIndex(null);
 
-    // Persist new aiRank override for the moved item
+    
     const newRank = Math.min(10, targetIndex + 1);
     updateMutation.mutate({
       id: draggedItem.id,
@@ -179,7 +175,7 @@ export default function Tasks() {
     });
   };
 
-  // Badge for AI urgency ranking (1 = most urgent)
+  
   const getAiRankBadge = (rank) => {
     if (!rank) return null;
     if (rank === 1) {
@@ -206,7 +202,7 @@ export default function Tasks() {
 
   return (
     <div className="bg-white/95 border border-zinc-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-sm transition-all flex flex-col h-full">
-      {/* Sleek Compact Header */}
+      {}
       <div className="flex items-center justify-between pb-3 mb-3 border-b border-zinc-100 gap-2">
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs flex-shrink-0">
@@ -238,7 +234,7 @@ export default function Tasks() {
         )}
       </div>
 
-      {/* Quick Add Inline Input */}
+      {}
       {!isAdding && !editingId && (
         <form
           onSubmit={(e) => {
@@ -272,7 +268,7 @@ export default function Tasks() {
         </form>
       )}
 
-      {/* Add Task Modal Popup */}
+      {}
       <AnimatePresence>
         {isAdding && (
           <motion.div
@@ -382,7 +378,7 @@ export default function Tasks() {
       )}
     </AnimatePresence>
 
-      {/* Task List */}
+      {}
       <div className="mt-4 flex-1 overflow-y-auto space-y-2.5 max-h-[420px] pr-0.5">
         {isLoading ? (
           <div className="space-y-2.5 animate-pulse">
@@ -470,7 +466,7 @@ export default function Tasks() {
                 </form>
               ) : (
                 <div className="flex items-start justify-between gap-2.5">
-                  {/* Grip Handle for drag */}
+                  {}
                   {!task.isCompleted && (
                     <div
                       className="cursor-grab active:cursor-grabbing text-zinc-400 hover:text-black pt-0.5 transition"
@@ -480,7 +476,7 @@ export default function Tasks() {
                     </div>
                   )}
 
-                  {/* Complete Checkbox */}
+                  {}
                   <button
                     onClick={() => toggleComplete(task)}
                     className="pt-0.5 text-zinc-400 hover:text-accent-600 transition flex-shrink-0"
@@ -493,7 +489,7 @@ export default function Tasks() {
                     )}
                   </button>
 
-                  {/* Task Content */}
+                  {}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h4
@@ -531,7 +527,7 @@ export default function Tasks() {
                     </div>
                   </div>
 
-                  {/* Actions */}
+                  {}
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
                     <button
                       onClick={() => startEdit(task)}

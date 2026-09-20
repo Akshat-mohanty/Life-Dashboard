@@ -1,7 +1,4 @@
-/**
- * Tasks - Delete Lambda Function
- * DELETE /tasks/{id}
- */
+
 
 import { DeleteCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, TABLE_NAME } from '../utils/db.js';

@@ -1,7 +1,4 @@
-/**
- * User Profile - Get Lambda Function
- * GET /user/profile
- */
+
 
 import { GetCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, TABLE_NAME } from '../utils/db.js';
@@ -40,7 +37,7 @@ export const handler = async (event) => {
       });
     }
 
-    // Default fallback if no profile record exists in DynamoDB yet
+    
     const claims = event?.requestContext?.authorizer?.claims;
     const defaultName = claims?.name || claims?.email?.split('@')[0] || (userId === 'demo-user-1' ? 'Akshat Mohanty' : 'User');
     const defaultEmail = claims?.email || `${userId}@example.com`;

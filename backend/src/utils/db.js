@@ -1,7 +1,4 @@
-/**
- * DynamoDB Document Client Setup
- * Configures endpoints automatically for LocalStack or AWS Cloud
- */
+
 
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
@@ -18,7 +15,7 @@ if (ENDPOINT) {
   clientConfig.endpoint = ENDPOINT;
 }
 
-// Fallback credentials for local testing without requiring ~/.aws/credentials
+
 if (!process.env.AWS_ACCESS_KEY_ID) {
   clientConfig.credentials = {
     accessKeyId: 'test',

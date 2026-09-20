@@ -1,7 +1,4 @@
-/**
- * Bills - Create Lambda Function
- * POST /bills
- */
+
 
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { v4 as uuidv4 } from 'uuid';
@@ -27,7 +24,7 @@ export const handler = async (event) => {
 
     const { name, amount, dueDate, isPaid = false, isRecurring = false, frequency = null } = body;
 
-    // Input Validation
+    
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return errorResponse(400, 'Validation Error: "name" is required and must be a non-empty string.');
     }
@@ -67,7 +64,7 @@ export const handler = async (event) => {
       id,
       name: name.trim(),
       amount: Number(amount),
-      dueDate: dueDate.split('T')[0], // Standardize to YYYY-MM-DD
+      dueDate: dueDate.split('T')[0], 
       isPaid: Boolean(isPaid),
       isRecurring: Boolean(isRecurring),
       frequency: isRecurring ? frequency : null,

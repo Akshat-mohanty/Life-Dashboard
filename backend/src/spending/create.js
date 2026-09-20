@@ -1,7 +1,4 @@
-/**
- * Spending - Create Lambda Function
- * POST /spending
- */
+
 
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { v4 as uuidv4 } from 'uuid';
@@ -27,7 +24,7 @@ export const handler = async (event) => {
 
     const { amount, category, description, date } = body;
 
-    // Validation
+    
     if (amount === undefined || amount === null || typeof amount !== 'number' || isNaN(amount) || amount <= 0) {
       return errorResponse(400, 'Validation Error: "amount" is required and must be a positive number.');
     }

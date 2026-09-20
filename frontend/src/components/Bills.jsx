@@ -1,7 +1,4 @@
-/**
- * Bills & Payments Component
- * Redesigned in Obsidian Black, Pure White & Electric Indigo
- */
+
 
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -27,7 +24,7 @@ export default function Bills() {
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
-  // Form State
+  
   const [formData, setFormData] = useState({
     name: '',
     amount: '',
@@ -36,7 +33,7 @@ export default function Bills() {
     frequency: 'monthly',
   });
 
-  // Query bills
+  
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['bills'],
     queryFn: async () => {
@@ -54,7 +51,7 @@ export default function Bills() {
     overdueCount: 0,
   };
 
-  // Create Mutation
+  
   const createMutation = useMutation({
     mutationFn: (newBill) => billsApi.create(newBill),
     onSuccess: () => {
@@ -64,7 +61,7 @@ export default function Bills() {
     },
   });
 
-  // Update Mutation
+  
   const updateMutation = useMutation({
     mutationFn: ({ id, updates }) => billsApi.update(id, updates),
     onSuccess: () => {
@@ -73,7 +70,7 @@ export default function Bills() {
     },
   });
 
-  // Delete Mutation
+  
   const deleteMutation = useMutation({
     mutationFn: (id) => billsApi.delete(id),
     onSuccess: () => {
@@ -141,7 +138,7 @@ export default function Bills() {
     });
   };
 
-  // Color-coded badge helper for light mode
+  
   const getStatusBadge = (status) => {
     switch (status) {
       case 'overdue':
@@ -176,7 +173,7 @@ export default function Bills() {
 
   return (
     <div className="bg-white/95 border border-zinc-200/90 rounded-2xl p-3.5 sm:p-4 shadow-xs hover:shadow-sm transition-all flex flex-col h-full">
-      {/* Sleek Header */}
+      {}
       <div className="flex items-center justify-between pb-3 border-b border-zinc-100 gap-2">
         <div className="flex items-center gap-2 min-w-0">
           <div className="w-7 h-7 rounded-lg bg-zinc-900 text-white flex items-center justify-center shadow-xs flex-shrink-0">
@@ -218,7 +215,7 @@ export default function Bills() {
         )}
       </div>
 
-      {/* Add Bill Modal Popup */}
+      {}
       <AnimatePresence>
         {isAdding && (
           <motion.div
@@ -342,7 +339,7 @@ export default function Bills() {
         )}
       </AnimatePresence>
 
-      {/* Bill List */}
+      {}
       <div className="mt-4 flex-1 overflow-y-auto space-y-2.5 max-h-[420px] pr-0.5">
         {isLoading ? (
           <div className="space-y-2.5 animate-pulse">

@@ -1,7 +1,4 @@
-/**
- * Bills - Delete Lambda Function
- * DELETE /bills/{id}
- */
+
 
 import { DeleteCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, TABLE_NAME } from '../utils/db.js';

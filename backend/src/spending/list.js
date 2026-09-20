@@ -1,7 +1,4 @@
-/**
- * Spending - List Lambda Function
- * GET /spending
- */
+
 
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, TABLE_NAME } from '../utils/db.js';
@@ -18,8 +15,8 @@ export const handler = async (event) => {
     }
 
     const queryParams = event.queryStringParameters || {};
-    const filterMonth = queryParams.month; // e.g. "2026-09"
-    const filterCategory = queryParams.category; // e.g. "food"
+    const filterMonth = queryParams.month; 
+    const filterCategory = queryParams.category; 
 
     const command = new QueryCommand({
       TableName: TABLE_NAME,
@@ -33,7 +30,7 @@ export const handler = async (event) => {
     const result = await docClient.send(command);
     let items = result.Items || [];
 
-    // Optional filters
+    
     if (filterMonth) {
       items = items.filter((item) => item.date && item.date.startsWith(filterMonth));
     }
@@ -42,7 +39,7 @@ export const handler = async (event) => {
       items = items.filter((item) => item.category === filterCategory);
     }
 
-    // Sort: newest first
+    
     items.sort((a, b) => {
       if (a.date !== b.date) {
         return (b.date || '').localeCompare(a.date || '');

@@ -1,8 +1,4 @@
-/**
- * Documents - Upload Lambda Function
- * POST /documents/upload
- * Generates an S3 presigned PUT URL and stores document metadata in DynamoDB
- */
+
 
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
@@ -37,7 +33,7 @@ export const handler = async (event) => {
       expiryDate = null,
     } = body;
 
-    // Validation
+    
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return errorResponse(400, 'Validation Error: "name" is required and must be a non-empty string.');
     }
@@ -59,10 +55,10 @@ export const handler = async (event) => {
       .toLowerCase()
       .replace(/[^a-z0-9._-]/g, '_');
 
-    // S3 Key strictly bounded by user prefix according to Cedar policy: documents/{userId}/*
+    
     const s3Key = `documents/${userId}/${id}-${sanitizedFileName}`;
 
-    // Generate presigned PUT URL (valid for 15 minutes)
+    
     const putObjectCommand = new PutObjectCommand({
       Bucket: BUCKET_NAME,
       Key: s3Key,

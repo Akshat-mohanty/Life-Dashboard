@@ -32,9 +32,9 @@ Globals:
         NODE_OPTIONS: "--enable-source-maps"
 
 Resources:
-  ##############################################################################
-  # COGNITO USER POOL & CLIENT
-  ##############################################################################
+
+
+
   LifeDashboardUserPool:
     Type: AWS::Cognito::UserPool
     Properties:
@@ -72,9 +72,8 @@ Resources:
         - ALLOW_REFRESH_TOKEN_AUTH
       PreventUserExistenceErrors: ENABLED
 
-  ##############################################################################
-  # DYNAMODB TABLE (Single-Table Design)
-  ##############################################################################
+
+
   LifeDashboardTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -95,9 +94,8 @@ Resources:
       SSESpecification:
         SSEEnabled: true
 
-  ##############################################################################
-  # S3 STORAGE (Documents & Receipts)
-  ##############################################################################
+
+
   LifeDashboardBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -136,18 +134,16 @@ Resources:
               Bool:
                 'aws:SecureTransport': 'false'
 
-  ##############################################################################
-  # SNS TOPIC (Health Reminder SMS / Push)
-  ##############################################################################
+
+
   HealthRemindersTopic:
     Type: AWS::SNS::Topic
     Properties:
       TopicName: !Sub life-dashboard-health-alerts-${Environment}
       DisplayName: LifeDashboardHealth
 
-  ##############################################################################
-  # API GATEWAY (REST API with Cognito Authorizer)
-  ##############################################################################
+
+
   LifeDashboardApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -156,7 +152,7 @@ Resources:
       TracingEnabled: true
       Cors:
         AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
-        AllowHeaders: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+        AllowHeaders: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token,X-User-Id'"
         AllowOrigin: "'*'"
       Auth:
         DefaultAuthorizer: CognitoAuthorizer
@@ -167,9 +163,8 @@ Resources:
             Identity:
               Header: Authorization
 
-  ##############################################################################
-  # MODULE 1: BILLS LAMBDA FUNCTIONS
-  ##############################################################################
+
+
   BillsCreateFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -234,9 +229,8 @@ Resources:
             Path: /bills/{id}
             Method: delete
 
-  ##############################################################################
-  # MODULE 2: TASKS LAMBDA FUNCTIONS
-  ##############################################################################
+
+
   TasksCreateFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -301,9 +295,8 @@ Resources:
             Path: /tasks/{id}
             Method: delete
 
-  ##############################################################################
-  # MODULE 3: CALENDAR LAMBDA FUNCTIONS
-  ##############################################################################
+
+
   CalendarCreateFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -352,9 +345,8 @@ Resources:
             Path: /calendar/{id}
             Method: delete
 
-  ##############################################################################
-  # MODULE 4: HEALTH REMINDERS LAMBDA FUNCTIONS
-  ##############################################################################
+
+
   HealthCreateFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -405,9 +397,8 @@ Resources:
             Path: /health/{id}
             Method: delete
 
-  ##############################################################################
-  # MODULE 5: DOCUMENTS LAMBDA FUNCTIONS (S3 Integration)
-  ##############################################################################
+
+
   DocumentsUploadFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -462,9 +453,8 @@ Resources:
             Path: /documents/{id}
             Method: delete
 
-  ##############################################################################
-  # MODULE 6: SPENDING LAMBDA FUNCTIONS
-  ##############################################################################
+
+
   SpendingCreateFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -513,9 +503,8 @@ Resources:
             Path: /spending/summary
             Method: get
 
-  ##############################################################################
-  # AI LAYER: BEDROCK MORNING BRIEFING & EVENTBRIDGE TRIGGER
-  ##############################################################################
+
+
   BriefingGenerateFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -560,9 +549,8 @@ Resources:
             Path: /briefing/today
             Method: get
 
-  ##############################################################################
-  # USER PROFILE MANAGEMENT (DynamoDB Single-Table User-Isolated Storage)
-  ##############################################################################
+
+
   UserProfileGetFunction:
     Type: AWS::Serverless::Function
     Properties:

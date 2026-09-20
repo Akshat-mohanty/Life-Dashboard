@@ -1,8 +1,4 @@
-/**
- * User Profile - Update Lambda Function
- * PUT /user/profile
- * Updates user name and avatarUrl in DynamoDB with strict user isolation (PK = USER#{userId})
- */
+
 
 import { UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, TABLE_NAME } from '../utils/db.js';
@@ -27,7 +23,7 @@ export const handler = async (event) => {
 
     const { name, avatarUrl, defaultCurrency } = body;
 
-    // Validation
+    
     if (name !== undefined) {
       if (typeof name !== 'string' || name.trim().length === 0) {
         return errorResponse(400, 'Validation Error: "name" must be a non-empty string.');

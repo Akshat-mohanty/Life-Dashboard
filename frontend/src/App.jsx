@@ -1,7 +1,4 @@
-/**
- * Meridian — Main Application
- * Redesigned with Obsidian Black (#090A0F), Pure White, and Electric Indigo (#6366F1).
- */
+
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -73,7 +70,7 @@ export default function App() {
     error: authError,
   } = useAuth();
 
-  // Auth screen mode: 'signup' | 'login' | 'confirm' (defaults to 'signup')
+  
   const [authMode, setAuthMode] = useState('signup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -110,11 +107,11 @@ export default function App() {
   const queryClient = useQueryClient();
   const { formatAmount } = useCurrency();
 
-  // Historical Archive / Time Machine state (defaults to today YYYY-MM-DD)
+  
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
 
-  // Reset or invalidate queries when switching users so no cached data leaks across accounts
+  
   useEffect(() => {
     if (user?.userId) {
       queryClient.invalidateQueries();
@@ -123,10 +120,10 @@ export default function App() {
     }
   }, [user?.userId, queryClient]);
 
-  // Dashboard workspace view tab: 'overview' | 'focus' | 'finances' | 'life'
+  
   const [activeTab, setActiveTab] = useState('overview');
 
-  // Cached summary telemetry for the Horizon Pulse Bar
+  
   const { data: tasksData } = useQuery({
     queryKey: ['tasks'],
     queryFn: tasksApi.list,
@@ -197,8 +194,8 @@ export default function App() {
   const totalPendingObligations =
     pendingTasksCount + unpaidBillsCount + calendarEvents7DaysCount + pendingHealthCount;
 
-  // Track user-expanded accordion categories in Overview
-  const [expandedCategory, setExpandedCategory] = useState(null); // 'tasks' | 'calendar' | 'bills' | 'health' | null
+  
+  const [expandedCategory, setExpandedCategory] = useState(null); 
   const [showAllWorkspaceTiles, setShowAllWorkspaceTiles] = useState(false);
 
   const handleAuthSubmit = async (e) => {
@@ -230,7 +227,7 @@ export default function App() {
     }
   };
 
-  // 1. Loading state while checking authentication credentials
+  
   if (authLoading) {
     return (
       <div className="min-h-screen bg-[#fafbfc] flex items-center justify-center">
@@ -242,9 +239,9 @@ export default function App() {
     );
   }
 
-  // =========================================================================
-  // UNAUTHENTICATED: EDITORIAL REFERENCE-MATCHED LANDING PAGE
-  // =========================================================================
+  
+  
+  
   if (!isAuthenticated) {
     return (
       <LandingPage
@@ -260,9 +257,9 @@ export default function App() {
     );
   }
 
-  // =========================================================================
-  // AUTHENTICATED: EXECUTIVE DASHBOARD (NON-BULKY BENTO WORKSPACE)
-  // =========================================================================
+  
+  
+  
   const displayName = user?.name || (user?.email ? user.email.split('@')[0] : 'Akshat');
   const todayIso = new Date().toISOString().split('T')[0];
   const isTimeTravelActive = Boolean(selectedDate && selectedDate !== todayIso);
@@ -275,9 +272,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#fafbfc] text-zinc-900 flex flex-col relative overflow-x-hidden selection:bg-accent-100 selection:text-accent-900">
-      {/* ====================================================================
-       * SLEEK EXECUTIVE TOP BAR
-       * ==================================================================== */}
+      {}
       <motion.header
         initial={{ opacity: 0, y: -15 }}
         animate={{ opacity: 1, y: 0 }}
@@ -285,7 +280,7 @@ export default function App() {
         className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-zinc-200/80 shadow-2xs"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-15 flex items-center justify-between">
-          {/* Brand & Greeting */}
+          {}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2.5">
               <span className="text-xl font-bold tracking-tight text-zinc-900 font-serif">Meridian</span>
@@ -296,18 +291,16 @@ export default function App() {
             </div>
           </div>
 
-          {/* Right Controls: Status & User Profile */}
+          {}
           <div className="flex items-center gap-3">
             <UserProfileMenu />
           </div>
         </div>
       </motion.header>
 
-      {/* ====================================================================
-       * MAIN EXECUTIVE WORKSPACE CANVAS
-       * ==================================================================== */}
+      {}
       <main className="relative z-10 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-5 sm:py-6 flex-1 flex flex-col">
-        {/* Time-Travel Historical Banner */}
+        {}
         {isTimeTravelActive && (
           <motion.div
             initial={{ opacity: 0, y: -8 }}
@@ -345,7 +338,7 @@ export default function App() {
         )}
 
 
-        {/* 3. Main Dynamic Content by Workspace View */}
+        {}
         <AnimatePresence mode="wait">
           {activeTab === 'overview' && (
             <motion.div
@@ -356,7 +349,7 @@ export default function App() {
               transition={{ duration: 0.25 }}
               className="space-y-5 flex-1 flex flex-col pb-2"
             >
-              {/* Status Header: Automatically states if tasks/obligations are pending */}
+              {}
               <div className="bg-white border border-zinc-200/90 rounded-2xl p-5 shadow-2xs">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3.5">
@@ -387,7 +380,7 @@ export default function App() {
                       )}
                     </div>
                   </div>
-                  {/* Date Button inline */}
+                  {}
                   <button
                     type="button"
                     onClick={() => setIsArchiveModalOpen(true)}
@@ -408,9 +401,9 @@ export default function App() {
                   </button>
                 </div>
 
-                {/* Categories Breakdown Dropdowns */}
+                {}
                 <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                  {/* Category 1: Tasks */}
+                  {}
                   <div className="border border-zinc-200/80 rounded-xl overflow-hidden bg-zinc-50/50">
                     <button
                       type="button"
@@ -480,7 +473,7 @@ export default function App() {
                     </AnimatePresence>
                   </div>
 
-                  {/* Category 2: Calendar & Schedule */}
+                  {}
                   <div className="border border-zinc-200/80 rounded-xl overflow-hidden bg-zinc-50/50">
                     <button
                       type="button"
@@ -543,7 +536,7 @@ export default function App() {
                     </AnimatePresence>
                   </div>
 
-                  {/* Category 3: Bills & Payments */}
+                  {}
                   <div className="border border-zinc-200/80 rounded-xl overflow-hidden bg-zinc-50/50">
                     <button
                       type="button"
@@ -609,7 +602,7 @@ export default function App() {
                     </AnimatePresence>
                   </div>
 
-                  {/* Category 4: Health & Habits */}
+                  {}
                   <div className="border border-zinc-200/80 rounded-xl overflow-hidden bg-zinc-50/50">
                     <button
                       type="button"
@@ -672,7 +665,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Minimalist Abstract Heatmap */}
+              {}
               <ActivityHeatmap 
                 isDemo={user?.isDemo}
                 activityItems={[
@@ -686,7 +679,7 @@ export default function App() {
 
 
 
-              {/* Sleek Intelligence Banner (Daily Briefing) */}
+              {}
               <div className="mt-auto pt-5">
                 <Briefing
                   selectedDate={selectedDate}
@@ -694,7 +687,7 @@ export default function App() {
                 />
               </div>
 
-              {/* Bento Grid Architecture: only visible if user explicitly chooses to expand all tiles */}
+              {}
               <AnimatePresence>
                 {showAllWorkspaceTiles && (
                   <motion.div
@@ -703,7 +696,7 @@ export default function App() {
                     exit={{ opacity: 0, y: 10 }}
                     className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start pt-2"
                   >
-                    {/* Left Column (7 cols / ~58%) */}
+                    {}
                     <div className="lg:col-span-7 space-y-5">
                       <Tasks />
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -712,7 +705,7 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* Right Column (5 cols / ~42%) */}
+                    {}
                     <div className="lg:col-span-5 space-y-5">
                       <CalendarView />
                       <Health />
@@ -733,7 +726,7 @@ export default function App() {
               transition={{ duration: 0.25 }}
               className="space-y-5"
             >
-              {/* Back to Overview button */}
+              {}
               <div className="flex items-center gap-3">
                 <button
                   type="button"
@@ -815,7 +808,7 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      {/* Architectural Footer */}
+      {}
       <footer className="relative z-10 py-5 mt-8 border-t border-zinc-200/60">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex items-center justify-between text-xs text-zinc-400 font-medium">
           <span>
@@ -840,7 +833,7 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Historical Life Archive & Time Machine Modal */}
+      {}
       <HistoryArchiveModal
         isOpen={isArchiveModalOpen}
         onClose={() => setIsArchiveModalOpen(false)}

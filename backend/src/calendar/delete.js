@@ -1,7 +1,4 @@
-/**
- * Calendar - Delete Lambda Function
- * DELETE /calendar/{id}
- */
+
 
 import { DeleteCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, TABLE_NAME } from '../utils/db.js';

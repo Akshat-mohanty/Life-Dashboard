@@ -1,7 +1,4 @@
-/**
- * Tasks - List Lambda Function
- * GET /tasks
- */
+
 
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, TABLE_NAME } from '../utils/db.js';
@@ -44,7 +41,7 @@ export const handler = async (event) => {
       }
     }
 
-    // Sort: Incomplete tasks first (by aiRank ASC), completed tasks at the bottom
+    
     const sortedItems = [...rawItems].sort((a, b) => {
       if (a.isCompleted !== b.isCompleted) {
         return a.isCompleted ? 1 : -1;
@@ -55,7 +52,7 @@ export const handler = async (event) => {
         if (rankA !== rankB) {
           return rankA - rankB;
         }
-        // If ranks match, sort by due date
+        
         if (a.dueDate && b.dueDate) {
           return a.dueDate.localeCompare(b.dueDate);
         }

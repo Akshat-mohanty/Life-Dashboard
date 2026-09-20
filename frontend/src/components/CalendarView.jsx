@@ -1,7 +1,4 @@
-/**
- * CalendarView Component
- * Displays events for today and the next 7 days with inline creation and date chips.
- */
+
 
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -27,9 +24,9 @@ export default function CalendarView() {
   const queryClient = useQueryClient();
   const { formatAmount } = useCurrency();
   const [isAdding, setIsAdding] = useState(false);
-  const [filter, setFilter] = useState('all'); // 'all' | 'events' | 'bills' | 'health'
+  const [filter, setFilter] = useState('all'); 
 
-  // Form State
+  
   const [formData, setFormData] = useState({
     title: '',
     date: new Date().toISOString().split('T')[0],
@@ -38,7 +35,7 @@ export default function CalendarView() {
     notes: '',
   });
 
-  // Query events
+  
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['calendar'],
     queryFn: async () => {
@@ -47,13 +44,13 @@ export default function CalendarView() {
     },
   });
 
-  // Query bills to integrate unpaid bills due in next 7 days
+  
   const { data: billsData } = useQuery({
     queryKey: ['bills'],
     queryFn: billsApi.list,
   });
 
-  // Query health reminders to integrate upcoming health checkups & habits
+  
   const { data: healthData } = useQuery({
     queryKey: ['health'],
     queryFn: healthApi.list,
@@ -73,7 +70,7 @@ export default function CalendarView() {
   sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
   const maxDateStr = sevenDaysLater.toISOString().split('T')[0];
 
-  // Unpaid bills due in 7 days or overdue
+  
   const unpaidBills = (billsData?.items || [])
     .filter((b) => !b.isPaid)
     .filter((b) => !b.dueDate || b.dueDate <= maxDateStr)
@@ -88,7 +85,7 @@ export default function CalendarView() {
       raw: b,
     }));
 
-  // Pending health reminders / checkups
+  
   const pendingHealth = (healthData?.items || []).map((h) => ({
     id: `health-${h.id}`,
     originalId: h.id,
@@ -100,7 +97,7 @@ export default function CalendarView() {
     raw: h,
   }));
 
-  // Calendar events
+  
   const calendarItems = events.map((e) => ({
     id: `event-${e.id}`,
     originalId: e.id,
@@ -113,7 +110,7 @@ export default function CalendarView() {
     raw: e,
   }));
 
-  // Combined unified items
+  
   const allItems = [...calendarItems, ...unpaidBills, ...pendingHealth].sort((a, b) => {
     if (a.date !== b.date) return a.date.localeCompare(b.date);
     const timeA = a.time || '23:59';
@@ -128,7 +125,7 @@ export default function CalendarView() {
     return true;
   });
 
-  // Create Mutation
+  
   const createMutation = useMutation({
     mutationFn: (newEvent) => calendarApi.create(newEvent),
     onSuccess: () => {
@@ -137,7 +134,7 @@ export default function CalendarView() {
     },
   });
 
-  // Delete Mutation
+  
   const deleteMutation = useMutation({
     mutationFn: (id) => calendarApi.delete(id),
     onSuccess: () => {
@@ -145,7 +142,7 @@ export default function CalendarView() {
     },
   });
 
-  // Quick Pay Bill Mutation
+  
   const payBillMutation = useMutation({
     mutationFn: (billId) => billsApi.update(billId, { isPaid: true }),
     onSuccess: () => {
@@ -193,7 +190,7 @@ export default function CalendarView() {
 
   return (
     <div className="bg-white/95 border border-zinc-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-sm transition-all flex flex-col h-full">
-      {/* Sleek Header */}
+      {}
       <div className="flex items-center justify-between pb-3.5 border-b border-zinc-100 gap-2">
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="w-8 h-8 rounded-xl bg-zinc-900 text-white flex items-center justify-center shadow-xs flex-shrink-0">
@@ -225,7 +222,7 @@ export default function CalendarView() {
         )}
       </div>
 
-      {/* Category Filter Chips */}
+      {}
       <div className="flex items-center gap-1.5 pt-2.5 pb-2 overflow-x-auto text-[11px] border-b border-zinc-100">
         <button
           type="button"
@@ -273,7 +270,7 @@ export default function CalendarView() {
         </button>
       </div>
 
-      {/* Add Calendar Event Modal Popup */}
+      {}
       <AnimatePresence>
         {isAdding && (
           <motion.div
@@ -394,7 +391,7 @@ export default function CalendarView() {
         )}
       </AnimatePresence>
 
-      {/* Event List */}
+      {}
       <div className="mt-4 flex-1 overflow-y-auto space-y-2.5 max-h-[420px] pr-0.5">
         {isLoading ? (
           <div className="space-y-2.5 animate-pulse">

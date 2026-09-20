@@ -6,7 +6,7 @@ import { CurrencyProvider } from './hooks/useCurrency';
 import App from './App';
 import './index.css';
 
-// Always scroll to the top of the page on refresh/load, overriding browser scroll restoration
+
 if ('scrollRestoration' in window.history) {
   window.history.scrollRestoration = 'manual';
 }
@@ -21,7 +21,7 @@ const queryClient = new QueryClient({
     queries: {
       refetchOnWindowFocus: false,
       retry: 1,
-      staleTime: 1000 * 60 * 3, // 3 minutes cache
+      staleTime: 1000 * 60 * 3, 
     },
   },
 });

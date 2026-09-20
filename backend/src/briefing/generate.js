@@ -1,8 +1,4 @@
-/**
- * AI Morning Briefing Generator Lambda Function
- * Triggers via EventBridge Schedule (7:00 AM IST daily) OR API Gateway (/briefing/today, /briefing/generate)
- * Queries DynamoDB for user life data, builds Bedrock prompt, invokes Claude, stores briefing, and sends SES email.
- */
+
 
 import { ScanCommand, QueryCommand, PutCommand, GetCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
@@ -15,18 +11,14 @@ const REGION = process.env.AWS_REGION || 'us-east-1';
 const BEDROCK_MODEL_ID = process.env.BEDROCK_MODEL_ID || 'anthropic.claude-3-5-sonnet-20241022-v2:0';
 const SES_SOURCE_EMAIL = process.env.SES_SOURCE_EMAIL || 'briefings@lifedashboard.app';
 
-const clientConfig = { region: REGION, credentials: { accessKeyId: process.env.AWS_ACCESS_KEY_ID || "test", secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "test" } };
+const clientConfig = { region: REGION,   };
 const bedrockClient = new BedrockRuntimeClient(clientConfig);
 const sesClient = new SESClient(clientConfig);
 
-/**
- * Formats a Date into YYYY-MM-DD
- */
+
 const formatDate = (dateObj) => dateObj.toISOString().split('T')[0];
 
-/**
- * Retrieves all distinct user IDs from DynamoDB using paginated scan
- */
+
 async function getAllUserIds() {
   const userIds = new Set();
   let lastEvaluatedKey = undefined;
@@ -51,9 +43,7 @@ async function getAllUserIds() {
   return Array.from(userIds);
 }
 
-/**
- * Aggregates all life domain data for a single user
- */
+
 async function gatherUserData(userId) {
   const today = new Date();
   const todayStr = formatDate(today);
@@ -78,7 +68,7 @@ async function gatherUserData(userId) {
   const prevMonthDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
   const prevYearMonth = `${prevMonthDate.getFullYear()}-${String(prevMonthDate.getMonth() + 1).padStart(2, '0')}`;
 
-  // Query all user items
+  
   const queryCommand = new QueryCommand({
     TableName: TABLE_NAME,
     KeyConditionExpression: 'PK = :pk',
@@ -90,7 +80,7 @@ async function gatherUserData(userId) {
   const queryResult = await docClient.send(queryCommand);
   const items = queryResult.Items || [];
 
-  // Filter 1: Unpaid bills (dueDate within 7 days or already overdue)
+  
   const unpaidBills = items
     .filter((it) => it.SK.startsWith('BILL#') && !it.isPaid)
     .filter((it) => it.dueDate < todayStr || it.dueDate <= sevenDaysLaterStr)
@@ -101,7 +91,7 @@ async function gatherUserData(userId) {
       isOverdue: it.dueDate < todayStr,
     }));
 
-  // Filter 2: Incomplete tasks (dueDate within 3 days or today or overdue)
+  
   const incompleteTasks = items
     .filter((it) => it.SK.startsWith('TASK#') && !it.isCompleted)
     .filter((it) => !it.dueDate || it.dueDate <= threeDaysLaterStr)
@@ -113,7 +103,7 @@ async function gatherUserData(userId) {
       priority: it.priority,
     }));
 
-  // Filter 3: Calendar events today and tomorrow
+  
   const calendarEvents = items
     .filter((it) => it.SK.startsWith('EVENT#'))
     .filter((it) => it.date === todayStr || it.date === tomorrowStr)
@@ -125,7 +115,7 @@ async function gatherUserData(userId) {
       location: it.location,
     }));
 
-  // Filter 4: Health reminders active today
+  
   const healthReminders = items
     .filter((it) => it.SK.startsWith('HEALTH#'))
     .map((it) => ({
@@ -134,7 +124,7 @@ async function gatherUserData(userId) {
       frequency: it.frequency,
     }));
 
-  // Filter 5: Documents expiring within 30 days
+  
   const expiringDocs = items
     .filter((it) => it.SK.startsWith('DOC#') && it.expiryDate)
     .filter((it) => it.expiryDate <= thirtyDaysLaterStr)
@@ -144,7 +134,7 @@ async function gatherUserData(userId) {
       expiryDate: it.expiryDate,
     }));
 
-  // Filter 6: Spending this month vs last month
+  
   let spendingThisMonth = 0;
   let spendingLastMonth = 0;
   items
@@ -167,9 +157,7 @@ async function gatherUserData(userId) {
   };
 }
 
-/**
- * Builds the exact prompt specified for Bedrock
- */
+
 function buildBedrockPrompt(userName, today, data) {
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const dayOfWeek = days[today.getDay()];
@@ -255,9 +243,7 @@ Plain English. No bullet overload.
 Sound like a thoughtful friend, not a robot.`;
 }
 
-/**
- * Invokes Bedrock Claude model with fallback for local/offline simulation
- */
+
 async function invokeBedrockClaude(prompt) {
   try {
     const payload = {
@@ -288,16 +274,12 @@ async function invokeBedrockClaude(prompt) {
   }
 }
 
-/**
- * Generates high quality fallback text if Bedrock is not configured locally
- */
+
 function generateFallbackBriefing(prompt) {
   return 'No value is entered.';
 }
 
-/**
- * Generates briefing for a single user and saves it to DynamoDB
- */
+
 async function generateAndSaveBriefingForUser(userId, userEmail = null, userName = 'Friend') {
   const today = new Date();
   const todayStr = formatDate(today);
@@ -342,7 +324,7 @@ async function generateAndSaveBriefingForUser(userId, userEmail = null, userName
   );
   console.log(`Saved briefing for user ${userId} under BRIEFING#${todayStr}`);
 
-  // Re-rank incomplete tasks with aiRank (1-10) based on urgency
+  
   if (userData.incompleteTasks && userData.incompleteTasks.length > 0) {
     for (let i = 0; i < userData.incompleteTasks.length; i++) {
       const task = userData.incompleteTasks[i];
@@ -366,7 +348,7 @@ async function generateAndSaveBriefingForUser(userId, userEmail = null, userName
     }
   }
 
-  // Send SES email if email address is available
+  
   if (userEmail) {
     try {
       await sesClient.send(
@@ -392,9 +374,7 @@ async function generateAndSaveBriefingForUser(userId, userEmail = null, userName
   return briefingItem;
 }
 
-/**
- * Lambda Handler
- */
+
 export const handler = async (event) => {
   console.log('BriefingGenerateFunction invoked with event:', JSON.stringify(event, null, 2));
 
@@ -404,7 +384,7 @@ export const handler = async (event) => {
       event['detail-type'] === 'Scheduled Event' ||
       event.isCron === true;
 
-    // SCENARIO 1: EventBridge Scheduled Cron (7 AM IST)
+    
     if (isScheduled) {
       console.log('Running scheduled 7:00 AM IST batch briefing generation...');
       const userIds = await getAllUserIds();
@@ -427,7 +407,7 @@ export const handler = async (event) => {
       };
     }
 
-    // SCENARIO 2: API Gateway GET /briefing/today
+    
     if (event.httpMethod === 'GET') {
       const userId = getUserId(event);
       if (!userId) {
@@ -466,7 +446,7 @@ export const handler = async (event) => {
       });
     }
 
-    // SCENARIO 3: API Gateway POST /briefing/generate (Manual Trigger)
+    
     const userId = getUserId(event);
     if (!userId) {
       return errorResponse(401, 'Unauthorized: User identity could not be resolved.');

@@ -1,8 +1,4 @@
-/**
- * Spending - Summary Lambda Function
- * GET /spending/summary
- * Computes monthly totals, category breakdowns for donut chart, MoM trends, and budget tracking
- */
+
 
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, TABLE_NAME } from '../utils/db.js';
@@ -32,7 +28,7 @@ export const handler = async (event) => {
     const selectedMonth = queryParams.month || currentYearMonth;
     const previousMonth = getPreviousMonthStr(selectedMonth);
 
-    // Soft monthly budget (default 50,000 INR or customizable via query param)
+    
     const softMonthlyBudget = queryParams.budget ? Number(queryParams.budget) : 50000;
 
     const command = new QueryCommand({
@@ -47,7 +43,7 @@ export const handler = async (event) => {
     const result = await docClient.send(command);
     const allExpenses = result.Items || [];
 
-    // Track available unique months across data
+    
     const monthSet = new Set();
     monthSet.add(currentYearMonth);
 
@@ -94,7 +90,7 @@ export const handler = async (event) => {
       }
     });
 
-    // Format category breakdown for Donut Chart
+    
     const categories = Object.keys(categoryTotals).map((cat) => {
       const amount = Math.round(categoryTotals[cat] * 100) / 100;
       const count = categoryCounts[cat];
@@ -107,18 +103,18 @@ export const handler = async (event) => {
       };
     });
 
-    // Month-over-month calculation
+    
     const monthOverMonthDiff = Math.round((currentMonthTotal - lastMonthTotal) * 100) / 100;
     let monthOverMonthPctChange = 0;
     if (lastMonthTotal > 0) {
       monthOverMonthPctChange = Math.round(((currentMonthTotal - lastMonthTotal) / lastMonthTotal) * 1000) / 10;
     }
 
-    // Budget tracking
+    
     const budgetRemaining = Math.round((softMonthlyBudget - currentMonthTotal) * 100) / 100;
     const budgetConsumedPercentage = Math.round((currentMonthTotal / softMonthlyBudget) * 100);
 
-    // Sort available months descending
+    
     const availableMonths = Array.from(monthSet).sort().reverse();
 
     const summary = {

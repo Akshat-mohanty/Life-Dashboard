@@ -1,8 +1,4 @@
-/**
- * Spending Component
- * Features Donut Chart category breakdown (Recharts), monthly history selector,
- * running total against soft monthly budget, and inline expense logging.
- */
+
 
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -27,12 +23,12 @@ import { spendingApi } from '../api/client';
 import { useCurrency } from '../hooks/useCurrency';
 
 const CATEGORY_COLORS = {
-  food: '#237d8d', // accent-600
-  transport: '#3faab9', // accent-500
-  bills: '#9bdee8', // base accent-300
-  health: '#e11d48', // rose-600
-  entertainment: '#7c3aed', // purple-600
-  other: '#d97706', // amber-600
+  food: '#237d8d', 
+  transport: '#3faab9', 
+  bills: '#9bdee8', 
+  health: '#e11d48', 
+  entertainment: '#7c3aed', 
+  other: '#d97706', 
 };
 
 export default function Spending() {
@@ -44,7 +40,7 @@ export default function Spending() {
     return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
   });
 
-  // Form State
+  
   const [formData, setFormData] = useState({
     amount: '',
     category: 'food',
@@ -52,7 +48,7 @@ export default function Spending() {
     date: new Date().toISOString().split('T')[0],
   });
 
-  // Query spending summary & chart data
+  
   const {
     data: summaryData,
     isLoading: isSummaryLoading,
@@ -65,7 +61,7 @@ export default function Spending() {
     },
   });
 
-  // Query spending item list
+  
   const {
     data: listData,
     isLoading: isListLoading,
@@ -90,7 +86,7 @@ export default function Spending() {
 
   const items = listData?.items || [];
 
-  // Create Mutation
+  
   const createMutation = useMutation({
     mutationFn: (newExpense) => spendingApi.create(newExpense),
     onSuccess: () => {
@@ -138,7 +134,7 @@ export default function Spending() {
     }
   };
 
-  // Filter chart data for categories with positive amounts
+  
   const chartData = (summary.byCategory || [])
     .filter((cat) => cat.amount > 0)
     .map((cat) => ({
@@ -150,7 +146,7 @@ export default function Spending() {
 
   return (
     <div className="bg-white/95 border border-zinc-200/90 rounded-2xl p-3.5 sm:p-4 shadow-xs hover:shadow-sm transition-all flex flex-col h-full">
-      {/* Sleek Header */}
+      {}
       <div className="flex items-center justify-between pb-3 border-b border-zinc-100 gap-2">
         <div className="flex items-center gap-2 min-w-0">
           <div className="w-7 h-7 rounded-lg bg-zinc-900 text-white flex items-center justify-center shadow-xs flex-shrink-0">
@@ -177,10 +173,10 @@ export default function Spending() {
         )}
       </div>
 
-      {/* Compact Budget Progress Strip */}
+      {}
       <div className="mt-3 p-2.5 bg-zinc-50/80 border border-zinc-100 rounded-xl">
         <div className="flex items-center justify-between text-xs mb-1.5 gap-2 flex-wrap">
-          {/* Month Selector integrated into budget bar */}
+          {}
           <div className="relative">
             <select
               value={selectedMonth}
@@ -221,7 +217,7 @@ export default function Spending() {
         </div>
       </div>
 
-      {/* Donut Chart Breakdown */}
+      {}
       {chartData.length > 0 && (
         <div className="mt-4 pt-2 pb-2 border-b border-zinc-100 flex flex-col sm:flex-row items-center justify-center gap-4">
           <div className="w-36 h-36">
@@ -257,7 +253,7 @@ export default function Spending() {
             </ResponsiveContainer>
           </div>
 
-          {/* Legend Grid */}
+          {}
           <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs">
             {chartData.map((cat) => (
               <div key={cat.name} className="flex items-center gap-1.5">
@@ -273,7 +269,7 @@ export default function Spending() {
         </div>
       )}
 
-      {/* Log Expense Modal Popup */}
+      {}
       <AnimatePresence>
         {isAdding && (
           <motion.div
@@ -390,7 +386,7 @@ export default function Spending() {
         )}
       </AnimatePresence>
 
-      {/* Expense Item List */}
+      {}
       <div className="mt-4 flex-1 overflow-y-auto space-y-2.5 max-h-[300px] pr-0.5">
         {isListLoading ? (
           <div className="space-y-2.5 animate-pulse">

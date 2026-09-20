@@ -1,7 +1,4 @@
-/**
- * Bills - List Lambda Function
- * GET /bills
- */
+
 
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, TABLE_NAME } from '../utils/db.js';
@@ -63,11 +60,11 @@ export const handler = async (event) => {
 
       return {
         ...bill,
-        status, // 'overdue' | 'due_soon' | 'upcoming' | 'paid'
+        status, 
       };
     });
 
-    // Sort priority: overdue (1) -> due_soon (2) -> upcoming (3) -> paid (4)
+    
     const priorityMap = { overdue: 1, due_soon: 2, upcoming: 3, paid: 4 };
     items.sort((a, b) => {
       if (priorityMap[a.status] !== priorityMap[b.status]) {

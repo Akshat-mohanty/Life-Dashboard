@@ -1,7 +1,4 @@
-/**
- * Cognito Authentication Hook & Context
- * Handles Sign Up, Confirmation, Sign In, Sign Out, Token Management, and Local Dev Fallback
- */
+
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
@@ -54,7 +51,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Restore session or process OAuth callback on initial mount
+  
   useEffect(() => {
     const initializeAuth = async () => {
       try {
@@ -64,7 +61,7 @@ export const AuthProvider = ({ children }) => {
           : window.location.hash;
         const hashParams = new URLSearchParams(hashString);
 
-        // 1. Check for OAuth error returned from Google/IdP in hash or query
+        
         const oauthError = searchParams.get('error') || hashParams.get('error');
         const oauthErrorDesc =
           searchParams.get('error_description') || hashParams.get('error_description');
@@ -77,12 +74,12 @@ export const AuthProvider = ({ children }) => {
           return;
         }
 
-        // 2. Check if an OAuth redirect flow was initiated
+        
         const wasOAuthInProgress = sessionStorage.getItem(STORAGE_KEYS.OAUTH_IN_PROGRESS);
         const idToken = hashParams.get('id_token') || searchParams.get('id_token');
         const accessToken = hashParams.get('access_token') || searchParams.get('access_token');
 
-        // If user came back from Google without tokens (e.g. Back button, cancelled auth, or closed prompt)
+        
         if (wasOAuthInProgress && !idToken && !accessToken) {
           sessionStorage.removeItem(STORAGE_KEYS.OAUTH_IN_PROGRESS);
           clearSession();
@@ -91,7 +88,7 @@ export const AuthProvider = ({ children }) => {
           return;
         }
 
-        // 3. Process successful OAuth tokens
+        
         if (idToken || accessToken) {
           sessionStorage.removeItem(STORAGE_KEYS.OAUTH_IN_PROGRESS);
           if (idToken) {
@@ -148,7 +145,7 @@ export const AuthProvider = ({ children }) => {
           }
         }
 
-        // 4. Restore valid existing session from localStorage if present
+        
         const cachedUserStr = localStorage.getItem(STORAGE_KEYS.USER);
         const cachedToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
 
@@ -195,7 +192,7 @@ export const AuthProvider = ({ children }) => {
 
     initializeAuth();
 
-    // Handle BFCache (browser Back/Forward navigation)
+    
     const handlePageShow = (event) => {
       if (event.persisted) {
         setLoading(false);
@@ -230,7 +227,7 @@ export const AuthProvider = ({ children }) => {
     return () => window.removeEventListener('pageshow', handlePageShow);
   }, []);
 
-  // Fetch isolated profile record from database for this user
+  
   const fetchRemoteProfile = async (targetUserId) => {
     try {
       const res = await userApi.getProfile();
@@ -248,7 +245,7 @@ export const AuthProvider = ({ children }) => {
         });
       }
     } catch (err) {
-      // Backend may be offline or in-memory; ignore gracefully
+      
     }
   };
 
@@ -271,9 +268,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  /**
-   * Log In with Email and Password
-   */
+  
   const login = async (email, password) => {
     setError(null);
     setLoading(true);
@@ -285,7 +280,7 @@ export const AuthProvider = ({ children }) => {
       throw err;
     }
 
-    // Local account authentication if Cognito User Pool is not configured
+    
     if (!userPool) {
       const accounts = getStoredAccounts();
       const normalizedEmail = email.trim().toLowerCase();
@@ -354,9 +349,7 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
-  /**
-   * Sign Up with Email, Password, and Name
-   */
+  
   const signup = async (email, password, name) => {
     setError(null);
     setLoading(true);
@@ -375,7 +368,7 @@ export const AuthProvider = ({ children }) => {
       throw err;
     }
 
-    // Local account registration if Cognito User Pool is not configured
+    
     if (!userPool) {
       const accounts = getStoredAccounts();
       const normalizedEmail = email.trim().toLowerCase();
@@ -433,9 +426,7 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
-  /**
-   * Confirm Sign Up with verification code sent to email
-   */
+  
   const confirmSignup = async (email, code) => {
     setError(null);
     setLoading(true);
@@ -463,10 +454,7 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
-  /**
-   * Request Password Reset
-   * Validates email presence, format, and verifies if the user account exists
-   */
+  
   const forgotPassword = async (rawEmail) => {
     setError(null);
     const email = rawEmail?.trim();
@@ -486,7 +474,7 @@ export const AuthProvider = ({ children }) => {
 
     const normalizedEmail = email.toLowerCase();
 
-    // 1. If real Cognito User Pool is configured
+    
     if (userPool) {
       return new Promise((resolve, reject) => {
         const cognitoUser = new CognitoUser({
@@ -514,7 +502,7 @@ export const AuthProvider = ({ children }) => {
       });
     }
 
-    // 2. Check local accounts registry & demo user
+    
     const accounts = getStoredAccounts();
     const userExists =
       accounts.some((a) => a.email.toLowerCase() === normalizedEmail) ||
@@ -534,28 +522,23 @@ export const AuthProvider = ({ children }) => {
     };
   };
 
-  /**
-   * Sign Out
-   */
+  
   const logout = () => {
     clearSession();
   };
 
-  /**
-   * Update Profile (Name, Avatar URL / PFP)
-   * Strictly isolated per user: updates DynamoDB single-table record PK: USER#{userId}, SK: PROFILE
-   */
+  
   const updateProfile = async ({ name, avatarUrl, defaultCurrency }) => {
     if (!user) return null;
 
-    // 1. Send update to database API (scoped strictly to this user's PK)
+    
     try {
       await userApi.updateProfile({ name, avatarUrl, defaultCurrency });
     } catch (dbErr) {
       console.warn('Backend database profile update warning:', dbErr);
     }
 
-    // 2. If user exists in local accounts registry, sync it
+    
     try {
       const accounts = getStoredAccounts();
       const idx = accounts.findIndex((a) => a.userId === user.userId || a.email === user.email);
@@ -566,10 +549,10 @@ export const AuthProvider = ({ children }) => {
         saveStoredAccounts(accounts);
       }
     } catch {
-      // ignore
+      
     }
 
-    // 3. If user is authenticated via Cognito, sync attribute to Cognito User Pool as well
+    
     if (userPool && name) {
       try {
         const cognitoUser = userPool.getCurrentUser();
@@ -590,7 +573,7 @@ export const AuthProvider = ({ children }) => {
       }
     }
 
-    // 4. Update local user state and storage for this user
+    
     const updatedUser = {
       ...user,
       ...(name !== undefined && { name }),
@@ -601,15 +584,12 @@ export const AuthProvider = ({ children }) => {
     return updatedUser;
   };
 
-  /**
-   * Quick Demo Login (ONLY accessible via explicit Instant Demo Access button)
-   * Automatically signs into the real AWS backend using a pre-provisioned demo user.
-   */
+  
   const loginAsDemo = async () => {
     try {
       await login('demo@meridian.com', 'MeridianDemo123!');
       
-      // Update session with demo flag so heatmap/UI knows we are in demo mode
+      
       setUser(prev => {
         const updated = { ...prev, isDemo: true, authProvider: 'Demo' };
         localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(updated));
@@ -621,10 +601,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  /**
-   * Log In with Google
-   * Prepares OAuth session tracking and redirects directly to Google's authentication page
-   */
+  
   const loginWithGoogle = () => {
     setError(null);
     clearSession();
@@ -633,7 +610,7 @@ export const AuthProvider = ({ children }) => {
     const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
     const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI || `${window.location.origin}/`;
 
-    // 1. If Cognito Hosted UI domain is configured, redirect via Cognito Google IdP
+    
     if (COGNITO_DOMAIN && CLIENT_ID && !CLIENT_ID.includes('example')) {
       sessionStorage.setItem(STORAGE_KEYS.OAUTH_IN_PROGRESS, 'google');
       setLoading(true);
@@ -642,7 +619,7 @@ export const AuthProvider = ({ children }) => {
       return;
     }
 
-    // 2. Direct Google OAuth 2.0 endpoint (only if valid GOOGLE_CLIENT_ID is provided)
+    
     if (
       GOOGLE_CLIENT_ID &&
       !GOOGLE_CLIENT_ID.includes('demo') &&
@@ -655,7 +632,7 @@ export const AuthProvider = ({ children }) => {
       return;
     }
 
-    // If neither Cognito nor Google Client ID is configured, do not redirect to broken dummy Google endpoint
+    
     setLoading(false);
     const err = new Error(
       'Sign in with Google is not configured yet. Please sign in or sign up with email, or use Instant Demo Access.'

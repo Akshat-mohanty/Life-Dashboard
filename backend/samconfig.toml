@@ -3,6 +3,7 @@ version = 0.1
 [default]
 [default.global.parameters]
 stack_name = "life-dashboard-backend"
+region = "ap-southeast-2"
 
 [default.build.parameters]
 cached = true
@@ -10,12 +11,10 @@ parallel = true
 
 [default.deploy.parameters]
 capabilities = "CAPABILITY_IAM CAPABILITY_AUTO_EXPAND"
-confirm_changeset = false
+confirm_changeset = true
 resolve_s3 = true
 s3_prefix = "life-dashboard-backend"
 region = "ap-southeast-2"
-parameter_overrides = [
-  "Environment=prod",
-  "BedrockModelId=anthropic.claude-3-5-sonnet-20241022-v2:0"
-]
+parameter_overrides = "Environment=\"prod\" BedrockModelId=\"anthropic.claude-3-5-sonnet-20241022-v2:0\""
 image_repositories = []
+disable_rollback = true

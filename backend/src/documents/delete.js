@@ -1,8 +1,4 @@
-/**
- * Documents - Delete Lambda Function
- * DELETE /documents/{id}
- * Deletes the S3 file object and DynamoDB record
- */
+
 
 import { GetCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 import { DeleteObjectCommand } from '@aws-sdk/client-s3';
@@ -25,7 +21,7 @@ export const handler = async (event) => {
       return errorResponse(400, 'Missing required path parameter: "id".');
     }
 
-    // 1. Fetch document metadata to retrieve S3 key
+    
     const existing = await docClient.send(
       new GetCommand({
         TableName: TABLE_NAME,
@@ -42,7 +38,7 @@ export const handler = async (event) => {
 
     const s3Key = existing.Item.s3Key;
 
-    // 2. Delete file from S3 if s3Key is present
+    
     if (s3Key) {
       try {
         await s3Client.send(
@@ -57,7 +53,7 @@ export const handler = async (event) => {
       }
     }
 
-    // 3. Delete metadata from DynamoDB
+    
     await docClient.send(
       new DeleteCommand({
         TableName: TABLE_NAME,

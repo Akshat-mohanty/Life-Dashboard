@@ -1,8 +1,4 @@
-/**
- * Briefing Component — AI Morning Briefing Card
- * Redesigned in Obsidian Black, Pure White & Electric Indigo
- * Loads today's cached Bedrock briefing or streams newly generated briefing character-by-character.
- */
+
 
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -38,7 +34,7 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
     day: 'numeric',
   });
 
-  // Query briefing for the active date
+  
   const {
     data: briefingData,
     isLoading,
@@ -60,7 +56,7 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
   const briefing = isMock ? null : rawBriefing;
   const exists = Boolean(briefingData?.exists && !isMock && briefing?.content);
 
-  // Stream text character-by-character using ReadableStream
+  
   const streamText = async (fullText) => {
     setIsStreaming(true);
     setStreamedContent('');
@@ -93,7 +89,7 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
     setIsStreaming(false);
   };
 
-  // Mutation to trigger manual briefing generation
+  
   const generateMutation = useMutation({
     mutationFn: async () => {
       const res = await briefingApi.generateNow({ date: effectiveDate });
@@ -102,14 +98,14 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['briefing', effectiveDate] });
       queryClient.invalidateQueries({ queryKey: ['archive'] });
-      queryClient.invalidateQueries({ queryKey: ['tasks'] }); // Refresh re-ranked tasks
+      queryClient.invalidateQueries({ queryKey: ['tasks'] }); 
       if (data?.item?.content) {
         streamText(data.item.content);
       }
     },
   });
 
-  // Mutation to delete current briefing
+  
   const deleteMutation = useMutation({
     mutationFn: async () => {
       return await briefingApi.delete({ date: effectiveDate });
@@ -135,7 +131,7 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
       ? 'No value is entered.'
       : rawContent;
 
-  // 1. Loading State
+  
   if (isLoading) {
     return (
       <div className="w-full bg-white border border-zinc-200/80 rounded-2xl p-4 shadow-xs mb-6 animate-pulse">
@@ -153,7 +149,7 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
     );
   }
 
-  // 2. Error State
+  
   if (isError) {
     return (
       <div className="w-full bg-rose-50 border border-rose-200 rounded-2xl p-3.5 px-4.5 mb-6 flex items-center justify-between gap-3 text-rose-800 text-xs">
@@ -171,7 +167,7 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
     );
   }
 
-  // 3. Empty State (Ready to generate) — Centered clean button without emoji
+  
   if (!exists && !isStreaming && !displayContent) {
     return (
       <div className="flex items-center justify-center py-6 mb-5">
@@ -193,10 +189,10 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
     );
   }
 
-  // 4. Formatted Active Briefing — Clean Expandable Executive Card
+  
   return (
     <div className="w-full bg-white border border-zinc-200/90 rounded-2xl p-4 sm:p-5 shadow-xs hover:shadow-sm transition-all mb-6 relative overflow-hidden">
-      {/* Header */}
+      {}
       <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
         <div className="flex items-center gap-2.5">
           <div>
@@ -260,7 +256,7 @@ export default function Briefing({ selectedDate, onOpenArchive }) {
         </div>
       </div>
 
-      {/* Content Area */}
+      {}
       <AnimatePresence>
         {isExpanded && (
           <motion.div

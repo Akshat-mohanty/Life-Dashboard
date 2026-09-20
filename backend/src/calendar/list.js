@@ -1,8 +1,4 @@
-/**
- * Calendar - List Lambda Function
- * GET /calendar
- * Returns events for today and the next 7 days (or all if specified)
- */
+
 
 import { QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient, TABLE_NAME } from '../utils/db.js';
@@ -38,7 +34,7 @@ export const handler = async (event) => {
     const result = await docClient.send(command);
     const allEvents = result.Items || [];
 
-    // Filter events for today and next 7 days by default
+    
     const filteredEvents = showAll
       ? allEvents
       : allEvents.filter((item) => {
@@ -46,7 +42,7 @@ export const handler = async (event) => {
           return item.date >= todayStr && item.date <= maxDateStr;
         });
 
-    // Sort chronologically by date and time
+    
     filteredEvents.sort((a, b) => {
       if (a.date !== b.date) {
         return a.date.localeCompare(b.date);

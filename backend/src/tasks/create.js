@@ -1,7 +1,4 @@
-/**
- * Tasks - Create Lambda Function
- * POST /tasks
- */
+
 
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { v4 as uuidv4 } from 'uuid';
@@ -34,7 +31,7 @@ export const handler = async (event) => {
       aiRank = null,
     } = body;
 
-    // Validation
+    
     if (!title || typeof title !== 'string' || title.trim().length === 0) {
       return errorResponse(400, 'Validation Error: "title" is required and must be a non-empty string.');
     }
@@ -64,7 +61,7 @@ export const handler = async (event) => {
         return errorResponse(400, 'Validation Error: "aiRank" must be a number between 1 and 10.');
       }
     } else {
-      // Default heuristic aiRank based on priority until Bedrock morning briefing runs
+      
       const defaultRankMap = { high: 2, medium: 5, low: 8 };
       initialAiRank = defaultRankMap[priority] || 5;
     }

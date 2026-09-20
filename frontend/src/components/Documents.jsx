@@ -1,8 +1,4 @@
-/**
- * Documents Component
- * Manages secure document storage with S3 presigned uploads, category pills,
- * 30-day expiry early warning badges, and direct view/download links.
- */
+
 
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -28,14 +24,14 @@ export default function Documents() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(false);
 
-  // Form State
+  
   const [formData, setFormData] = useState({
     name: '',
     category: 'ID',
     expiryDate: '',
   });
 
-  // Query documents
+  
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['documents'],
     queryFn: async () => {
@@ -51,7 +47,7 @@ export default function Documents() {
     expiredCount: 0,
   };
 
-  // Upload Mutation
+  
   const uploadMutation = useMutation({
     mutationFn: async ({ file, metadata }) => {
       setUploadProgress(true);
@@ -67,7 +63,7 @@ export default function Documents() {
     },
   });
 
-  // Delete Mutation
+  
   const deleteMutation = useMutation({
     mutationFn: (id) => documentsApi.delete(id),
     onSuccess: () => {
@@ -90,7 +86,7 @@ export default function Documents() {
     if (file) {
       setSelectedFile(file);
       if (!formData.name) {
-        // Auto fill document name without file extension
+        
         const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ');
         setFormData((prev) => ({ ...prev, name: cleanName }));
       }
@@ -111,7 +107,7 @@ export default function Documents() {
     });
   };
 
-  // Category pill style
+  
   const getCategoryBadge = (category) => {
     const styleMap = {
       ID: 'bg-accent-50 text-accent-800 border-accent-200',
@@ -160,7 +156,7 @@ export default function Documents() {
         )}
       </div>
 
-      {/* Upload Document Modal Popup */}
+      {}
       <AnimatePresence>
         {isAdding && (
           <motion.div
@@ -193,7 +189,7 @@ export default function Documents() {
               </div>
 
               <form onSubmit={handleUploadSubmit} className="space-y-4">
-                {/* File Picker */}
+                {}
                 <div>
                   <label className="border-2 border-dashed border-zinc-200 hover:border-accent-400 bg-zinc-50 hover:bg-accent-50/20 rounded-2xl p-4 flex flex-col items-center justify-center cursor-pointer transition group">
                     <div className="w-10 h-10 rounded-full bg-white shadow-xs border border-zinc-200 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
@@ -279,7 +275,7 @@ export default function Documents() {
         )}
       </AnimatePresence>
 
-      {/* Document List */}
+      {}
       <div className="mt-4 flex-1 overflow-y-auto space-y-2.5 max-h-[420px] pr-0.5">
         {isLoading ? (
           <div className="space-y-2.5 animate-pulse">
@@ -345,7 +341,7 @@ export default function Documents() {
                     </div>
                   </div>
 
-                  {/* Actions */}
+                  {}
                   <div className="flex items-center gap-1 flex-shrink-0">
                     {doc.downloadUrl && (
                       <a
