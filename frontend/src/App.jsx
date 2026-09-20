@@ -955,12 +955,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.25 }}
-              className="space-y-5"
             >
-              <Briefing
-                selectedDate={selectedDate}
-                onOpenArchive={() => setIsArchiveModalOpen(true)}
-              />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
                 <div className="space-y-5">
                   <Tasks />
