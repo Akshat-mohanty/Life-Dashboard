@@ -396,7 +396,6 @@ export default function Tasks() {
           <div className="text-center py-6 px-4 bg-zinc-50/50 rounded-xl border border-dashed border-zinc-200">
             <CheckCircle2 className="w-5 h-5 mx-auto mb-1.5 text-zinc-300" />
             <p className="text-xs font-semibold text-zinc-700">All caught up</p>
-            <p className="text-[11px] text-zinc-400 mt-0.5">Use the quick add field above to record next actions</p>
           </div>
         ) : (
           <AnimatePresence initial={false}>
