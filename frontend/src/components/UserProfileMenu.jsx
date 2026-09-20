@@ -288,58 +288,6 @@ export default function UserProfileMenu() {
 
             {/* Action List */}
             <div className="space-y-0.5">
-              {/* Quick Upload Own Image as PFP */}
-              <button
-                onClick={() => directFileInputRef.current?.click()}
-                disabled={isProcessingFile}
-                className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold text-zinc-700 hover:text-black hover:bg-zinc-100 transition text-left cursor-pointer group"
-              >
-                {isProcessingFile ? (
-                  <Loader2 className="w-4 h-4 text-accent-600 animate-spin" />
-                ) : quickUploadSuccess ? (
-                  <Check className="w-4 h-4 text-accent-600" />
-                ) : (
-                  <Upload className="w-4 h-4 text-zinc-400 group-hover:text-black" />
-                )}
-                <span>
-                  {isProcessingFile
-                    ? 'Processing Image...'
-                    : quickUploadSuccess
-                    ? 'Photo Updated!'
-                    : 'Upload Own Image for PFP'}
-                </span>
-              </button>
-
-              {/* Default Currency Quick Setting */}
-              <div className="p-2.5 bg-zinc-50 rounded-xl border border-zinc-100 my-1">
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold text-zinc-700">
-                    <Coins className="w-3.5 h-3.5 text-amber-500" />
-                    <span>Default Currency</span>
-                  </div>
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-white border border-zinc-200 text-zinc-800 shadow-2xs">
-                    {currencySymbol} {currencyCode}
-                  </span>
-                </div>
-                <select
-                  value={currencyCode}
-                  onChange={async (e) => {
-                    const newCode = e.target.value;
-                    setCurrency(newCode);
-                    try {
-                      await updateProfile({ defaultCurrency: newCode });
-                    } catch {}
-                  }}
-                  className="w-full text-xs py-1.5 px-2 bg-white border border-zinc-200 rounded-lg text-zinc-800 font-medium focus:outline-none focus:ring-1 focus:ring-black cursor-pointer shadow-2xs"
-                >
-                  {availableCurrencies.map((c) => (
-                    <option key={c.code} value={c.code}>
-                      {c.symbol} — {c.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
               {/* Edit Full Profile (Name & PFP Modal) */}
               <button
                 onClick={() => {
